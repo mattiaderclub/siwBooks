@@ -3,15 +3,21 @@ package it.uniroma3.siw.model;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Book {
@@ -20,7 +26,13 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
+	@NotBlank
+	@Column(nullable = false)
 	private String title;
+	
+	@NotNull
+	@Min(0)
+	@Column(nullable = false)
 	private Integer annoPubblicazione;
 	
 	@ElementCollection
@@ -28,9 +40,9 @@ public class Book {
     @Column(name = "path")
     private List<String> imagePaths;
 	
-	@OneToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	private List<Author> autori;
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "libro")
 	private List<Review> recensioni;
 	
 	// === Getter e Setter ===
