@@ -114,6 +114,11 @@ public class BookController {
         model.addAttribute("minRating", null);
         return "formSearchLibri.html";
     }
+    
+    @GetMapping("/admin/indexBooks")
+    public String indexBooks() {
+        return "admin/indexBooks.html";
+    }
 
     // Esegue la ricerca avanzata
     @GetMapping("/foundLibri")
@@ -122,6 +127,13 @@ public class BookController {
                               @RequestParam(required = false) Integer annoMax,
                               @RequestParam(required = false) Double minRating,
                               Model model) {
+    	
+    	if (title != null) {
+            title = title.trim();
+            if (title.isEmpty()) {
+                title = null;
+            }
+        }
 
         List<Book> books = bookService.searchBooks(title, annoMin, annoMax, minRating);
         model.addAttribute("books", books);
