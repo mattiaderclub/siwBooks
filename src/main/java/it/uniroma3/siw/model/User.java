@@ -1,11 +1,13 @@
 package it.uniroma3.siw.model;
 
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -31,6 +33,9 @@ public class User {
 	@NotBlank
 	private String cell;
 	
+	@OneToOne
+	private List<Review> review;
+
 	// === Getter e Setter ===
 	public Long getId() {
 		return id;
@@ -38,7 +43,6 @@ public class User {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 	public String getName() {
 		return name;
 	}
@@ -63,10 +67,16 @@ public class User {
 	public void setCell(String cell) {
 		this.cell = cell;
 	}
+	public List<Review> getReview() {
+		return review;
+	}
+	public void setReview(List<Review> review) {
+		this.review = review;
+	}
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(cell, email, id, name, surname);
+		return Objects.hash(cell, email, id, name, review, surname);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -78,6 +88,7 @@ public class User {
 			return false;
 		User other = (User) obj;
 		return Objects.equals(cell, other.cell) && Objects.equals(email, other.email) && Objects.equals(id, other.id)
-				&& Objects.equals(name, other.name) && Objects.equals(surname, other.surname);
+				&& Objects.equals(name, other.name) && Objects.equals(review, other.review)
+				&& Objects.equals(surname, other.surname);
 	}
 }
