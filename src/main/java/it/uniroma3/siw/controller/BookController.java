@@ -18,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import it.uniroma3.siw.controller.validator.BookValidator;
 import it.uniroma3.siw.model.Author;
 import it.uniroma3.siw.model.Book;
 import it.uniroma3.siw.service.AuthorService;
@@ -32,6 +33,9 @@ public class BookController {
 
     @Autowired
     private AuthorService authorService;
+    
+    @Autowired
+    private BookValidator bookValidator;
 
     // Mostra la lista dei libri
     @GetMapping("/books")
@@ -63,6 +67,7 @@ public class BookController {
                           @RequestParam("images") List<MultipartFile> images,
                           Model model) throws IOException {
 
+    	this.bookValidator.validate(book, bindingResult);
         if (bindingResult.hasErrors()) {
             return "admin/formNewLibro";
         }

@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import it.uniroma3.siw.controller.validator.AuthorValidator;
 import it.uniroma3.siw.model.Author;
 import it.uniroma3.siw.service.AuthorService;
 import jakarta.validation.Valid;
@@ -26,6 +27,9 @@ public class AuthorController {
 
     @Autowired
     private AuthorService authorService;
+    
+    @Autowired
+    private AuthorValidator authorValidator;
 
     // Mostra la lista di tutti gli autori
     @GetMapping("/authors")
@@ -57,6 +61,7 @@ public class AuthorController {
                             @RequestParam("photo") MultipartFile photo,
                             Model model) throws IOException {
 
+    	this.authorValidator.validate(author, bindingResult);
         if (bindingResult.hasErrors()) {
             return "admin/formNewAuthor";
         }
