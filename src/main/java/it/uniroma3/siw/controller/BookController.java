@@ -5,7 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -40,8 +42,16 @@ public class BookController {
     // Mostra la lista dei libri
     @GetMapping("/books")
     public String showBooks(Model model) {
-        Iterable<Book> books = bookService.getAllBooks();
+        Iterable<Book> books = this.bookService.getAllBooks();
+        
+        Map<Long, Double> bookAverageRatings = new HashMap<>();
+        for (Book book : books) {
+            Double average = this.bookService.getAverageRating(book);
+            bookAverageRatings.put(book.getId(), average);
+        }
+        
         model.addAttribute("books", books);
+        model.addAttribute("bookAverageRatings", bookAverageRatings);
         return "books.html";
     }
 
@@ -49,7 +59,10 @@ public class BookController {
     @GetMapping("/book/{id}")
     public String getBookById(@PathVariable("id") Long id, Model model) {
         Book book = bookService.getBookById(id);
+        Double averageRating = bookService.getAverageRating(book);
+
         model.addAttribute("book", book);
+        model.addAttribute("averageRating", averageRating);
         return "book.html";
     }
 
@@ -115,6 +128,18 @@ public class BookController {
         bookService.saveBook(book);
         return "redirect:/book/" + id;
     }
+    
+    @PostMapping("/admin/removeAuthorFromBook/{bookId}")
+    public String removeAuthorFromBook(@PathVariable Long bookId, @RequestParam Long authorId) {
+        Book book = bookService.getBookById(bookId);
+        Author author = authorService.getAuthorById(authorId);
+
+        book.getAutori().remove(author);
+
+        bookService.saveBook(book);
+        return "redirect:/book/" + bookId;
+    }
+
 
     // Mostra il form per la ricerca avanzata dei libri
     @GetMapping("/formSearchLibri")
@@ -147,7 +172,15 @@ public class BookController {
         }
 
         List<Book> books = bookService.searchBooks(title, annoMin, annoMax, minRating);
+        
+        Map<Long, Double> bookAverageRatings = new HashMap<>();
+        for (Book book : books) {
+            Double average = bookService.getAverageRating(book);
+            bookAverageRatings.put(book.getId(), average);
+        }
+        
         model.addAttribute("books", books);
+        model.addAttribute("bookAverageRatings", bookAverageRatings);
         model.addAttribute("title", title);
         model.addAttribute("annoMin", annoMin);
         model.addAttribute("annoMax", annoMax);

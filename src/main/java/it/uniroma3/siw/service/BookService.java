@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import it.uniroma3.siw.model.Book;
+import it.uniroma3.siw.model.Review;
 import it.uniroma3.siw.repository.BookRepository;
 
 @Service
@@ -47,4 +48,17 @@ public class BookService {
     public boolean existsByTitleAndAnnoPubblicazione(String title, Integer annoPubblicazione) {
     	return bookRepository.existsByTitleAndAnnoPubblicazione(title, annoPubblicazione);
 	}
+    
+    public Double getAverageRating(Book book) {
+        List<Review> reviews = book.getRecensioni();
+        if (reviews == null || reviews.isEmpty()) {
+            return null;
+        }
+        double sum = 0;
+        for (Review r : reviews) {
+            sum += r.getRating();
+        }
+        return sum / reviews.size();
+    }
+
 }
