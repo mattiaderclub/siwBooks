@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import it.uniroma3.siw.model.Author;
+import it.uniroma3.siw.model.Book;
 import it.uniroma3.siw.repository.AuthorRepository;
 
 @Service
@@ -15,6 +16,9 @@ public class AuthorService {
 
 	@Autowired
 	private AuthorRepository authorRepository;
+	
+	@Autowired
+	private BookService bookService;
 	
 	public Iterable<Author> getAllAuthors() {
         return authorRepository.findAll();
@@ -56,5 +60,28 @@ public class AuthorService {
     
     public boolean existsByNameAndSurnameAndBirthDate(String name, String surname, LocalDate birthDate) {
     	return this.authorRepository.existsByNameAndSurnameAndBirthDate(name, surname, birthDate);
+    }
+    
+    public Double getAverageRatingOfAuthor(Author author) {
+        Set<Book> books = author.getLibri();
+        if (books == null || books.isEmpty()) {
+            return null;
+        }
+
+        double sum = 0;
+        int count = 0;
+
+        for (Book book : books) {
+            Double bookAverage = bookService.getAverageRating(book);
+            if (bookAverage != null) {
+                sum += bookAverage;
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            return null;
+        }
+        return sum / count;
     }
 }

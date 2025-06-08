@@ -5,7 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,22 @@ public class AuthorController {
     @GetMapping("/authors")
     public String showAuthors(Model model) {
         Iterable<Author> authors = authorService.getAllAuthors();
+        
+        // Calcola numero libri e voto medio per ogni autore
+        Map<Long, Integer> authorNumBooks = new HashMap<>();
+        Map<Long, Double> authorAverageRatings = new HashMap<>();
+
+        for (Author author : authors) {
+            int numBooks = author.getLibri() != null ? author.getLibri().size() : 0;
+            Double avgRating = authorService.getAverageRatingOfAuthor(author);
+
+            authorNumBooks.put(author.getId(), numBooks);
+            authorAverageRatings.put(author.getId(), avgRating);
+        }
+        
         model.addAttribute("authors", authors);
+        model.addAttribute("authorNumBooks", authorNumBooks);
+        model.addAttribute("authorAverageRatings", authorAverageRatings);
         return "authors.html";
     }
 
@@ -43,7 +60,12 @@ public class AuthorController {
     @GetMapping("/author/{id}")
     public String getAuthorById(@PathVariable("id") Long id, Model model) {
         Author author = authorService.getAuthorById(id);
+        int numBooks = author.getLibri() != null ? author.getLibri().size() : 0;
+        Double avgRating = authorService.getAverageRatingOfAuthor(author);
+
         model.addAttribute("author", author);
+        model.addAttribute("numBooks", numBooks);
+        model.addAttribute("averageRating", avgRating);
         return "author.html";
     }
 
@@ -121,7 +143,20 @@ public class AuthorController {
         }
 
         List<Author> authors = authorService.searchAuthors(name, surname, nationality, bornAfter, bornBefore);
+        
+        Map<Long, Integer> authorNumBooks = new HashMap<>();
+        Map<Long, Double> authorAverageRatings = new HashMap<>();
+
+        for (Author author : authors) {
+            int numBooks = author.getLibri() != null ? author.getLibri().size() : 0;
+            Double avgRating = authorService.getAverageRatingOfAuthor(author);
+
+            authorNumBooks.put(author.getId(), numBooks);
+            authorAverageRatings.put(author.getId(), avgRating);
+        }
         model.addAttribute("authors", authors);
+        model.addAttribute("authorNumBooks", authorNumBooks);
+        model.addAttribute("authorAverageRatings", authorAverageRatings);
         model.addAttribute("name", name);
         model.addAttribute("surname", surname);
         model.addAttribute("nationality", nationality);
