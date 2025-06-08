@@ -43,4 +43,8 @@ public class BookService {
     public List<Book> searchBooks(String title, Integer annoMin, Integer annoMax, Double minRating) {
         return bookRepository.findByFilters(title, annoMin, annoMax, minRating);
     }
+    
+    public boolean existsByTitleAndAnnoPubblicazione(String title, Integer annoPubblicazione) {
+    	return bookRepository.existsByTitleAndAnnoPubblicazione(title, annoPubblicazione);
+	}
 }

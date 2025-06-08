@@ -53,4 +53,8 @@ public class AuthorService {
     public Iterable<Author> getAuthorsByIds(Set<Long> ids) {
         return authorRepository.findAllById(ids);
     }
+    
+    public boolean existsByNameAndSurnameAndBirthDate(String name, String surname, LocalDate birthDate) {
+    	return this.authorRepository.existsByNameAndSurnameAndBirthDate(name, surname, birthDate);
+    }
 }

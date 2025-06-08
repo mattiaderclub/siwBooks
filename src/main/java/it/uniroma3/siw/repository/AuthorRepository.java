@@ -26,4 +26,6 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {
         @Param("bornAfter") LocalDate bornAfter,
         @Param("bornBefore") LocalDate bornBefore
     );
+	
+	public boolean existsByNameAndSurnameAndBirthDate(String name, String surname, LocalDate birthDate);
 }

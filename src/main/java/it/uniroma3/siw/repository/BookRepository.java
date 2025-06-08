@@ -23,4 +23,6 @@ public interface BookRepository extends CrudRepository<Book, Long> {
         @Param("annoMax") Integer annoMax,
         @Param("minRating") Double minRating
     );
+	
+	public boolean existsByTitleAndAnnoPubblicazione(String title, Integer annoPubblicazione);
 }
