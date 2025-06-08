@@ -1,8 +1,8 @@
 package it.uniroma3.siw.model;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,7 +40,7 @@ public class Author {
     private String photo;
     
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "autori")
-    private List<Book> libri;
+    private Set<Book> libri;
 
     // === Getter e Setter ===
 	public Long getId() {
@@ -85,10 +85,10 @@ public class Author {
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
-	public List<Book> getLibri() {
+	public Set<Book> getLibri() {
 		return libri;
 	}
-	public void setLibri(List<Book> libri) {
+	public void setLibri(Set<Book> libri) {
 		this.libri = libri;
 	}
 	

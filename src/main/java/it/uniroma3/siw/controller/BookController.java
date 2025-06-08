@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,10 +98,15 @@ public class BookController {
     // Salva l'associazione degli autori a un libro
     @PostMapping("/admin/addAuthorsToBook/{id}")
     public String addAuthorsToBook(@PathVariable("id") Long id,
-                                   @RequestParam List<Long> authorIds) {
+                                   @RequestParam Set<Long> authorIds) {
         Book book = bookService.getBookById(id);
         Iterable<Author> authorsToAdd = authorService.getAuthorsByIds(authorIds);
-        authorsToAdd.forEach(book.getAutori()::add);
+
+        
+        Set<Author> autori = book.getAutori();
+        for (Author a : authorsToAdd) {
+            autori.add(a);
+        }
         bookService.saveBook(book);
         return "redirect:/book/" + id;
     }

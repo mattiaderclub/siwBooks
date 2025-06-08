@@ -2,6 +2,7 @@ package it.uniroma3.siw.model;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
@@ -41,7 +42,7 @@ public class Book {
     private List<String> imagePaths;
 	
 	@ManyToMany(fetch = FetchType.LAZY)
-	private List<Author> autori;
+	private Set<Author> autori;
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "libro")
 	private List<Review> recensioni;
 	
@@ -70,10 +71,10 @@ public class Book {
 	public void setImagePaths(List<String> imagePaths) {
 		this.imagePaths = imagePaths;
 	}
-	public List<Author> getAutori() {
+	public Set<Author> getAutori() {
 		return autori;
 	}
-	public void setAutori(List<Author> autori) {
+	public void setAutori(Set<Author> autori) {
 		this.autori = autori;
 	}
 	public List<Review> getRecensioni() {
