@@ -1,5 +1,6 @@
 package it.uniroma3.siw.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,29 @@ public class AuthorService {
     public void saveAuthor(Author author) {
         authorRepository.save(author);
     }
+    
+    public void deleteById(Long id) {
+        this.authorRepository.deleteById(id);
+    }
+    
+    /**
+     * Ricerca avanzata autori con parametri opzionali.
+     *
+     * @param name        nome (parziale o completo)
+     * @param surname     cognome (parziale o completo)
+     * @param nationality nazionalità (parziale o completa)
+     * @param bornAfter	  natoDopo
+     * @param bornBefore  natoPrima
+     * @return lista di autori che corrispondono ai filtri
+     */
+    public List<Author> searchAuthors(
+            String name, String surname, String nationality, LocalDate bornAfter, LocalDate bornBefore) {
+        return authorRepository.findByFilters(name, surname, nationality, bornAfter, bornBefore);
+    }
 
+    /**
+     * Ricava gli autori da una lista di ID.
+     */
     public Iterable<Author> getAuthorsByIds(List<Long> ids) {
         return authorRepository.findAllById(ids);
     }
