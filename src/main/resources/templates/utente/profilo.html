@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Profilo Utente</title>
+</head>
+<body>
+
+<header>
+    <div>
+        <span>Cliente:</span>
+        <span th:text="${credentials.username}"></span>
+        <a href="/logout">Logout</a>
+        <a th:href="@{/utente/{id}/profilo/modifica(id=${utente.id})}">Modifica Profilo</a>
+    </div>
+</header>
+
+<h1>Il tuo Profilo</h1>
+
+<div>
+    <!-- Attributi di User -->
+    <p><strong th:text="#{user.name} + ':'"></strong> <span th:text="${utente.name}"></span></p>
+    <p><strong th:text="#{user.surname} + ':'"></strong> <span th:text="${utente.surname}"></span></p>
+    <p><strong th:text="#{user.cell} + ':'"></strong> <span th:text="${utente.cell}"></span></p>
+    <p><strong th:text="#{user.email} + ':'"></strong> <span th:text="${utente.email}"></span></p>
+
+    <!-- Attributi di Credentials -->
+    <p><strong th:text="#{credentials.username} + ':'"></strong> <span th:text="${credentials.username}"></span></p>
+    <p><strong>Password:</strong> ********</p>
+    <p><strong th:text="#{credentials.role} + ':'"></strong> <span th:text="${credentials.role}"></span></p>
+</div>
+
+<div>
+    <a th:href="@{/}" th:text="'Torna alla Home'"></a>
+</div>
+
+</body>
+</html>

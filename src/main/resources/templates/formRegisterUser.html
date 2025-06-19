@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registrazione nuovo utente</title>
+</head>
+<body>
+
+<h1>Registrazione nuovo utente</h1>
+
+<form th:action="@{/register}" method="POST" th:object="${registrationUserDTO}">
+
+    <!-- === USER === -->
+    <div>
+        <label th:text="#{user.name} + ':'"></label>
+        <input type="text" placeholder="Nome" th:field="*{user.name}" />
+        <span th:if="${#fields.hasErrors('user.name')}" th:errors="*{user.name}"></span>
+    </div>
+
+    <div>
+        <label th:text="#{user.surname} + ':'"></label>
+        <input type="text" placeholder="Cognome" th:field="*{user.surname}" />
+        <span th:if="${#fields.hasErrors('user.surname')}" th:errors="*{user.surname}"></span>
+    </div>
+
+    <div>
+        <label th:text="#{user.email} + ':'"></label>
+        <input type="email" placeholder="Email" th:field="*{user.email}" />
+        <span th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></span>
+    </div>
+
+    <div>
+        <label th:text="#{user.cell} + ':'"></label>
+        <input type="tel" placeholder="Cellulare" th:field="*{user.cell}" />
+        <span th:if="${#fields.hasErrors('user.cell')}" th:errors="*{user.cell}"></span>
+    </div>
+
+    <!-- === CREDENTIALS === -->
+    <div>
+        <label th:text="#{credentials.username} + ':'"></label>
+        <input type="text" placeholder="Username" th:field="*{credentials.username}" />
+        <span th:if="${#fields.hasErrors('credentials.username')}" th:errors="*{credentials.username}"></span>
+    </div>
+
+    <div>
+        <label th:text="#{credentials.password} + ':'"></label>
+        <input type="password" placeholder="Password" th:field="*{credentials.password}" />
+        <span th:if="${#fields.hasErrors('credentials.password')}" th:errors="*{credentials.password}"></span>
+    </div>
+
+    <!-- === CONFIRM PASSWORD === -->
+    <div>
+        <label>Conferma Password</label>
+        <input type="password" placeholder="Conferma Password" th:field="*{confirmPassword}" />
+        <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+    </div>
+
+    <div>
+        <button type="submit">Registra</button>
+    </div>
+
+</form>
+
+</body>
+</html>

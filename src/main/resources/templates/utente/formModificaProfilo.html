@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Modifica Profilo</title>
+</head>
+<body>
+
+<h1>Modifica Profilo</h1>
+
+<form th:action="@{/utente/{id}/profilo/modifica(id=${credentials.user.id})}" 
+      method="post" 
+      th:object="${updateUserDTO}">
+
+    <div>
+        <label th:text="#{credentials.username} + ':'"></label>
+        <input type="text" th:value="${credentials.username}" readonly />
+    </div>
+
+    <div>
+        <label th:text="#{user.email} + ':'"></label>
+        <input type="email" th:value="${credentials.user.email}" readonly />
+    </div>
+
+    <div>
+        <label th:text="#{user.name} + ':'"></label>
+        <input type="text" th:field="*{name}" />
+        <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+    </div>
+
+    <div>
+        <label th:text="#{user.surname} + ':'"></label>
+        <input type="text" th:field="*{surname}" />
+        <span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
+    </div>
+
+    <div>
+        <label th:text="#{user.cell} + ':'"></label>
+        <input type="text" th:field="*{cell}" />
+        <span th:if="${#fields.hasErrors('cell')}" th:errors="*{cell}"></span>
+    </div>
+
+    <div>
+        <label>Nuova Password:</label>
+        <input type="password" name="newPassword" />
+    </div>
+
+    <div>
+        <label>Conferma Password:</label>
+        <input type="password" name="confirmNewPassword" />
+        <span th:if="${passwordError}" th:text="${passwordError}"></span>
+    </div>
+
+    <div>
+        <button type="submit">Salva</button>
+        <a href="#" onclick="history.back()">Annulla</a>
+    </div>
+
+</form>
+
+</body>
+</html>
