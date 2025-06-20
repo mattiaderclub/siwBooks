@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SIW Books - HomePage</title>
+</head>
+
+<body>
+
+<header>
+    <div th:if="${userDetails}">
+        <div>
+            <span class="ruolo">Utente:</span>
+            <span th:text="${userDetails.username}"></span>
+        </div>
+        <div>
+            <a th:if="${credentials != null}" th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
+                Profilo
+            </a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div th:unless="${userDetails}">
+        <a href="/login">Login</a>
+    </div>
+</header>
+
+<div>
+    <img src="/images/logo-siwBooks.png" width="20%" />
+</div>
+
+<div>
+    <h1>
+        <a href="/books">Lista Libri</a>
+    </h1>
+
+    <h1>
+        <a href="/authors">Lista Autori</a>
+    </h1>
+
+    <h1>
+        <a href="/formSearchLibri">Cerca Libri</a>
+    </h1>
+
+    <h1>
+        <a href="/formSearchAuthors">Cerca Autori</a>
+    </h1>
+</div>
+
+</body>
+</html>
