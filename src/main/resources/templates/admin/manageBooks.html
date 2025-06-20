@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Gestione Libri</title>
+</head>
+
+<body>
+
+<header>
+    <div th:if="${userDetails}">
+        <span th:text="${userDetails.username}"></span>
+        <a href="/logout">Logout</a>
+    </div>
+    <div th:unless="${userDetails}">
+        <a href="/login">Login</a>
+    </div>
+</header>
+
+<div>
+    <a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
+</div>
+
+<h1>Libri</h1>
+
+<div th:if="${books.isEmpty()}">
+    Non ci sono libri nel sistema.
+</div>
+
+<ul>
+    <li th:each="book : ${books}">
+        <div>
+            <a th:href="@{'/book/' + ${book.id}}"
+               th:text="${book.title} + ' (' + ${book.annoPubblicazione} + ')'">
+            </a>
+
+            <img th:if="${book.imagePaths != null and #lists.size(book.imagePaths) > 0}"
+                 th:src="@{${book.imagePaths[0]}}"
+                 alt="Copertina libro"
+                 style="max-width:100px; margin-left:8px;" />
+
+            <a th:href="@{'/admin/deleteBook/' + ${book.id}}">Cancella</a>
+        </div>
+    </li>
+</ul>
+
+</body>
+</html>

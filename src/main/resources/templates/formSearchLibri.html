@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ricerca Avanzata Libri</title>
+</head>
+
+<body>
+
+<header>
+    <div th:if="${userDetails}">
+        <span th:text="${userDetails.username}"></span>
+        <a href="/logout">Logout</a>
+    </div>
+    <div th:unless="${userDetails}">
+        <a href="/login">Login</a>
+    </div>
+</header>
+
+<div>
+    <a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
+</div>
+
+<h1>Ricerca Avanzata Libri</h1>
+
+<form th:action="@{/foundLibri}" method="get">
+    <div>
+        <label for="title">Titolo:</label>
+        <input type="text" id="title" name="title" th:value="${title}" />
+    </div>
+
+    <div>
+        <label for="annoMin">Anno Pubblicazione (da):</label>
+        <input type="number" id="annoMin" name="annoMin" th:value="${annoMin}" />
+    </div>
+
+    <div>
+        <label for="annoMax">Anno Pubblicazione (a):</label>
+        <input type="number" id="annoMax" name="annoMax" th:value="${annoMax}" />
+    </div>
+
+    <div>
+        <label for="minRating">Voto minimo:</label>
+        <input type="number" step="0.1" min="1" max="5" id="minRating" name="minRating" th:value="${minRating}" />
+    </div>
+
+    <div>
+        <button type="submit">Cerca</button>
+    </div>
+</form>
+
+</body>
+</html>

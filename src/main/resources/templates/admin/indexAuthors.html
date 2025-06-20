@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SIW Books - Gestione Autori</title>
+</head>
+
+<body>
+
+<header>
+    <div th:if="${userDetails}">
+        <span th:text="${userDetails.username}"></span>
+        <a href="/logout">Logout</a>
+    </div>
+    <div th:unless="${userDetails}">
+        <a href="/login">Login</a>
+    </div>
+</header>
+
+<div>
+    <a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
+</div>
+
+<h1>Gestione Autori</h1>
+
+<div>
+    <a href="/admin/formNewAuthor">Inserisci un nuovo autore</a>
+</div>
+<div>
+    <a href="/admin/manageAuthors">Gestisci gli autori</a>
+</div>
+<div>
+    <a href="/formSearchAuthors">Cerca gli autori</a>
+</div>
+
+</body>
+</html>

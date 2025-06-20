@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ricerca Avanzata Autori</title>
+</head>
+
+<body>
+
+<header>
+    <div th:if="${userDetails}">
+        <span th:text="${userDetails.username}"></span>
+        <a href="/logout">Logout</a>
+    </div>
+    <div th:unless="${userDetails}">
+        <a href="/login">Login</a>
+    </div>
+</header>
+
+<div>
+    <a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
+</div>
+
+<h1>Ricerca Avanzata Autori</h1>
+
+<form th:action="@{/foundAuthors}" method="get">
+
+    <div>
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" th:value="${name}" />
+    </div>
+
+    <div>
+        <label for="surname">Cognome:</label>
+        <input type="text" id="surname" name="surname" th:value="${surname}" />
+    </div>
+
+    <div>
+        <label for="nationality">Nazionalità:</label>
+        <input type="text" id="nationality" name="nationality" th:value="${nationality}" />
+    </div>
+
+    <div>
+        <label for="bornAfter">Nato dopo il:</label>
+        <input type="date" id="bornAfter" name="bornAfter" th:value="${bornAfter}" />
+    </div>
+
+    <div>
+        <label for="bornBefore">Nato prima del:</label>
+        <input type="date" id="bornBefore" name="bornBefore" th:value="${bornBefore}" />
+    </div>
+
+    <div>
+        <button type="submit">Cerca</button>
+    </div>
+
+</form>
+
+</body>
+</html>
