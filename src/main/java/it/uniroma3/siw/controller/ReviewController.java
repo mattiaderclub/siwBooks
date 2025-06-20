@@ -33,19 +33,6 @@ public class ReviewController {
     @Autowired
     private CredentialsService credentialsService;
     
-    // Form per nuova recensione
-    @GetMapping("/reviews/new/{bookId}")
-    @PreAuthorize("isAuthenticated()")
-    public String newReviewForm(@PathVariable Long bookId, Model model) {
-        Review review = new Review();
-        Book book = bookService.getBookById(bookId);
-
-        model.addAttribute("review", review);
-        model.addAttribute("book", book);
-
-        return "review/formNewReview.html";  // il tuo form per nuova recensione
-    }
-    
     @GetMapping("/reviews/new/{bookId}")
     public String newReviewForm(@PathVariable Long bookId,
                                 @AuthenticationPrincipal UserDetails currentUser,
