@@ -1,52 +1,71 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
+
 <head>
-    <title>Ricerca Avanzata Libri</title>
+	<title>Ricerca Avanzata Libri</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=2" />
 </head>
+
+<header class="main-header">
+	<div class="header-content container">
+
+		<!-- A sinistra -->
+		<div class="user-info">
+			<span class="user-role" th:if="${credentials != null}">
+				<span th:if="${credentials.role == 'DEFAULT'}">Cliente:</span>
+				<span th:if="${credentials.role == 'ADMIN'}">Bibliotecario:</span>
+			</span>
+			<span class="user-name" th:if="${userDetails}" th:text="${userDetails.username}"></span>
+		</div>
+
+		<!-- A destra -->
+		<div class="header-links">
+			<a class="header-link" th:if="${credentials != null}"
+				th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
+				Profilo
+			</a>
+
+			<a class="header-link" href="/logout" th:if="${userDetails}">Logout</a>
+			<a class="header-link" href="/login" th:unless="${userDetails}">Login</a>
+		</div>
+
+	</div>
+</header>
 
 <body>
 
-<header>
-    <div th:if="${userDetails}">
-        <span th:text="${userDetails.username}"></span>
-        <a href="/logout">Logout</a>
-    </div>
-    <div th:unless="${userDetails}">
-        <a href="/login">Login</a>
-    </div>
-</header>
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
+	</div>
 
-<div>
-    <a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
-</div>
+	<h1>Ricerca Avanzata Libri</h1>
 
-<h1>Ricerca Avanzata Libri</h1>
+	<form th:action="@{/foundLibri}" method="get">
+		<div>
+			<label for="title">Titolo:</label>
+			<input type="text" id="title" name="title" th:value="${title}" />
+		</div>
 
-<form th:action="@{/foundLibri}" method="get">
-    <div>
-        <label for="title">Titolo:</label>
-        <input type="text" id="title" name="title" th:value="${title}" />
-    </div>
+		<div>
+			<label for="annoMin">Anno Pubblicazione (da):</label>
+			<input type="number" id="annoMin" name="annoMin" th:value="${annoMin}" />
+		</div>
 
-    <div>
-        <label for="annoMin">Anno Pubblicazione (da):</label>
-        <input type="number" id="annoMin" name="annoMin" th:value="${annoMin}" />
-    </div>
+		<div>
+			<label for="annoMax">Anno Pubblicazione (a):</label>
+			<input type="number" id="annoMax" name="annoMax" th:value="${annoMax}" />
+		</div>
 
-    <div>
-        <label for="annoMax">Anno Pubblicazione (a):</label>
-        <input type="number" id="annoMax" name="annoMax" th:value="${annoMax}" />
-    </div>
+		<div>
+			<label for="minRating">Voto minimo:</label>
+			<input type="number" step="0.1" min="1" max="5" id="minRating" name="minRating" th:value="${minRating}" />
+		</div>
 
-    <div>
-        <label for="minRating">Voto minimo:</label>
-        <input type="number" step="0.1" min="1" max="5" id="minRating" name="minRating" th:value="${minRating}" />
-    </div>
-
-    <div>
-        <button type="submit">Cerca</button>
-    </div>
-</form>
+		<div>
+			<button type="submit">Cerca</button>
+		</div>
+	</form>
 
 </body>
+
 </html>

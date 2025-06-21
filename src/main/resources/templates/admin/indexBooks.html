@@ -1,36 +1,51 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
+
 <head>
-    <title>SIW Books - Gestione Libri</title>
+	<title>SIW Books - Gestione Libri</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+
 </head>
+
+<header class="main-header">
+	<div class="header-content container">
+
+		<!-- A sinistra -->
+		<div class="user-info">
+			<span class="user-role">Bibliotecario:</span>
+			<span class="user-name" th:text="${userDetails.username}"></span>
+		</div>
+
+		<!-- A destra -->
+		<div class="header-links">
+			<a class="header-link" th:if="${credentials != null}"
+				th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
+				Profilo
+			</a>
+
+			<a class="header-link" href="/logout">Logout</a>
+		</div>
+	</div>
+</header>
 
 <body>
 
-<header>
-    <div th:if="${userDetails}">
-        <span th:text="${userDetails.username}"></span>
-        <a href="/logout">Logout</a>
-    </div>
-    <div th:unless="${userDetails}">
-        <a href="/login">Login</a>
-    </div>
-</header>
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
+	</div>
 
-<div>
-    <a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
-</div>
+	<h1>Gestione Libri</h1>
 
-<h1>Gestione Libri</h1>
-
-<div>
-    <a href="/admin/formNewLibro">Inserisci un nuovo libro</a>
-</div>
-<div>
-    <a href="/admin/manageBooks">Gestisci i libri</a>
-</div>
-<div>
-    <a href="/formSearchLibri">Cerca i libri</a>
-</div>
+	<div>
+		<a href="/admin/formNewLibro">Inserisci un nuovo libro</a>
+	</div>
+	<div>
+		<a href="/admin/manageBooks">Gestisci i libri</a>
+	</div>
+	<div>
+		<a href="/formSearchLibri">Cerca i libri</a>
+	</div>
 
 </body>
+
 </html>

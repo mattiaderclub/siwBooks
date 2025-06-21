@@ -1,64 +1,90 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
+
 <head>
-    <title>Registrazione nuovo utente</title>
+	<title>
+		SiwBooks - Registrazione
+	</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=2" />
+
 </head>
+
+<header class="main-header">
+	<div class="header-content container">
+
+		<!-- A sinistra -->
+		<div class="user-info">
+			<span class="user-role">SiwBooks</span>
+		</div>
+
+		<!-- A destra -->
+		<div class="header-links">
+			<a class="header-link">Registrazione</a>
+		</div>
+
+	</div>
+</header>
+
 <body>
 
-<h1>Registrazione nuovo utente</h1>
 
-<form th:action="@{/register}" method="POST" th:object="${registrationUserDTO}">
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
+	</div>
+	<h1>Registrazione nuovo utente</h1>
+	<form th:action="@{/register}" method="POST" th:object="${registrationForm}" class="form-auth">
 
-    <!-- === USER === -->
-    <div>
-        <label th:text="#{user.name} + ':'"></label>
-        <input type="text" placeholder="Nome" th:field="*{user.name}" />
-        <span th:if="${#fields.hasErrors('user.name')}" th:errors="*{user.name}"></span>
-    </div>
+		<!-- User data -->
+		<div class="form-group">
+			<label for="name">Nome</label>
+			<input type="text" id="name" placeholder="name" th:field="*{user.name}" />
+			<span th:if="${#fields.hasErrors('user.name')}" th:errors="*{user.name}"></span>
+		</div>
 
-    <div>
-        <label th:text="#{user.surname} + ':'"></label>
-        <input type="text" placeholder="Cognome" th:field="*{user.surname}" />
-        <span th:if="${#fields.hasErrors('user.surname')}" th:errors="*{user.surname}"></span>
-    </div>
+		<div class="form-group">
+			<label for="surname">Cognome</label>
+			<input type="text" id="surname" placeholder="surname" th:field="*{user.surname}" />
+			<span th:if="${#fields.hasErrors('user.surname')}" th:errors="*{user.surname}"></span>
+		</div>
 
-    <div>
-        <label th:text="#{user.email} + ':'"></label>
-        <input type="email" placeholder="Email" th:field="*{user.email}" />
-        <span th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></span>
-    </div>
+		<div class="form-group">
+			<label for="email">Email</label>
+			<input type="text" id="email" placeholder="email" th:field="*{user.email}" />
+			<span th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></span>
+		</div>
 
-    <div>
-        <label th:text="#{user.cell} + ':'"></label>
-        <input type="tel" placeholder="Cellulare" th:field="*{user.cell}" />
-        <span th:if="${#fields.hasErrors('user.cell')}" th:errors="*{user.cell}"></span>
-    </div>
+		<div class="form-group">
+			<label for="cell">Cellulare</label>
+			<input type="tel" id="cell" placeholder="cellulare" th:field="*{user.cell}" />
+			<span th:if="${#fields.hasErrors('user.cell')}" th:errors="*{user.cell}"></span>
+		</div>
 
-    <!-- === CREDENTIALS === -->
-    <div>
-        <label th:text="#{credentials.username} + ':'"></label>
-        <input type="text" placeholder="Username" th:field="*{credentials.username}" />
-        <span th:if="${#fields.hasErrors('credentials.username')}" th:errors="*{credentials.username}"></span>
-    </div>
+		<!-- Credentials data -->
+		<div class="form-group">
+			<label for="username">Username</label>
+			<input type="text" id="username" placeholder="username" th:field="*{credentials.username}" />
+			<span th:if="${#fields.hasErrors('credentials.username')}" th:errors="*{credentials.username}"></span>
+		</div>
 
-    <div>
-        <label th:text="#{credentials.password} + ':'"></label>
-        <input type="password" placeholder="Password" th:field="*{credentials.password}" />
-        <span th:if="${#fields.hasErrors('credentials.password')}" th:errors="*{credentials.password}"></span>
-    </div>
+		<div class="form-group">
+			<label for="password">Password</label>
+			<input type="password" id="password" placeholder="password" th:field="*{credentials.password}" />
+			<span th:if="${#fields.hasErrors('credentials.password')}" th:errors="*{credentials.password}"></span>
+		</div>
 
-    <!-- === CONFIRM PASSWORD === -->
-    <div>
-        <label>Conferma Password</label>
-        <input type="password" placeholder="Conferma Password" th:field="*{confirmPassword}" />
-        <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
-    </div>
+		<!-- Conferma password -->
+		<div class="form-group">
+			<label for="confirmPassword">Conferma Password</label>
+			<input type="password" id="confirmPassword" placeholder="conferma password" th:field="*{confirmPassword}" />
+			<span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
+		</div>
 
-    <div>
-        <button type="submit">Registra</button>
-    </div>
+		<div class="form-group">
+			<button type="submit">Registra</button>
+		</div>
 
-</form>
+	</form>
 
 </body>
+
 </html>

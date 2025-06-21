@@ -1,37 +1,56 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Profilo Utente</title>
-</head>
-<body>
+<html>
 
-<header>
-    <div>
-        <span>Cliente:</span>
-        <span th:text="${credentials.username}"></span>
-        <a href="/logout">Logout</a>
-        <a th:href="@{/utente/{id}/profilo/modifica(id=${utente.id})}">Modifica Profilo</a>
-    </div>
+<head>
+	<title>Profilo Utente</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=2" />
+
+</head>
+
+<header class="main-header">
+	<div class="header-content container">
+
+		<!-- A sinistra -->
+		<div class="user-info">
+			<span class="user-role" th:if="${credentials != null}">
+				<span th:if="${credentials.role == 'DEFAULT'}">Cliente:</span>
+				<span th:if="${credentials.role == 'ADMIN'}">Bibliotecario:</span>
+			</span>
+			<span class="user-name" th:if="${userDetails}" th:text="${userDetails.username}"></span>
+		</div>
+
+		<!-- A destra -->
+		<div class="header-links">
+			<a class="header-link" th:if="${credentials != null}"
+				th:href="@{/utente/{id}/profilo/modifica(id=${utente.id})}">Modifica Profilo</a>
+			<a class="header-link" href="/logout" th:if="${userDetails}">Logout</a>
+			<a class="header-link" href="/login" th:unless="${userDetails}">Login</a>
+		</div>
+
+	</div>
 </header>
 
-<h1>Il tuo Profilo</h1>
+<body>
 
-<div>
-    <!-- Attributi di User -->
-    <p><strong th:text="#{user.name} + ':'"></strong> <span th:text="${utente.name}"></span></p>
-    <p><strong th:text="#{user.surname} + ':'"></strong> <span th:text="${utente.surname}"></span></p>
-    <p><strong th:text="#{user.cell} + ':'"></strong> <span th:text="${utente.cell}"></span></p>
-    <p><strong th:text="#{user.email} + ':'"></strong> <span th:text="${utente.email}"></span></p>
+	<h1 style="text-align: center; margin-top: 2em;">Il tuo Profilo</h1>
 
-    <!-- Attributi di Credentials -->
-    <p><strong th:text="#{credentials.username} + ':'"></strong> <span th:text="${credentials.username}"></span></p>
-    <p><strong>Password:</strong> ********</p>
-    <p><strong th:text="#{credentials.role} + ':'"></strong> <span th:text="${credentials.role}"></span></p>
-</div>
+	<div class="main-content">
+		<!-- Attributi di User -->
+		<p><strong>Nome:</strong> <span th:text="${utente.name}"></span></p>
+		<p><strong>Cognome:</strong> <span th:text="${utente.surname}"></span></p>
+		<p><strong>Cellulare:</strong> <span th:text="${utente.cell}"></span></p>
+		<p><strong>Email:</strong> <span th:text="${utente.email}"></span></p>
 
-<div>
-    <a th:href="@{/}" th:text="'Torna alla Home'"></a>
-</div>
+		<!-- Attributi di Credentials -->
+		<p><strong>Username:</strong> <span th:text="${credentials.username}"></span></p>
+		<p><strong>Password:</strong> ********</p>
+		<p><strong>Ruolo:</strong> <span th:text="${credentials.role}"></span></p>
+	</div>
 
+	<div class="actions">
+		<a href="/" class="back-link">Torna alla Home</a>
+	</div>
 </body>
+
+
 </html>

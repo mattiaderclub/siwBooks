@@ -1,42 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
+
 <head>
-    <title>Gestione Autori</title>
+	<title>Gestione Autori</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+
 </head>
+
+<header class="main-header">
+	<div class="header-content container">
+		<!-- A sinistra -->
+		<div class="user-info">
+			<span class="user-role">Bibliotecario:</span>
+			<span class="user-name" th:text="${userDetails.username}"></span>
+		</div>
+
+		<!-- A destra -->
+		<div class="header-links">
+			<a class="header-link" th:if="${credentials != null}"
+				th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
+				Profilo
+			</a>
+
+			<a class="header-link" href="/logout">Logout</a>
+		</div>
+	</div>
+</header>
 
 <body>
 
-<header>
-    <div th:if="${userDetails}">
-        <span th:text="${userDetails.username}"></span>
-        <a href="/logout">Logout</a>
-    </div>
-    <div th:unless="${userDetails}">
-        <a href="/login">Login</a>
-    </div>
-</header>
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
+	</div>
 
-<div>
-    <a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
-</div>
+	<h1>Autori</h1>
 
-<h1>Autori</h1>
+	<div th:if="${authors.isEmpty()}">
+		Non ci sono autori nel sistema.
+	</div>
 
-<div th:if="${authors.isEmpty()}">
-    Non ci sono autori nel sistema.
-</div>
+	<ul>
+		<li th:each="author : ${authors}">
+			<div>
+				<a th:href="@{'/author/' + ${author.id}}" th:text="${author.name} + ' ' + ${author.surname}">
+				</a>
 
-<ul>
-    <li th:each="author : ${authors}">
-        <div>
-            <a th:href="@{'/author/' + ${author.id}}"
-               th:text="${author.name} + ' ' + ${author.surname}">
-            </a>
-
-            <a th:href="@{'/admin/deleteAuthor/' + ${author.id}}">Cancella</a>
-        </div>
-    </li>
-</ul>
+				<a th:href="@{'/admin/deleteAuthor/' + ${author.id}}">Cancella</a>
+			</div>
+		</li>
+	</ul>
 
 </body>
+
 </html>
