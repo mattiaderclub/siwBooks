@@ -32,7 +32,7 @@
 		<a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
 	</div>
 	<h1>Registrazione nuovo utente</h1>
-	<form th:action="@{/register}" method="POST" th:object="${registrationForm}" class="form-auth">
+	<form th:action="@{/register}" method="POST" th:object="${registrationUserDTO}" class="form-auth">
 
 		<!-- User data -->
 		<div class="form-group">
