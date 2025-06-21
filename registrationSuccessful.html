@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>SiwBooks - Registrazione conclusa</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=2" />
+
+</head>
+
+<header class="main-header">
+	<div class="header-content container">
+
+		<!-- A sinistra -->
+		<div class="user-info">
+			<span class="user-name" th:if="${userDetails}" th:text="${userDetails.username}"></span>
+		</div>
+
+		<!-- A destra -->
+		<div class="header-links">
+			<a class="header-link" href="/login" th:unless="${userDetails}">Login</a>
+		</div>
+
+	</div>
+</header>
+
+<body>
+
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
+	</div>
+	<h1>Congratulazioni ti sei registrato!</h1>
+	<div>
+		<span>Nome: </span>
+		<span th:text="${user.name}"></span>
+	</div>
+	<div>
+		<span>Cognome: </span>
+		<span th:text="${user.surname}"></span>
+	</div>
+	<div>
+		<span>Email: </span>
+		<span th:text="${user.email}"></span>
+	</div>
+	<div>
+		<span>Cellulare: </span>
+		<span th:text="${user.cell}"></span>
+	</div>
+</body>
+
+</html>

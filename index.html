@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>SIW Books - HomePage</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=2" />
+</head>
+
+<header class="main-header">
+	<div class="header-content container">
+
+		<!-- A sinistra -->
+		<div class="user-info">
+			<span class="user-role" th:if="${userDetails}">Cliente:</span>
+			<span class="user-name" th:if="${userDetails}" th:text="${userDetails.username}"></span>
+		</div>
+
+		<!-- A destra -->
+		<div class="header-links">
+			<a class="header-link" th:if="${credentials != null}"
+				th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
+				Profilo
+			</a>
+
+			<a class="header-link" href="/logout" th:if="${userDetails}">Logout</a>
+			<a class="header-link" href="/login" th:unless="${userDetails}">Login</a>
+		</div>
+
+	</div>
+</header>
+
+<body>
+
+	<div>
+		<img src="/images/logo-siwBooks.png" width="20%" />
+	</div>
+
+	<div>
+		<h1>
+			<a href="/books">Lista Libri</a>
+		</h1>
+
+		<h1>
+			<a href="/authors">Lista Autori</a>
+		</h1>
+
+		<h1>
+			<a href="/formSearchLibri">Cerca Libri</a>
+		</h1>
+
+		<h1>
+			<a href="/formSearchAuthors">Cerca Autori</a>
+		</h1>
+	</div>
+
+</body>
+
+</html>
