@@ -4,47 +4,140 @@
 <head>
 	<meta charset="UTF-8">
 	<title th:text="${author.name + ' ' + author.surname}">Dettaglio Autore</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
+	<header class="main-header">
+		<div class="header-content container">
+			<div class="brand-section">
+				<a href="/"><img src="/images/logo-siwBooks.png" class="brand-logo" alt="SiwBooks Logo" /></a>
+				<h1 class="brand-title">SiwBooks</h1>
+			</div>
+			<div class="user-section">
+				<div class="header-actions">
+					<a class="btn-profile" href="/">
+						<i class="fas fa-home"></i>
+						Home
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
 
-	<div>
-		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	<div class="entity-detail-header">
+		<div class="entity-detail-container">
+			<div class="entity-detail-breadcrumb">
+				<a href="/"><i class="fas fa-home"></i> Home</a>
+				<i class="fas fa-chevron-right"></i>
+				<a href="/authors">Autori</a>
+				<i class="fas fa-chevron-right"></i>
+				<span th:text="${author.name + ' ' + author.surname}">Nome Cognome</span>
+			</div>
+
+			<div class="entity-detail-hero">
+				<div class="entity-detail-image-wrapper">
+					<img th:if="${author.photo != null}" th:src="@{${author.photo}}" alt="Foto Autore"
+						class="entity-detail-image" />
+					<div th:unless="${author.photo != null}" class="entity-detail-image-placeholder">
+						<i class="fas fa-user"></i>
+					</div>
+				</div>
+
+				<div class="entity-detail-info">
+					<h1 class="entity-detail-title" th:text="${author.name + ' ' + author.surname}">Nome Cognome</h1>
+					<p class="entity-detail-subtitle" th:text="${author.nationality}">Nazionalità</p>
+
+					<div class="entity-detail-stats">
+						<div class="entity-detail-stat">
+							<span class="entity-detail-stat-value" th:text="${#lists.size(author.libri)}">0</span>
+							<span class="entity-detail-stat-label">Libri</span>
+						</div>
+						<div class="entity-detail-stat">
+							<span class="entity-detail-stat-value">
+								<span th:if="${averageRating != null}"
+									th:text="${#numbers.formatDecimal(averageRating, 1, 1)}">0.0</span>
+								<span th:unless="${averageRating != null}">-</span>
+							</span>
+							<span class="entity-detail-stat-label">Valutazione</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
-	<h1 th:text="${author.name + ' ' + author.surname}">Nome Cognome</h1>
+	<div class="entity-detail-container">
+		<div class="entity-detail-content">
+			<div class="entity-detail-main">
+				<h2 class="entity-detail-section-title">
+					<i class="fas fa-book"></i>
+					Opere dell'Autore
+				</h2>
 
-	<div th:if="${author.photo != null}">
-		<img th:src="@{${author.photo}}" alt="Foto Autore" width="200" />
+				<div class="entity-detail-books-grid" th:if="${!#lists.isEmpty(author.libri)}">
+					<a th:each="book : ${author.libri}" th:href="@{/book/{id}(id=${book.id})}"
+						class="entity-detail-book-item">
+						<div class="entity-detail-book-icon">
+							<i class="fas fa-book"></i>
+						</div>
+						<span class="entity-detail-book-title" th:text="${book.title}">Titolo Libro</span>
+						<i class="fas fa-chevron-right entity-detail-book-arrow"></i>
+					</a>
+				</div>
+
+				<div th:if="${#lists.isEmpty(author.libri)}" class="entity-detail-no-content">
+					<i class="fas fa-book-open" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
+					Nessun libro disponibile per questo autore
+				</div>
+			</div>
+
+			<div class="entity-detail-sidebar">
+				<h3 class="entity-detail-section-title">
+					<i class="fas fa-info-circle"></i>
+					Informazioni
+				</h3>
+
+				<div class="entity-detail-info-grid">
+					<div class="entity-detail-info-item">
+						<i class="fas fa-birthday-cake entity-detail-info-icon"></i>
+						<span class="entity-detail-info-label">Data di nascita:</span>
+						<span class="entity-detail-info-value"
+							th:text="${#temporals.format(author.birthDate, 'dd/MM/yyyy')}">01/01/1970</span>
+					</div>
+
+					<div th:if="${author.deathDate != null}" class="entity-detail-info-item">
+						<i class="fas fa-calendar-times entity-detail-info-icon"></i>
+						<span class="entity-detail-info-label">Data di morte:</span>
+						<span class="entity-detail-info-value"
+							th:text="${#temporals.format(author.deathDate, 'dd/MM/yyyy')}">01/01/2020</span>
+					</div>
+
+					<div class="entity-detail-info-item">
+						<i class="fas fa-globe entity-detail-info-icon"></i>
+						<span class="entity-detail-info-label">Nazionalità:</span>
+						<span class="entity-detail-info-value" th:text="${author.nationality}">Nazionalità</span>
+					</div>
+
+					<div class="entity-detail-info-item">
+						<i class="fas fa-star entity-detail-info-icon"></i>
+						<span class="entity-detail-info-label">Valutazione:</span>
+						<div class="entity-detail-info-value">
+							<div th:if="${averageRating != null}" class="entity-detail-rating-wrapper">
+								<div class="entity-detail-stars">
+									<i th:each="i : ${#numbers.sequence(1, 5)}"
+										th:class="'fas fa-star entity-detail-star' + (${i <= averageRating} ? '' : ' empty')"></i>
+								</div>
+								<span th:text="${#numbers.formatDecimal(averageRating, 1, 1)}">0.0</span>
+							</div>
+							<span th:unless="${averageRating != null}">Nessuna valutazione</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-
-	<p>
-		<strong>Data di nascita:</strong>
-		<span th:text="${#temporals.format(author.birthDate, 'dd/MM/yyyy')}">01/01/1970</span>
-	</p>
-
-	<p th:if="${author.deathDate != null}">
-		<strong>Data di morte:</strong>
-		<span th:text="${#temporals.format(author.deathDate, 'dd/MM/yyyy')}">01/01/2020</span>
-	</p>
-
-	<p>
-		<strong>Nazionalità:</strong>
-		<span th:text="${author.nationality}">Nazionalità</span>
-	</p>
-
-	<p>
-		<strong>Valutazione media autore:</strong>
-		<span th:if="${averageRating != null}" th:text="${averageRating}">0.0</span>
-		<span th:unless="${averageRating != null}">Nessuna valutazione</span>
-	</p>
-
-	<h2>Libri</h2>
-	<ul>
-		<li th:each="book : ${author.libri}">
-			<a th:href="@{/book/{id}(id=${book.id})}" th:text="${book.title}">Titolo Libro</a>
-		</li>
-	</ul>
 
 </body>
 
