@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Risultati Ricerca Libri</title>
+</head>
+
+<body>
+
+	<!-- Logo per tornare alla home -->
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1>Risultati della Ricerca</h1>
+
+	<div th:if="${books.isEmpty()}">
+		<p>Nessun libro trovato con i criteri selezionati.</p>
+	</div>
+
+	<ul th:unless="${books.isEmpty()}">
+		<li th:each="book : ${books}">
+			<a th:href="@{/book/{id}(id=${book.id})}" th:text="${book.title}">Titolo</a>
+		</li>
+	</ul>
+
+	<!-- Link per tornare al form di ricerca -->
+	<p><a href="/formSearchBooks">Torna alla ricerca</a></p>
+
+</body>
+
+</html>

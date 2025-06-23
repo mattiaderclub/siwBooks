@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Aggiungi Libro</title>
+</head>
+
+<body>
+
+	<!-- Link alla home con logo -->
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1>Aggiungi un nuovo libro</h1>
+
+	<form th:action="@{/admin/book}" th:object="${book}" method="post" enctype="multipart/form-data">
+		<div>
+			<label for="title">Titolo *</label>
+			<input type="text" id="title" th:field="*{title}" />
+			<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+		</div>
+
+		<div>
+			<label for="annoPubblicazione">Anno di pubblicazione *</label>
+			<input type="number" id="annoPubblicazione" th:field="*{annoPubblicazione}" />
+			<div th:if="${#fields.hasErrors('annoPubblicazione')}" th:errors="*{annoPubblicazione}"></div>
+		</div>
+
+		<div>
+			<label for="images">Immagini</label>
+			<input type="file" id="images" name="images" multiple accept="image/*" />
+		</div>
+
+		<div>
+			<button type="submit">Salva</button>
+		</div>
+	</form>
+
+</body>
+
+</html>

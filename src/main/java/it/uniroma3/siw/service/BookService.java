@@ -51,6 +51,21 @@ public class BookService {
     	return bookRepository.existsByTitleAndAnnoPubblicazione(title, annoPubblicazione);
 	}
     
+    public Double getAverageRating(Book book) {
+        List<Review> recensioni = book.getRecensioni();
+        if (recensioni == null || recensioni.isEmpty()) {
+            return null;
+        }
+
+        double somma = 0;
+        for (Review r : recensioni) {
+            somma += r.getRating(); // assicurati che getRating() restituisca un valore numerico
+        }
+
+        return somma / recensioni.size();
+    }
+
+    
     public Map<Long, Double> mediaRecensioniPerLibro(List<Book> books) {
         Map<Long, Double> mediaMap = new HashMap<>();
 

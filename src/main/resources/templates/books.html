@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Libri</title>
+</head>
+
+<body>
+
+	<!-- Logo per tornare alla home -->
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1>Elenco Libri</h1>
+
+	<div th:if="${books.isEmpty()}">
+		<p>Nessun libro disponibile.</p>
+	</div>
+
+	<ul th:unless="${books.isEmpty()}">
+		<li th:each="book : ${books}">
+			<a th:href="@{/book/{id}(id=${book.id})}" th:text="${book.title}">Titolo</a>
+		</li>
+	</ul>
+
+</body>
+
+</html>

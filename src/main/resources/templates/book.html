@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${book.title}">Dettaglio Libro</title>
+</head>
+
+<body>
+
+	<!-- Logo cliccabile per tornare alla home -->
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1 th:text="${book.title}">Titolo Libro</h1>
+
+	<p><strong>Anno di pubblicazione:</strong> <span th:text="${book.annoPubblicazione}">2020</span></p>
+
+	<div th:if="${book.imagePaths != null}">
+		<p><strong>Immagini del libro:</strong></p>
+		<div th:each="img : ${book.imagePaths}">
+			<img th:src="@{${img}}" alt="Immagine Libro" width="200" />
+		</div>
+	</div>
+
+	<p><strong>Autori:</strong></p>
+	<ul>
+		<li th:each="autore : ${book.autori}">
+			<a th:href="@{/author/{id}(id=${autore.id})}" th:text="${autore.name + ' ' + autore.surname}">Autore</a>
+		</li>
+	</ul>
+
+	<p><strong>Valutazione media:</strong>
+		<span th:if="${averageRating != null}" th:text="${averageRating}">4.5</span>
+		<span th:unless="${averageRating != null}">Nessuna valutazione</span>
+	</p>
+
+</body>
+
+</html>
