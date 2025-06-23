@@ -4,78 +4,218 @@
 <head>
 	<title>Aggiungi un nuovo autore</title>
 	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
-<header class="main-header">
-	<div class="header-content container">
-
-		<!-- A sinistra -->
-		<div class="user-info">
-			<span class="user-role">Bibliotecario:</span>
-			<span class="user-name" th:text="${userDetails.username}"></span>
-		</div>
-
-		<!-- A destra -->
-		<div class="header-links">
-			<a class="header-link" th:if="${credentials != null}"
-				th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
-				Profilo
-			</a>
-			<a class="header-link" href="/logout">Logout</a>
-		</div>
-
-	</div>
-</header>
-
 <body>
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- A sinistra -->
+			<div class="brand-section">
+				<a href="/"><img src="/images/logo-siwBooks.png" class="brand-logo" alt="SiwBooks Logo" /></a>
+				<h1 class="brand-title">SiwBooks</h1>
+			</div>
 
-	<div>
-		<a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
-	</div>
-
-	<h1>Aggiungi un nuovo autore</h1>
-
-	<form th:action="@{/admin/author}" method="post" th:object="${author}" enctype="multipart/form-data">
-
-		<div>
-			Nome:
-			<input type="text" th:field="*{name}" />
-			<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+			<!-- A destra -->
+			<div class="user-section">
+				<div class="user-info">
+					<span class="user-welcome">Bibliotecario</span>
+					<span class="user-name" th:text="${userDetails.username}">Admin</span>
+				</div>
+				<div class="header-actions">
+					<a class="btn-profile" th:if="${credentials != null}"
+						th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
+						<i class="fas fa-user"></i>
+						Profilo
+					</a>
+					<a class="btn-logout" href="/logout">
+						<i class="fas fa-sign-out-alt"></i>
+						Logout
+					</a>
+				</div>
+			</div>
 		</div>
+	</header>
 
-		<div>
-			Cognome:
-			<input type="text" th:field="*{surname}" />
-			<span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
+	<main class="form-container">
+		<div class="container">
+			<div class="form-header">
+				<div class="form-icon">
+					<i class="fas fa-user-edit"></i>
+				</div>
+				<h1 class="form-title">Aggiungi un nuovo autore</h1>
+				<p class="form-subtitle">Inserisci i dettagli dell'autore che vuoi aggiungere</p>
+			</div>
+
+			<div class="form-wrapper">
+				<form th:action="@{/admin/author}" method="post" th:object="${author}" enctype="multipart/form-data"
+					class="book-form">
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-info-circle"></i>
+							Informazioni Autore
+						</h3>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label for="name" class="form-label">
+									<i class="fas fa-user"></i>
+									Nome *
+								</label>
+								<input type="text" id="name" th:field="*{name}" class="form-input"
+									placeholder="Inserisci il nome dell'autore" />
+								<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+									class="error-message"></span>
+							</div>
+
+							<div class="form-group">
+								<label for="surname" class="form-label">
+									<i class="fas fa-user"></i>
+									Cognome *
+								</label>
+								<input type="text" id="surname" th:field="*{surname}" class="form-input"
+									placeholder="Inserisci il cognome dell'autore" />
+								<span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"
+									class="error-message"></span>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label for="birthDate" class="form-label">
+									<i class="fas fa-calendar-alt"></i>
+									Data di nascita *
+								</label>
+								<input type="date" id="birthDate" th:field="*{birthDate}" class="form-input" />
+								<span th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"
+									class="error-message"></span>
+							</div>
+
+							<div class="form-group">
+								<label for="deathDate" class="form-label">
+									<i class="fas fa-calendar-alt"></i>
+									Data di morte
+								</label>
+								<input type="date" id="deathDate" th:field="*{deathDate}" class="form-input" />
+								<span th:if="${#fields.hasErrors('deathDate')}" th:errors="*{deathDate}"
+									class="error-message"></span>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label for="nationality" class="form-label">
+									<i class="fas fa-flag"></i>
+									Nazionalità *
+								</label>
+								<input type="text" id="nationality" th:field="*{nationality}" class="form-input"
+									placeholder="Inserisci la nazionalità dell'autore" />
+								<span th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"
+									class="error-message"></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-image"></i>
+							Foto dell'Autore
+						</h3>
+
+						<div class="form-group">
+							<label for="images" class="form-label">
+								<i class="fas fa-upload"></i>
+								Carica Foto
+							</label>
+							<div class="file-upload-wrapper">
+								<input id="images" type="file" name="images" accept="image/*" class="file-input" />
+								<div class="file-upload-area">
+									<div class="upload-icon">
+										<i class="fas fa-cloud-upload-alt"></i>
+									</div>
+									<p class="upload-text">
+										<strong>Clicca per selezionare</strong> o trascina qui la foto
+									</p>
+									<p class="upload-hint">Formati supportati: JPG, PNG, GIF (max 5MB)</p>
+								</div>
+							</div>
+							<div id="file-list" class="file-list"></div>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="button" class="btn-secondary" onclick="history.back()">
+							<i class="fas fa-arrow-left"></i>
+							Annulla
+						</button>
+						<button type="submit" class="btn-primary">
+							<i class="fas fa-plus"></i>
+							Aggiungi Autore
+						</button>
+					</div>
+
+				</form>
+			</div>
 		</div>
+	</main>
 
-		<div>
-			Data di nascita:
-			<input type="date" th:field="*{birthDate}" />
-			<span th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></span>
-		</div>
+	<script>
+		// Gestione file upload con preview
+		document.getElementById('images').addEventListener('change', function (e) {
+			const fileList = document.getElementById('file-list');
+			const files = Array.from(e.target.files);
 
-		<div>
-			Data di morte (se presente):
-			<input type="date" th:field="*{deathDate}" />
-		</div>
+			fileList.innerHTML = '';
 
-		<div>
-			Nazionalità:
-			<input type="text" th:field="*{nationality}" />
-			<span th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></span>
-		</div>
+			files.forEach((file, index) => {
+				const fileItem = document.createElement('div');
+				fileItem.style.cssText = `
+					display: flex;
+					align-items: center;
+					gap: 10px;
+					padding: 10px;
+					background: var(--background-light);
+					border-radius: 8px;
+					margin-bottom: 10px;
+					border: 1px solid var(--border-color);
+				`;
 
-		<div>
-			<label for="photo">Foto autore:</label>
-			<input id="photo" type="file" name="photo" accept="image/*" />
-		</div>
+				fileItem.innerHTML = `
+					<i class="fas fa-file-image" style="color: var(--primary-color);"></i>
+					<span style="flex: 1; font-size: 14px;">${file.name}</span>
+					<span style="font-size: 12px; color: var(--text-light);">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+				`;
 
-		<div>
-			<button type="submit">Conferma</button>
-		</div>
+				fileList.appendChild(fileItem);
+			});
+		});
 
-	</form>
+		// Effetto hover per upload area
+		const uploadArea = document.querySelector('.file-upload-area');
+		const fileInput = document.getElementById('images');
+
+		uploadArea.addEventListener('dragover', function (e) {
+			e.preventDefault();
+			this.style.borderColor = 'var(--primary-color)';
+			this.style.background = 'rgba(139, 69, 19, 0.1)';
+		});
+
+		uploadArea.addEventListener('dragleave', function (e) {
+			e.preventDefault();
+			this.style.borderColor = 'var(--border-color)';
+			this.style.background = 'var(--background-light)';
+		});
+
+		uploadArea.addEventListener('drop', function (e) {
+			e.preventDefault();
+			this.style.borderColor = 'var(--border-color)';
+			this.style.background = 'var(--background-light)';
+
+			fileInput.files = e.dataTransfer.files;
+			fileInput.dispatchEvent(new Event('change'));
+		});
+	</script>
 
 </body>
 

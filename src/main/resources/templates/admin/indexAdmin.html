@@ -1,55 +1,258 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
-	<title>SIW Books - Homepage Admin</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SIW Books - Dashboard Admin</title>
 	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
-
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+		rel="stylesheet">
 </head>
 
-<header class="main-header">
-	<div class="header-content container">
-
-		<!-- A sinistra -->
-		<div class="user-info">
-			<span class="user-role">Bibliotecario:</span>
-			<span class="user-name" th:text="${userDetails.username}"></span>
-		</div>
-
-		<!-- A destra -->
-		<div class="header-links">
-			<a class="header-link" th:if="${credentials != null}"
-				th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
-				Profilo
-			</a>
-
-			<a class="header-link" href="/logout">Logout</a>
-		</div>
-
-	</div>
-</header>
-
 <body>
+	<!-- Header -->
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- Logo e Brand -->
+			<div class="brand-section">
+				<img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
+				<h1 class="brand-title">SIW Books Admin</h1>
+			</div>
 
-	<div>
-		<img src="/images/logo-siwBooks.png" width="20%" />
-	</div>
+			<!-- User Section -->
+			<div class="user-section">
+				<div class="user-info">
+					<span class="user-welcome">Bibliotecario:</span>
+					<span class="user-name" th:text="${userDetails.username}"></span>
+				</div>
 
-	<div>
-		<h1>
-			<a href="/books">Elenco Libri</a>
-		</h1>
-		<h1>
-			<a href="/authors">Elenco Autori</a>
-		</h1>
-		<h1>
-			<a href="/admin/indexBooks">Operazioni sui Libri</a>
-		</h1>
-		<h1>
-			<a href="/admin/indexAuthors">Operazioni sugli Autori</a>
-		</h1>
-	</div>
+				<div class="header-actions">
+					<a class="btn-profile" th:if="${credentials != null}"
+						th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
+						<i class="fas fa-user-circle"></i> Profilo
+					</a>
+					<a class="btn-logout" href="/logout">
+						<i class="fas fa-sign-out-alt"></i> Logout
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
 
+	<!-- Hero Section -->
+	<section class="hero-section">
+		<div class="hero-content">
+			<div class="hero-text">
+				<h1 class="hero-title">
+					Dashboard <span class="highlight">Amministratore</span>
+				</h1>
+				<p class="hero-subtitle">
+					Gestisci la biblioteca digitale con facilità.
+					Aggiungi, modifica e organizza libri e autori.
+				</p>
+				<div class="hero-actions">
+					<a href="/admin/indexBooks" class="btn-primary">
+						<i class="fas fa-book-medical"></i> Gestisci Libri
+					</a>
+					<a href="/admin/indexAuthors" class="btn-secondary">
+						<i class="fas fa-user-plus"></i> Gestisci Autori
+					</a>
+				</div>
+			</div>
+			<div class="hero-visual">
+				<div class="floating-books">
+					<div class="book-card floating-book book-1">
+						<div class="book-spine"></div>
+						<div class="book-cover admin-book-1"></div>
+					</div>
+					<div class="book-card floating-book book-2">
+						<div class="book-spine"></div>
+						<div class="book-cover admin-book-2"></div>
+					</div>
+					<div class="book-card floating-book book-3">
+						<div class="book-spine"></div>
+						<div class="book-cover admin-book-3"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Admin Actions Section -->
+	<section class="quick-access-section">
+		<div class="container">
+			<h2 class="section-title">Pannello di Controllo</h2>
+			<div class="quick-access-grid">
+
+				<div class="access-card admin-card" onclick="location.href='/books'">
+					<div class="card-icon admin-icon">
+						<i class="fas fa-eye"></i>
+					</div>
+					<h3 class="card-title">Visualizza Libri</h3>
+					<p class="card-description">Controlla come appaiono i libri agli utenti</p>
+					<div class="card-arrow">
+						<i class="fas fa-arrow-right"></i>
+					</div>
+				</div>
+
+				<div class="access-card admin-card" onclick="location.href='/authors'">
+					<div class="card-icon admin-icon">
+						<i class="fas fa-users"></i>
+					</div>
+					<h3 class="card-title">Visualizza Autori</h3>
+					<p class="card-description">Esamina la lista completa degli autori</p>
+					<div class="card-arrow">
+						<i class="fas fa-arrow-right"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Admin Stats Section -->
+	<section class="quick-access-section"
+		style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+		<div class="container">
+			<h2 class="section-title" style="color: white;">Statistiche Rapide</h2>
+			<div class="quick-access-grid">
+				<div class="access-card"
+					style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);">
+					<div class="card-icon" style="color: #fff;">
+						<i class="fas fa-book"></i>
+					</div>
+					<h3 class="card-title" style="color: white;">Totale Libri</h3>
+					<p class="card-description" style="color: rgba(255,255,255,0.8);">Numero di libri nella biblioteca
+					</p>
+					<div class="stats-number"
+						style="font-size: 2rem; font-weight: bold; color: #fff; margin-top: 10px;">
+						${totalBooks}
+					</div>
+				</div>
+
+				<div class="access-card"
+					style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);">
+					<div class="card-icon" style="color: #fff;">
+						<i class="fas fa-users"></i>
+					</div>
+					<h3 class="card-title" style="color: white;">Totale Autori</h3>
+					<p class="card-description" style="color: rgba(255,255,255,0.8);">Numero di autori registrati</p>
+					<div class="stats-number"
+						style="font-size: 2rem; font-weight: bold; color: #fff; margin-top: 10px;">
+						${totalAuthors}
+					</div>
+				</div>
+
+				<div class="access-card"
+					style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);">
+					<div class="card-icon" style="color: #fff;">
+						<i class="fas fa-star"></i>
+					</div>
+					<h3 class="card-title" style="color: white;">Recensioni</h3>
+					<p class="card-description" style="color: rgba(255,255,255,0.8);">Totale recensioni pubblicate</p>
+					<div class="stats-number"
+						style="font-size: 2rem; font-weight: bold; color: #fff; margin-top: 10px;">
+						${totalReviews}
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-section">
+					<h4 class="footer-title">Dashboard Amministratore SIW Books</h4>
+				</div>
+
+				<div class="footer-section">
+					<h4 class="footer-title">Gestione</h4>
+					<div class="footer-links">
+						<a href="/admin/indexBooks" class="footer-link">Gestisci Libri</a>
+						<a href="/admin/indexAuthors" class="footer-link">Gestisci Autori</a>
+					</div>
+				</div>
+
+				<div class="footer-section">
+					<h4 class="footer-title">Visualizzazione</h4>
+					<div class="footer-links">
+						<a href="/books" class="footer-link">Visualizza Libri</a>
+						<a href="/authors" class="footer-link">Visualizza Autori</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="footer-bottom">
+				<p>&copy; 2025 SIW Books - Dashboard Amministratore. Tutti i diritti riservati.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Smooth scrolling for anchor links
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function (e) {
+				e.preventDefault();
+				const target = document.querySelector(this.getAttribute('href'));
+				if (target) {
+					target.scrollIntoView({
+						behavior: 'smooth',
+						block: 'start'
+					});
+				}
+			});
+		});
+
+		// Floating animation for books
+		function animateFloatingBooks() {
+			const books = document.querySelectorAll('.floating-book');
+			books.forEach((book, index) => {
+				book.style.animationDelay = `${index * 0.5}s`;
+			});
+		}
+
+		// Initialize animations when page loads
+		document.addEventListener('DOMContentLoaded', function () {
+			animateFloatingBooks();
+
+			// Add scroll effect to header
+			window.addEventListener('scroll', function () {
+				const header = document.querySelector('.main-header');
+				if (window.scrollY > 100) {
+					header.classList.add('scrolled');
+				} else {
+					header.classList.remove('scrolled');
+				}
+			});
+
+			// Admin dashboard welcome animation
+			setTimeout(() => {
+				const title = document.querySelector('.hero-title');
+				title.style.animation = 'fadeInUp 1s ease-out';
+			}, 300);
+		});
+
+		// Stats animation
+		function animateStats() {
+			const statsNumbers = document.querySelectorAll('.stats-number');
+			statsNumbers.forEach(stat => {
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							entry.target.style.animation = 'pulse 2s infinite';
+						}
+					});
+				});
+				observer.observe(stat);
+			});
+		}
+
+		document.addEventListener('DOMContentLoaded', animateStats);
+	</script>
 </body>
 
 </html>
