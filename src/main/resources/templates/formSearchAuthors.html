@@ -55,7 +55,7 @@
 			</div>
 
 			<div class="form-wrapper">
-				<form th:action="@{/foundAuthors}" method="get" class="book-form">
+				<form th:action="@{/foundAuthors}" method="get" th:object="${filtro}" class="book-form">
 
 					<div class="form-section">
 						<h3 class="section-title">
@@ -69,7 +69,7 @@
 									<i class="fas fa-user"></i>
 									Nome
 								</label>
-								<input type="text" id="name" name="name" th:value="${name}" class="form-input"
+								<input type="text" id="name" th:field="*{name}" class="form-input"
 									placeholder="Inserisci il nome dell'autore" />
 							</div>
 
@@ -78,7 +78,7 @@
 									<i class="fas fa-user"></i>
 									Cognome
 								</label>
-								<input type="text" id="surname" name="surname" th:value="${surname}" class="form-input"
+								<input type="text" id="surname" th:field="*{surname}" class="form-input"
 									placeholder="Inserisci il cognome dell'autore" />
 							</div>
 						</div>
@@ -89,7 +89,7 @@
 									<i class="fas fa-flag"></i>
 									Nazionalità
 								</label>
-								<input type="text" id="nationality" name="nationality" th:value="${nationality}"
+								<input type="text" id="nationality" th:field="*{nationality}"
 									class="form-input" placeholder="Inserisci la nazionalità" />
 							</div>
 						</div>
@@ -100,7 +100,7 @@
 									<i class="fas fa-calendar-alt"></i>
 									Nato dopo il
 								</label>
-								<input type="date" id="bornAfter" name="bornAfter" th:value="${bornAfter}"
+								<input type="date" id="bornAfter" th:field="*{bornAfter}"
 									class="form-input" />
 							</div>
 
@@ -109,7 +109,7 @@
 									<i class="fas fa-calendar-alt"></i>
 									Nato prima del
 								</label>
-								<input type="date" id="bornBefore" name="bornBefore" th:value="${bornBefore}"
+								<input type="date" id="bornBefore" th:field="*{bornBefore}"
 									class="form-input" />
 							</div>
 						</div>

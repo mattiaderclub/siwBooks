@@ -13,6 +13,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -21,8 +23,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.controller.validator.BookValidator;
+import it.uniroma3.siw.dto.BookSearchDTO;
+import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.model.Author;
 import it.uniroma3.siw.model.Book;
+import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.service.AuthorService;
 import it.uniroma3.siw.service.BookService;
 import jakarta.validation.Valid;
@@ -30,6 +35,9 @@ import jakarta.validation.Valid;
 @Controller
 public class BookController {
 
+	@Autowired
+	private CredentialsService credentialsService;
+	
 	@Autowired
     private BookService bookService;
 
@@ -143,11 +151,14 @@ public class BookController {
 
     // Mostra il form per la ricerca avanzata dei libri
     @GetMapping("/formSearchLibri")
-    public String formSearchLibri(Model model) {
-        model.addAttribute("title", "");
-        model.addAttribute("annoMin", null);
-        model.addAttribute("annoMax", null);
-        model.addAttribute("minRating", null);
+    public String formSearchLibri(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+    	model.addAttribute("filtro", new BookSearchDTO());
+
+		if (currentUser != null) {
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
+		
         return "formSearchLibri.html";
     }
     
@@ -156,37 +167,29 @@ public class BookController {
         return "admin/indexBooks.html";
     }
 
-    // Esegue la ricerca avanzata
     @GetMapping("/foundLibri")
-    public String searchLibri(@RequestParam(required = false) String title,
-                              @RequestParam(required = false) Integer annoMin,
-                              @RequestParam(required = false) Integer annoMax,
-                              @RequestParam(required = false) Double minRating,
-                              Model model) {
-    	
-    	if (title != null) {
-            title = title.trim();
-            if (title.isEmpty()) {
-                title = null;
-            }
-        }
-
-        List<Book> books = bookService.searchBooks(title, annoMin, annoMax, minRating);
+    public String searchLibri(@ModelAttribute("filtro") BookSearchDTO filtro, Model model) {
+        
+        List<Book> books = bookService.searchBooks(
+            filtro.getTitle(),
+            filtro.getAnnoMin(),
+            filtro.getAnnoMax(),
+            filtro.getMinRating()
+        );
         
         Map<Long, Double> bookAverageRatings = new HashMap<>();
         for (Book book : books) {
             Double average = bookService.getAverageRating(book);
             bookAverageRatings.put(book.getId(), average);
         }
-        
+
         model.addAttribute("books", books);
         model.addAttribute("bookAverageRatings", bookAverageRatings);
-        model.addAttribute("title", title);
-        model.addAttribute("annoMin", annoMin);
-        model.addAttribute("annoMax", annoMax);
-        model.addAttribute("minRating", minRating);
+        model.addAttribute("filtro", filtro); // per riempire il form
+
         return "foundLibri.html";
     }
+
 
     // Mostra la pagina di gestione admin
     @GetMapping("/admin/manageBooks")

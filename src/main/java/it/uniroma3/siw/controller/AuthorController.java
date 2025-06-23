@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +11,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -20,13 +21,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.controller.validator.AuthorValidator;
+import it.uniroma3.siw.dto.AuthorSearchDTO;
 import it.uniroma3.siw.model.Author;
+import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.service.AuthorService;
+import it.uniroma3.siw.service.CredentialsService;
 import jakarta.validation.Valid;
 
 @Controller
 public class AuthorController {
 
+	@Autowired
+	private CredentialsService credentialsService;
+	
     @Autowired
     private AuthorService authorService;
     
@@ -104,45 +111,28 @@ public class AuthorController {
 
     // Mostra il form per la ricerca avanzata degli autori
     @GetMapping("/formSearchAuthors")
-    public String formSearchAuthors(Model model) {
-        model.addAttribute("name", "");
-        model.addAttribute("surname", "");
-        model.addAttribute("nationality", "");
-        model.addAttribute("bornAfter", null);
-        model.addAttribute("bornBefore", null);
+    public String formSearchAuthors(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+    	model.addAttribute("filtro", new AuthorSearchDTO());
+
+		if (currentUser != null) {
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
         return "formSearchAuthors.html";
     }
 
     // Esegue la ricerca avanzata
     @GetMapping("/foundAuthors")
-    public String searchAuthors(@RequestParam(required = false) String name,
-                                @RequestParam(required = false) String surname,
-                                @RequestParam(required = false) String nationality,
-                                @RequestParam(required = false) LocalDate bornAfter,
-                                @RequestParam(required = false) LocalDate bornBefore,
+    public String searchAuthors(@ModelAttribute("filtro") AuthorSearchDTO filtro, 
                                 Model model) {
 
-        // Normalizza input (trim e gestione vuoto)
-        if (name != null) {
-            name = name.trim();
-            if (name.isEmpty()) {
-                name = null;
-            }
-        }
-        if (surname != null) {
-            surname = surname.trim();
-            if (surname.isEmpty()) {
-                surname = null;
-            }
-        }
-        if (nationality != null) {
-            nationality = nationality.trim();
-            if (nationality.isEmpty()) {
-                nationality = null;
-            }
-        }
-
-        List<Author> authors = authorService.searchAuthors(name, surname, nationality, bornAfter, bornBefore);
+    	List<Author> authors = authorService.searchAuthors(
+                filtro.getName(),
+                filtro.getSurname(),
+                filtro.getNationality(),
+                filtro.getBornBefore(),
+                filtro.getBornAfter()
+            );
         
         Map<Long, Integer> authorNumBooks = new HashMap<>();
         Map<Long, Double> authorAverageRatings = new HashMap<>();
@@ -157,11 +147,7 @@ public class AuthorController {
         model.addAttribute("authors", authors);
         model.addAttribute("authorNumBooks", authorNumBooks);
         model.addAttribute("authorAverageRatings", authorAverageRatings);
-        model.addAttribute("name", name);
-        model.addAttribute("surname", surname);
-        model.addAttribute("nationality", nationality);
-        model.addAttribute("bornAfter", bornAfter);
-        model.addAttribute("bornBefore", bornBefore);
+        model.addAttribute("filtro", filtro); // per riempire il form
         return "foundAuthors.html";
     }
 
