@@ -1,6 +1,8 @@
 package it.uniroma3.siw.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,6 +61,26 @@ public class BookService {
             sum += r.getRating();
         }
         return sum / reviews.size();
+    }
+
+    public Map<Long, Double> mediaRecensioniPerLibro(List<Book> books) {
+        Map<Long, Double> mediaMap = new HashMap<>();
+
+        for (Book book : books) {
+            List<Review> recensioni = book.getRecensioni();
+
+            if (recensioni != null && !recensioni.isEmpty()) {
+                double media = recensioni.stream()
+                    .mapToInt(Review::getRating)
+                    .average()
+                    .orElse(0.0);
+                mediaMap.put(book.getId(), media);
+            } else {
+                mediaMap.put(book.getId(), null); // oppure 0.0 se preferisci
+            }
+        }
+
+        return mediaMap;
     }
 
 }

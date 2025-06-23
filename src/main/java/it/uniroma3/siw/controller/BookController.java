@@ -185,6 +185,7 @@ public class BookController {
 
         model.addAttribute("books", books);
         model.addAttribute("bookAverageRatings", bookAverageRatings);
+        model.addAttribute("bookAverageRatings", this.bookService.mediaRecensioniPerLibro(books));
         model.addAttribute("filtro", filtro); // per riempire il form
 
         return "foundLibri.html";
