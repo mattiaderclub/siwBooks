@@ -1245,13 +1245,6 @@ html {
 }
 
 .entity-meta {
-	/*font-size: 0.9rem;
-	color: #666;
-	margin-bottom: 0.3rem;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	gap: 0.5rem;*/
 	font-size: 0.9rem;
 	color: #666;
 	margin-bottom: 0.3rem;
@@ -1414,20 +1407,6 @@ html {
 	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 	gap: 1.5rem;
 	padding: 1rem 0;
-}
-
-/* Responsive breakpoints per la griglia */
-@media (max-width: 768px) {
-	.siwbooks-items-grid {
-		grid-template-columns: 1fr;
-		gap: 1rem;
-	}
-}
-
-@media (min-width: 1200px) {
-	.siwbooks-items-grid {
-		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-	}
 }
 
 /* ===== SIWBOOKS ITEM CARD ===== */
@@ -1651,68 +1630,6 @@ html {
 	align-items: center;
 }
 
-.btn-secondary {
-	background: linear-gradient(135deg, #6b7280, #4b5563);
-	color: white;
-	padding: 0.75rem 1.5rem;
-	border-radius: 8px;
-	text-decoration: none;
-	font-weight: 500;
-	transition: all 0.3s ease;
-	display: inline-flex;
-	align-items: center;
-	gap: 0.5rem;
-	border: none;
-	cursor: pointer;
-}
-
-.btn-secondary:hover {
-	background: linear-gradient(135deg, #4b5563, #374151);
-	transform: translateY(-2px);
-	box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-/* Adattamenti per dispositivi mobili */
-
-@media (max-width: 640px) {
-	.siwbooks-item-card {
-		padding: 1rem;
-	}
-
-	.siwbooks-item-header {
-		margin-bottom: 1rem;
-	}
-
-	.siwbooks-item-avatar {
-		width: 50px;
-		height: 50px;
-		font-size: 1.2rem;
-	}
-
-	.siwbooks-item-title {
-		font-size: 1.1rem;
-	}
-
-	.siwbooks-item-actions {
-		gap: 0.25rem;
-	}
-
-	.siwbooks-btn-view,
-	.siwbooks-btn-edit,
-	.siwbooks-btn-delete {
-		width: 32px;
-		height: 32px;
-		font-size: 0.8rem;
-	}
-
-	.section-header {
-		flex-direction: column;
-		align-items: stretch;
-		text-align: center;
-	}
-}
-
 /* ===== ANIMAZIONI AGGIUNTIVE ===== */
 /* Animazioni per migliorare l'esperienza utente */
 
@@ -1772,4 +1689,97 @@ html {
 
 .siwbooks-item-card:nth-child(6) {
 	animation-delay: 0.6s;
+}
+
+.search-filters-info {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.filters-card {
+	background: #FFFFFF;
+	border-radius: 15px;
+	padding: 2rem;
+	box-shadow: 0 8px 40px rgba(139, 69, 19, 0.2);
+	border: 1px solid #E8D5B7;
+	max-width: 500px;
+	width: 100%;
+}
+
+.filters-card h3 {
+	margin: 0 0 1.5rem 0;
+	color: #2C1810;
+	font-size: 1.3rem;
+	font-family: 'Playfair Display', serif;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	gap: 0.7rem;
+	text-align: center;
+	justify-content: center;
+}
+
+.filters-card h3 i {
+	color: #8B4513;
+	font-size: 1.2rem;
+}
+
+.filters-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.filter-item {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.75rem 1rem;
+	background: #FFF8F0;
+	border-radius: 10px;
+	border-left: 4px solid #8B4513;
+	transition: all 0.3s ease;
+}
+
+.filter-item:hover {
+	background: #F5E6D3;
+	transform: translateX(5px);
+}
+
+.filter-item i {
+	color: #8B4513;
+	width: 18px;
+	font-size: 1.1rem;
+}
+
+.filter-item span {
+	color: #5D4037;
+	font-size: 0.95rem;
+	font-family: 'Inter', sans-serif;
+}
+
+.filter-item strong {
+	color: #2C1810;
+	font-weight: 600;
+	background: #CD853F;
+	color: white;
+	padding: 0.2rem 0.6rem;
+	border-radius: 6px;
+	margin-left: 0.5rem;
+	font-size: 0.9rem;
+}
+
+.no-filters {
+	border-left-color: #D2691E;
+	font-style: italic;
+	justify-content: center;
+}
+
+.no-filters i {
+	color: #D2691E;
+}
+
+.no-filters span {
+	color: #8D6E63;
 }
