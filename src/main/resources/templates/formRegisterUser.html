@@ -2,88 +2,165 @@
 <html>
 
 <head>
-	<title>
-		SiwBooks - Registrazione
-	</title>
-	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=2" />
-
+	<title>SiwBooks - Registrazione</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
-<header class="main-header">
-	<div class="header-content container">
-
-		<!-- A sinistra -->
-		<div class="user-info">
-			<span class="user-role">SiwBooks</span>
-		</div>
-
-		<!-- A destra -->
-		<div class="header-links">
-			<a class="header-link">Registrazione</a>
-		</div>
-
-	</div>
-</header>
-
 <body>
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- A sinistra -->
+			<div class="brand-section">
+				<a href="/"><img src="/images/logo-siwBooks.png" class="brand-logo" alt="SiwBooks Logo" /></a>
+				<h1 class="brand-title">SiwBooks</h1>
+			</div>
 
-
-	<div>
-		<a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
-	</div>
-	<h1>Registrazione nuovo utente</h1>
-	<form th:action="@{/register}" method="POST" th:object="${registrationUserDTO}" class="form-auth">
-
-		<!-- User data -->
-		<div class="form-group">
-			<label for="name">Nome</label>
-			<input type="text" id="name" placeholder="name" th:field="*{user.name}" />
-			<span th:if="${#fields.hasErrors('user.name')}" th:errors="*{user.name}"></span>
+			<!-- A destra -->
+			<div class="user-section">
+				<div class="header-actions">
+					<a class="btn-profile" href="/login">
+						<i class="fas fa-sign-in-alt"></i>
+						Accedi
+					</a>
+				</div>
+			</div>
 		</div>
+	</header>
 
-		<div class="form-group">
-			<label for="surname">Cognome</label>
-			<input type="text" id="surname" placeholder="surname" th:field="*{user.surname}" />
-			<span th:if="${#fields.hasErrors('user.surname')}" th:errors="*{user.surname}"></span>
+	<main class="form-container">
+		<div class="container">
+			<div class="form-header">
+				<div class="form-icon">
+					<i class="fas fa-user-plus"></i>
+				</div>
+				<h1 class="form-title">Registrazione nuovo utente</h1>
+				<p class="form-subtitle">Crea il tuo account per accedere a SiwBooks</p>
+			</div>
+
+			<div class="form-wrapper">
+				<form th:action="@{/register}" method="POST" th:object="${registrationUserDTO}" class="book-form">
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-user"></i>
+							Dati Personali
+						</h3>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label for="name" class="form-label">
+									<i class="fas fa-user"></i>
+									Nome *
+								</label>
+								<input type="text" id="name" th:field="*{user.name}" class="form-input"
+									placeholder="Inserisci il tuo nome" />
+								<span th:if="${#fields.hasErrors('user.name')}" th:errors="*{user.name}"
+									class="error-message"></span>
+							</div>
+
+							<div class="form-group">
+								<label for="surname" class="form-label">
+									<i class="fas fa-user"></i>
+									Cognome *
+								</label>
+								<input type="text" id="surname" th:field="*{user.surname}" class="form-input"
+									placeholder="Inserisci il tuo cognome" />
+								<span th:if="${#fields.hasErrors('user.surname')}" th:errors="*{user.surname}"
+									class="error-message"></span>
+							</div>
+						</div>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label for="email" class="form-label">
+									<i class="fas fa-envelope"></i>
+									Email *
+								</label>
+								<input type="email" id="email" th:field="*{user.email}" class="form-input"
+									placeholder="Inserisci la tua email" />
+								<span th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"
+									class="error-message"></span>
+							</div>
+
+							<div class="form-group">
+								<label for="cell" class="form-label">
+									<i class="fas fa-phone"></i>
+									Cellulare *
+								</label>
+								<input type="tel" id="cell" th:field="*{user.cell}" class="form-input"
+									placeholder="Inserisci il tuo numero di cellulare" />
+								<span th:if="${#fields.hasErrors('user.cell')}" th:errors="*{user.cell}"
+									class="error-message"></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-key"></i>
+							Credenziali di Accesso
+						</h3>
+
+						<div class="form-group">
+							<label for="username" class="form-label">
+								<i class="fas fa-user-circle"></i>
+								Username *
+							</label>
+							<input type="text" id="username" th:field="*{credentials.username}" class="form-input"
+								placeholder="Scegli un username" />
+							<span th:if="${#fields.hasErrors('credentials.username')}"
+								th:errors="*{credentials.username}" class="error-message"></span>
+						</div>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label for="password" class="form-label">
+									<i class="fas fa-lock"></i>
+									Password *
+								</label>
+								<input type="password" id="password" th:field="*{credentials.password}"
+									class="form-input" placeholder="Scegli una password sicura" />
+								<span th:if="${#fields.hasErrors('credentials.password')}"
+									th:errors="*{credentials.password}" class="error-message"></span>
+							</div>
+
+							<div class="form-group">
+								<label for="confirmPassword" class="form-label">
+									<i class="fas fa-lock"></i>
+									Conferma Password *
+								</label>
+								<input type="password" id="confirmPassword" th:field="*{confirmPassword}"
+									class="form-input" placeholder="Ripeti la password" />
+								<span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"
+									class="error-message"></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="button" class="btn-secondary" onclick="window.location.href='/login'">
+							<i class="fas fa-arrow-left"></i>
+							Torna al Login
+						</button>
+						<button type="submit" class="btn-primary">
+							<i class="fas fa-user-plus"></i>
+							Registrati
+						</button>
+					</div>
+
+					<div class="auth-register-inline">
+						<span class="auth-text">Hai già un account?</span>
+						<a th:href="@{/login}" class="auth-button-link">
+							<i class="fas fa-sign-in-alt"></i>
+							Accedi qui
+						</a>
+					</div>
+
+				</form>
+			</div>
 		</div>
-
-		<div class="form-group">
-			<label for="email">Email</label>
-			<input type="text" id="email" placeholder="email" th:field="*{user.email}" />
-			<span th:if="${#fields.hasErrors('user.email')}" th:errors="*{user.email}"></span>
-		</div>
-
-		<div class="form-group">
-			<label for="cell">Cellulare</label>
-			<input type="tel" id="cell" placeholder="cellulare" th:field="*{user.cell}" />
-			<span th:if="${#fields.hasErrors('user.cell')}" th:errors="*{user.cell}"></span>
-		</div>
-
-		<!-- Credentials data -->
-		<div class="form-group">
-			<label for="username">Username</label>
-			<input type="text" id="username" placeholder="username" th:field="*{credentials.username}" />
-			<span th:if="${#fields.hasErrors('credentials.username')}" th:errors="*{credentials.username}"></span>
-		</div>
-
-		<div class="form-group">
-			<label for="password">Password</label>
-			<input type="password" id="password" placeholder="password" th:field="*{credentials.password}" />
-			<span th:if="${#fields.hasErrors('credentials.password')}" th:errors="*{credentials.password}"></span>
-		</div>
-
-		<!-- Conferma password -->
-		<div class="form-group">
-			<label for="confirmPassword">Conferma Password</label>
-			<input type="password" id="confirmPassword" placeholder="conferma password" th:field="*{confirmPassword}" />
-			<span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
-		</div>
-
-		<div class="form-group">
-			<button type="submit">Registra</button>
-		</div>
-
-	</form>
+	</main>
 
 </body>
 

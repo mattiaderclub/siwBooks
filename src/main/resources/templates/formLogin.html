@@ -2,64 +2,96 @@
 <html>
 
 <head>
-	<title>
-		SiwBooks - Login
-	</title>
+	<title>SiwBooks - Login</title>
 	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
-
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
-<header class="main-header">
-	<div class="header-content container">
-
-		<!-- A sinistra -->
-		<div class="user-info">
-			<span class="user-role">SiwBooks</span>
-		</div>
-
-		<!-- A destra -->
-		<div class="header-links">
-			<a class="header-link">Login</a>
-		</div>
-
-	</div>
-</header>
-
 <body>
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- A sinistra -->
+			<div class="brand-section">
+				<a href="/"><img src="/images/logo-siwBooks.png" class="brand-logo" alt="SiwBooks Logo" /></a>
+				<h1 class="brand-title">SiwBooks</h1>
+			</div>
 
-	<div>
-		<a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
-	</div>
-	<h1>Login</h1>
-	<form th:action="@{/login}" method="POST" class="form-auth">
-
-		<div class="form-group">
-			<label for="username">Username:</label>
-			<input name="username" id="username" type="text" />
+			<!-- A destra -->
+			<div class="user-section">
+				<div class="header-actions">
+					<a class="btn-profile" href="/register">
+						<i class="fas fa-user-plus"></i>
+						Registrati
+					</a>
+				</div>
+			</div>
 		</div>
+	</header>
 
-		<div class="form-group">
-			<label for="password">Password:</label>
-			<input name="password" id="password" type="password" />
+	<main class="form-container">
+		<div class="container">
+			<div class="form-header">
+				<div class="form-icon">
+					<i class="fas fa-sign-in-alt"></i>
+				</div>
+				<h1 class="form-title">Accedi al tuo account</h1>
+				<p class="form-subtitle">Inserisci le tue credenziali per accedere a SiwBooks</p>
+			</div>
+
+			<div class="form-wrapper">
+				<form th:action="@{/login}" method="POST" class="book-form">
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-user-circle"></i>
+							Credenziali di Accesso
+						</h3>
+
+						<div class="form-group">
+							<label for="username" class="form-label">
+								<i class="fas fa-user"></i>
+								Username *
+							</label>
+							<input type="text" id="username" name="username" class="form-input"
+								placeholder="Inserisci il tuo username" required />
+						</div>
+
+						<div class="form-group">
+							<label for="password" class="form-label">
+								<i class="fas fa-lock"></i>
+								Password *
+							</label>
+							<input type="password" id="password" name="password" class="form-input"
+								placeholder="Inserisci la tua password" required />
+						</div>
+
+						<div class="form-group" th:if="${param.error != null}">
+							<div class="error-message">
+								<i class="fas fa-exclamation-triangle"></i>
+								Username o password errati
+							</div>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="submit" class="btn-primary">
+							<i class="fas fa-sign-in-alt"></i>
+							Accedi
+						</button>
+					</div>
+
+					<div class="auth-register-inline">
+						<span class="auth-text">Non hai un account?</span>
+						<a th:href="@{/register}" class="auth-button-link">
+							<i class="fas fa-user-plus"></i>
+							Registrati qui
+						</a>
+					</div>
+
+				</form>
+			</div>
 		</div>
-
-		<div class="form-group">
-			<span th:if="${param.error != null}" style="color: red;">
-				Username o password errati
-			</span>
-		</div>
-
-		<div class="form-group">
-			<button type="submit">Login</button>
-		</div>
-
-		<div class="auth-register-inline">
-			<span class="auth-text">Non hai un account?</span>
-			<a th:href="@{/register}" class="auth-button-link">Registrati</a>
-		</div>
-
-	</form>
-
+	</main>
 
 </body>
 
