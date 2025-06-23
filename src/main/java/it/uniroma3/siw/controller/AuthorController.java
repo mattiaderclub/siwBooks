@@ -95,22 +95,24 @@ public class AuthorController {
 	// Salva un nuovo autore con eventuale foto
 	@PostMapping(value = "/admin/author", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public String saveNewAuthor(@Valid @ModelAttribute("author") Author author, BindingResult bindingResult,
-			@RequestParam(value = "photo", required = false) MultipartFile photo, Model model) throws IOException {
+			@RequestParam("photoFile") MultipartFile photoFile, Model model) throws IOException {
 
 		authorValidator.validate(author, bindingResult);
 		if (bindingResult.hasErrors()) {
+			System.out.println("ERRORI NEL FORM: " + bindingResult.getAllErrors());
 			return "admin/formNewAuthor";
 		}
 
-		if (photo != null && !photo.isEmpty()) {
+		if (photoFile != null && !photoFile.isEmpty()) {
 			Path folder = Paths.get("uploads/images/authors");
 			Files.createDirectories(folder);
-			String filename = UUID.randomUUID() + "_" + StringUtils.cleanPath(photo.getOriginalFilename());
+			String filename = UUID.randomUUID() + "_" + StringUtils.cleanPath(photoFile.getOriginalFilename());
 			Path target = folder.resolve(filename);
-			photo.transferTo(target);
+			photoFile.transferTo(target);
 			author.setPhoto("/images/authors/" + filename);
 		}
 
+		System.out.println("SALVO AUTORE: " + author.getName());
 		authorService.saveAuthor(author);
 		return "redirect:/author/" + author.getId();
 	}
@@ -152,7 +154,7 @@ public class AuthorController {
 	@GetMapping("/foundAuthors")
 	public String searchAuthors(@ModelAttribute("filtro") AuthorSearchDTO filtro, Model model) {
 		List<Author> authors = authorService.searchAuthors(filtro.getName(), filtro.getSurname(),
-				filtro.getNationality(), filtro.getBornBefore(), filtro.getBornAfter());
+				filtro.getNationality());
 		model.addAttribute("authors", authors);
 		model.addAttribute("filtro", filtro);
 		return "foundAuthors.html";

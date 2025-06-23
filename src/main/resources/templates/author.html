@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${author.name + ' ' + author.surname}">Dettaglio Autore</title>
+</head>
+
+<body>
+
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1 th:text="${author.name + ' ' + author.surname}">Nome Cognome</h1>
+
+	<div th:if="${author.photo != null}">
+		<img th:src="@{${author.photo}}" alt="Foto Autore" width="200" />
+	</div>
+
+	<p>
+		<strong>Data di nascita:</strong>
+		<span th:text="${#temporals.format(author.birthDate, 'dd/MM/yyyy')}">01/01/1970</span>
+	</p>
+
+	<p th:if="${author.deathDate != null}">
+		<strong>Data di morte:</strong>
+		<span th:text="${#temporals.format(author.deathDate, 'dd/MM/yyyy')}">01/01/2020</span>
+	</p>
+
+	<p>
+		<strong>Nazionalità:</strong>
+		<span th:text="${author.nationality}">Nazionalità</span>
+	</p>
+
+	<p>
+		<strong>Valutazione media autore:</strong>
+		<span th:if="${averageRating != null}" th:text="${averageRating}">0.0</span>
+		<span th:unless="${averageRating != null}">Nessuna valutazione</span>
+	</p>
+
+	<h2>Libri</h2>
+	<ul>
+		<li th:each="book : ${author.libri}">
+			<a th:href="@{/book/{id}(id=${book.id})}" th:text="${book.title}">Titolo Libro</a>
+		</li>
+	</ul>
+
+</body>
+
+</html>

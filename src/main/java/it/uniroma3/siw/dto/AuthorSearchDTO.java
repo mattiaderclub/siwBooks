@@ -7,8 +7,6 @@ public class AuthorSearchDTO {
     private String name;
     private String surname;
     private String nationality;
-    private LocalDate bornAfter;
-    private LocalDate bornBefore;
 
     public String getName() {
         return name;
@@ -32,21 +30,5 @@ public class AuthorSearchDTO {
 
     public void setNationality(String nationality) {
         this.nationality = (nationality != null && !nationality.trim().isEmpty()) ? nationality.trim() : null;
-    }
-
-    public LocalDate getBornAfter() {
-        return bornAfter;
-    }
-
-    public void setBornAfter(LocalDate bornAfter) {
-        this.bornAfter = bornAfter;
-    }
-
-    public LocalDate getBornBefore() {
-        return bornBefore;
-    }
-
-    public void setBornBefore(LocalDate bornBefore) {
-        this.bornBefore = bornBefore;
     }
 }

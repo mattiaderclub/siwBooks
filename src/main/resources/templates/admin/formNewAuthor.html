@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Nuovo Autore</title>
+</head>
+
+<body>
+
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1>Aggiungi un nuovo autore</h1>
+
+	<form th:action="@{/admin/author}" method="post" th:object="${author}" enctype="multipart/form-data">
+
+		<div>
+			<label for="name">Nome:</label>
+			<input type="text" id="name" th:field="*{name}" />
+			<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+		</div>
+
+		<div>
+			<label for="surname">Cognome:</label>
+			<input type="text" id="surname" th:field="*{surname}" />
+			<span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
+		</div>
+
+		<div>
+			<label for="birthDate">Data di nascita:</label>
+			<input type="date" id="birthDate" th:field="*{birthDate}" />
+			<span th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></span>
+		</div>
+
+		<div>
+			<label for="deathDate">Data di morte:</label>
+			<input type="date" id="deathDate" th:field="*{deathDate}" />
+			<span th:if="${#fields.hasErrors('deathDate')}" th:errors="*{deathDate}"></span>
+		</div>
+
+		<div>
+			<label for="nationality">Nazionalità:</label>
+			<input type="text" id="nationality" th:field="*{nationality}" />
+			<span th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></span>
+		</div>
+
+		<div>
+			<label for="photo">Foto:</label>
+			<input type="file" id="photo" name="photoFile" accept="image/*" />
+		</div>
+
+		<div>
+			<button type="submit">Aggiungi Autore</button>
+		</div>
+
+	</form>
+
+</body>
+
+</html>

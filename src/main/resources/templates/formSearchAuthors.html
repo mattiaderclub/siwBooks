@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Ricerca Autori</title>
+</head>
+
+<body>
+
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1>Ricerca Avanzata Autori</h1>
+
+	<form th:action="@{/foundAuthors}" method="get" th:object="${filtro}">
+		<div>
+			<label for="name">Nome:</label>
+			<input type="text" id="name" th:field="*{name}" />
+		</div>
+
+		<div>
+			<label for="surname">Cognome:</label>
+			<input type="text" id="surname" th:field="*{surname}" />
+		</div>
+
+		<div>
+			<label for="nationality">Nazionalità:</label>
+			<input type="text" id="nationality" th:field="*{nationality}" />
+		</div>
+
+		<div>
+			<button type="submit">Cerca</button>
+		</div>
+	</form>
+
+</body>
+
+</html>

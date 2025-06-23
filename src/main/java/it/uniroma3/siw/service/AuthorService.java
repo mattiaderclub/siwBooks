@@ -42,13 +42,10 @@ public class AuthorService {
 	 * @param name        nome (parziale o completo)
 	 * @param surname     cognome (parziale o completo)
 	 * @param nationality nazionalità (parziale o completa)
-	 * @param bornAfter   natoDopo
-	 * @param bornBefore  natoPrima
 	 * @return lista di autori che corrispondono ai filtri
 	 */
-	public List<Author> searchAuthors(String name, String surname, String nationality, LocalDate bornAfter,
-			LocalDate bornBefore) {
-		return authorRepository.findByFilters(name, surname, nationality, bornAfter, bornBefore);
+	public List<Author> searchAuthors(String name, String surname, String nationality) {
+		return authorRepository.findByFilters(name, surname, nationality);
 	}
 
 	/**

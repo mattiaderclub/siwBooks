@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Autori</title>
+</head>
+
+<body>
+
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1>Elenco Autori</h1>
+
+	<div th:if="${authors.isEmpty()}">
+		<p>Non ci sono autori nel sistema.</p>
+	</div>
+
+	<ul th:if="${not #lists.isEmpty(authors)}">
+		<li th:each="author : ${authors}">
+			<a th:href="@{/author/{id}(id=${author.id})}" th:text="${author.name + ' ' + author.surname}">
+				Nome Cognome
+			</a>
+			<span> - Valutazione media: </span>
+			<span th:if="${authorAverageRatings[author.id] != null}"
+				th:text="${authorAverageRatings[author.id]}">0.0</span>
+			<span th:unless="${authorAverageRatings[author.id] != null}">Nessuna</span>
+		</li>
+	</ul>
+
+</body>
+
+</html>

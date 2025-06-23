@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Risultati Ricerca Autori</title>
+</head>
+
+<body>
+
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1>Risultati Ricerca Autori</h1>
+
+	<div th:if="${authors.isEmpty()}">
+		<p>Nessun autore trovato con i criteri selezionati.</p>
+	</div>
+
+	<ul th:if="${not #lists.isEmpty(authors)}">
+		<li th:each="author : ${authors}">
+			<a th:href="@{/author/{id}(id=${author.id})}" th:text="${author.name + ' ' + author.surname}">Nome
+				Cognome</a>
+		</li>
+	</ul>
+
+</body>
+
+</html>
