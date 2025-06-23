@@ -9,7 +9,7 @@ import it.uniroma3.siw.model.Author;
 import it.uniroma3.siw.service.AuthorService;
 
 @Component
-public class AuthorValidator implements Validator{
+public class AuthorValidator implements Validator {
 
 	@Autowired
 	private AuthorService authorService;
@@ -22,12 +22,12 @@ public class AuthorValidator implements Validator{
 	@Override
 	public void validate(Object o, Errors errors) {
 		Author author = (Author) o;
-		
+
 		if (author.getName() != null && author.getSurname() != null && author.getBirthDate() != null
-				&& this.authorService.existsByNameAndSurnameAndBirthDate(
-					author.getName(), author.getSurname(), author.getBirthDate())) {
-				
-			errors.reject("author.duplicate");
+				&& this.authorService.existsByNameAndSurnameAndBirthDate(author.getName(), author.getSurname(),
+						author.getBirthDate())) {
+
+			errors.rejectValue("name", "duplicate", "Autore già esistente");
 		}
 	}
 }

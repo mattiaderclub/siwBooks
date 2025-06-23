@@ -85,15 +85,16 @@ public class AuthorController {
 	// Salva un nuovo autore con eventuale foto
 	@PostMapping(value = "/admin/author", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public String newAuthor(@Valid @ModelAttribute("author") Author author, BindingResult bindingResult,
-			@RequestParam("photo") MultipartFile photo, Model model) throws IOException {
+			@RequestParam(value = "photo", required = false) MultipartFile photo, Model model) throws IOException {
 
-		this.authorValidator.validate(author, bindingResult);
+		/*this.authorValidator.validate(author, bindingResult);
+
 		if (bindingResult.hasErrors()) {
 			return "admin/formNewAuthor";
 		}
-
-		// Salva la foto se presente
-		if (!photo.isEmpty()) {
+*/
+		// Salva la foto solo se presente
+		if (photo != null && !photo.isEmpty()) {
 			Path folder = Paths.get("uploads/images/authors");
 			Files.createDirectories(folder);
 			String filename = UUID.randomUUID() + "_" + StringUtils.cleanPath(photo.getOriginalFilename());
