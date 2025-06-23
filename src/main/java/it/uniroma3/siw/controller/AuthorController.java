@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import it.uniroma3.siw.controller.validator.AuthorValidator;
 import it.uniroma3.siw.dto.AuthorSearchDTO;
 import it.uniroma3.siw.model.Author;
+import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.service.AuthorService;
 import it.uniroma3.siw.service.CredentialsService;
 import jakarta.validation.Valid;
@@ -41,59 +42,66 @@ public class AuthorController {
 
 	// Mostra la lista di tutti gli autori
 	@GetMapping("/authors")
-	public String showAuthors(Model model) {
+	public String showAuthors(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		Iterable<Author> authors = authorService.getAllAuthors();
 
-		// Calcola numero libri e voto medio per ogni autore
-		Map<Long, Integer> authorNumBooks = new HashMap<>();
 		Map<Long, Double> authorAverageRatings = new HashMap<>();
 
 		for (Author author : authors) {
-			int numBooks = author.getLibri() != null ? author.getLibri().size() : 0;
 			Double avgRating = authorService.getAverageRatingOfAuthor(author);
-
-			authorNumBooks.put(author.getId(), numBooks);
 			authorAverageRatings.put(author.getId(), avgRating);
 		}
 
+		if (currentUser != null) {
+			model.addAttribute("currentUser", currentUser);
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
+
 		model.addAttribute("authors", authors);
-		model.addAttribute("authorNumBooks", authorNumBooks);
 		model.addAttribute("authorAverageRatings", authorAverageRatings);
 		return "authors.html";
 	}
 
 	// Visualizza il dettaglio di un autore
 	@GetMapping("/author/{id}")
-	public String getAuthorById(@PathVariable("id") Long id, Model model) {
+	public String getAuthorDetails(@PathVariable("id") Long id, Model model,
+			@AuthenticationPrincipal UserDetails currentUser) {
 		Author author = authorService.getAuthorById(id);
-		int numBooks = author.getLibri() != null ? author.getLibri().size() : 0;
 		Double avgRating = authorService.getAverageRatingOfAuthor(author);
-
 		model.addAttribute("author", author);
-		model.addAttribute("numBooks", numBooks);
 		model.addAttribute("averageRating", avgRating);
+
+		if (currentUser != null) {
+			model.addAttribute("currentUser", currentUser);
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
 		return "author.html";
 	}
 
 	// Mostra il form per inserire un nuovo autore
 	@GetMapping("/admin/formNewAuthor")
-	public String formNewAuthor(Model model) {
+	public String formNewAuthor(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		model.addAttribute("author", new Author());
+		if (currentUser != null) {
+			model.addAttribute("currentUser", currentUser);
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
 		return "admin/formNewAuthor.html";
 	}
 
 	// Salva un nuovo autore con eventuale foto
 	@PostMapping(value = "/admin/author", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String newAuthor(@Valid @ModelAttribute("author") Author author, BindingResult bindingResult,
+	public String saveNewAuthor(@Valid @ModelAttribute("author") Author author, BindingResult bindingResult,
 			@RequestParam(value = "photo", required = false) MultipartFile photo, Model model) throws IOException {
 
-		/*this.authorValidator.validate(author, bindingResult);
-
+		authorValidator.validate(author, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return "admin/formNewAuthor";
 		}
-*/
-		// Salva la foto solo se presente
+
 		if (photo != null && !photo.isEmpty()) {
 			Path folder = Paths.get("uploads/images/authors");
 			Files.createDirectories(folder);
@@ -107,63 +115,46 @@ public class AuthorController {
 		return "redirect:/author/" + author.getId();
 	}
 
-	// Mostra il form per la ricerca avanzata degli autori
-	@GetMapping("/formSearchAuthors")
-	public String formSearchAuthors(Model model, @AuthenticationPrincipal UserDetails currentUser) {
-		model.addAttribute("filtro", new AuthorSearchDTO());
-
-		if (currentUser != null) {
-			model.addAttribute("currentUser", currentUser);
-			model.addAttribute("credentials", credentialsService.getCredentials(currentUser.getUsername()));
-		}
-		return "formSearchAuthors.html";
-	}
-
-	// Esegue la ricerca avanzata
-	@GetMapping("/foundAuthors")
-	public String searchAuthors(@ModelAttribute("filtro") AuthorSearchDTO filtro, Model model) {
-
-		List<Author> authors = authorService.searchAuthors(filtro.getName(), filtro.getSurname(),
-				filtro.getNationality(), filtro.getBornBefore(), filtro.getBornAfter());
-
-		Map<Long, Integer> authorNumBooks = new HashMap<>();
-		Map<Long, Double> authorAverageRatings = new HashMap<>();
-
-		for (Author author : authors) {
-			int numBooks = author.getLibri() != null ? author.getLibri().size() : 0;
-			Double avgRating = authorService.getAverageRatingOfAuthor(author);
-
-			authorNumBooks.put(author.getId(), numBooks);
-			authorAverageRatings.put(author.getId(), avgRating);
-		}
-		model.addAttribute("authors", authors);
-		model.addAttribute("authorNumBooks", authorNumBooks);
-		model.addAttribute("authorAverageRatings", authorAverageRatings);
-		model.addAttribute("filtro", filtro); // per riempire il form
-		return "foundAuthors.html";
-	}
-
-	// Pagina di index per la gestione admin
-	@GetMapping("/admin/indexAuthors")
-	public String indexAuthors(Model model, @AuthenticationPrincipal UserDetails currentUser) {
-
-		model.addAttribute("currentUser", currentUser);
-		model.addAttribute("credentials", credentialsService.getCredentials(currentUser.getUsername()));
-		return "admin/indexAuthors.html";
-	}
-
-	// Mostra la pagina di gestione admin degli autori
-	@GetMapping("/admin/manageAuthors")
-	public String manageAuthors(Model model) {
-		Iterable<Author> authors = authorService.getAllAuthors();
-		model.addAttribute("authors", authors);
-		return "admin/manageAuthors.html";
-	}
-
 	// Elimina un autore
 	@GetMapping("/admin/deleteAuthor/{id}")
 	public String deleteAuthor(@PathVariable("id") Long id) {
 		authorService.deleteById(id);
 		return "redirect:/admin/manageAuthors";
+	}
+
+	@GetMapping("/admin/manageAuthors")
+	public String manageAuthors(Model model) {
+		model.addAttribute("authors", authorService.getAllAuthors());
+		return "admin/manageAuthors.html";
+	}
+
+	@GetMapping("/admin/indexAuthors")
+	public String indexAuthors(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		if (currentUser != null) {
+			model.addAttribute("currentUser", currentUser);
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
+		return "admin/indexAuthors.html";
+	}
+
+	@GetMapping("/formSearchAuthors")
+	public String formSearchAuthors(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		model.addAttribute("filtro", new AuthorSearchDTO());
+		if (currentUser != null) {
+			model.addAttribute("currentUser", currentUser);
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
+		return "formSearchAuthors.html";
+	}
+
+	@GetMapping("/foundAuthors")
+	public String searchAuthors(@ModelAttribute("filtro") AuthorSearchDTO filtro, Model model) {
+		List<Author> authors = authorService.searchAuthors(filtro.getName(), filtro.getSurname(),
+				filtro.getNationality(), filtro.getBornBefore(), filtro.getBornAfter());
+		model.addAttribute("authors", authors);
+		model.addAttribute("filtro", filtro);
+		return "foundAuthors.html";
 	}
 }

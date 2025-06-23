@@ -13,11 +13,11 @@ public interface AuthorRepository extends CrudRepository<Author, Long> {
 
 	@Query("""
         SELECT a FROM Author a
-        WHERE (:name IS NULL OR LOWER(a.name) LIKE LOWER(CONCAT('%', :name, '%')))
-          AND (:surname IS NULL OR LOWER(a.surname) LIKE LOWER(CONCAT('%', :surname, '%')))
-          AND (:nationality IS NULL OR LOWER(a.nationality) LIKE LOWER(CONCAT('%', :nationality, '%')))
-          AND (:bornAfter   IS NULL OR a.birthDate >= :bornAfter)
-          AND (:bornBefore  IS NULL OR a.birthDate <= :bornBefore)
+        WHERE (:name 		IS NULL OR a.name 			= :name)
+          AND (:surname 	IS NULL OR a.surname 		= :surname)
+          AND (:nationality IS NULL OR a.nationality 	= :nationality)
+          AND (:bornAfter   IS NULL OR a.birthDate 		>= :bornAfter)
+          AND (:bornBefore  IS NULL OR a.birthDate 		<= :bornBefore)
 	    """)
     List<Author> findByFilters(
         @Param("name") String name,
