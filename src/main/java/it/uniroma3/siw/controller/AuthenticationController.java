@@ -5,6 +5,7 @@ import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -49,18 +50,14 @@ public class AuthenticationController {
 	 * Mostra la homepage. Se l'utente è admin, lo reindirizza alla dashboard admin.
 	 */
 	@GetMapping(value = "/")
-	public String index(Model model) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+	public String index(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		// Se l'utente non è loggato, mostra la homepage generica
-		if (authentication instanceof AnonymousAuthenticationToken) {
-			return "index.html";
+		if (currentUser == null) {
+			return "index";
 		} else {
 			// Se l'utente è loggato, controlla il suo ruolo
-			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
-
+			model.addAttribute("currentUser", currentUser);
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
 			// Aggiungi le credenziali al Model
 			model.addAttribute("credentials", credentials);
 
@@ -85,12 +82,17 @@ public class AuthenticationController {
 	 * Metodo di fallback dopo il login: reindirizza in base al ruolo.
 	 */
 	@GetMapping(value = "/success")
-	public String defaultAfterLogin(Model model) {
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
+	public String defaultAfterLogin(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		if (currentUser == null) {
+			return "index";
+		}
 
+		// Se l'utente è loggato, controlla il suo ruolo
+		model.addAttribute("currentUser", currentUser);
+		Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+		// Aggiungi le credenziali al Model
 		model.addAttribute("credentials", credentials);
-
+		
 		// Se l'utente è admin, vai alla dashboard admin
 		if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
 			int totalBooks = (int) StreamSupport.stream(bookService.getAllBooks().spliterator(), false).count();

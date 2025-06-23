@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title th:text="${book.title}">Dettaglio Libro</title>
+	<link rel="stylesheet" href="/css/main.css" />
+</head>
+
+<body>
+
+	<!-- Header / Navbar -->
+	<header>
+		<div>
+			<span th:if="${currentUser != null}" th:text="'Bentornato, ' + ${currentUser.username} + '!'">
+				Bentornato, utente!
+			</span>
+			<a th:if="${credentials != null}" th:href="@{/profile/{id}(id=${credentials.user.id})}">
+				Il tuo profilo
+			</a>
+			<a th:href="@{/logout}">Logout</a>
+		</div>
+	</header>
+
+	<main>
+		<h1 th:text="${book.title}">Titolo del Libro</h1>
+		<p><strong>Anno di pubblicazione:</strong>
+			<span th:text="${book.annoPubblicazione}">2025</span>
+		</p>
+		<p><strong>Valutazione media:</strong>
+			<span th:text="${averageRating}">4.5</span>
+		</p>
+
+		<section>
+			<h2>Autori</h2>
+			<ul>
+				<li th:each="author : ${book.autori}">
+					<a th:href="@{/author/{id}(id=${author.id})}" th:text="${author.name} + ' ' + ${author.surname}">
+						Nome Cognome
+					</a>
+				</li>
+			</ul>
+		</section>
+
+		<!-- Eventuali altre informazioni sul libro -->
+	</main>
+
+	<footer>
+		<p>© 2025 SIW Books</p>
+	</footer>
+
+</body>
+
+</html>
