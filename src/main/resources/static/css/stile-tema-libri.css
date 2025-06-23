@@ -1258,7 +1258,8 @@ html {
 }
 
 .entity-meta i {
-	margin-right: 0.5rem; /**/
+	margin-right: 0.5rem;
+	/**/
 	width: 12px;
 }
 
@@ -1364,4 +1365,411 @@ html {
 .empty-state h3 {
 	margin-bottom: 0.5rem;
 	color: var(--primary-dark);
+}
+
+/* ===== SIWBOOKS EMPTY STATE COMPONENTS ===== */
+/* Utilizzate quando non ci sono elementi da mostrare (autori/libri vuoti) */
+
+.siwbooks-empty-state {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 400px;
+	padding: 2rem;
+	text-align: center;
+}
+
+.siwbooks-empty-content {
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+.siwbooks-empty-icon {
+	font-size: 4rem;
+	color: #cbd5e1;
+	margin-bottom: 1.5rem;
+	opacity: 0.7;
+}
+
+.siwbooks-empty-title {
+	font-size: 1.8rem;
+	font-weight: 600;
+	color: #374151;
+	margin-bottom: 1rem;
+	font-family: 'Playfair Display', serif;
+}
+
+.siwbooks-empty-description {
+	font-size: 1.1rem;
+	color: #6b7280;
+	line-height: 1.6;
+	margin-bottom: 2rem;
+}
+
+/* ===== SIWBOOKS ITEMS GRID SYSTEM ===== */
+/* Sistema di griglia riutilizzabile per autori, libri e altri elementi */
+
+.siwbooks-items-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 1.5rem;
+	padding: 1rem 0;
+}
+
+/* Responsive breakpoints per la griglia */
+@media (max-width: 768px) {
+	.siwbooks-items-grid {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+}
+
+@media (min-width: 1200px) {
+	.siwbooks-items-grid {
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+	}
+}
+
+/* ===== SIWBOOKS ITEM CARD ===== */
+/* Card riutilizzabile per singoli elementi (autore/libro) */
+
+.siwbooks-item-card {
+	background: #ffffff;
+	border-radius: 12px;
+	padding: 1.5rem;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	border: 1px solid #e5e7eb;
+	transition: all 0.3s ease;
+	position: relative;
+	overflow: hidden;
+}
+
+/* Effetto hover per le card */
+.siwbooks-item-card:hover {
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+	border-color: #d1d5db;
+	transform: translateY(-2px);
+}
+
+/* Effetto di sfondo animato al hover */
+.siwbooks-item-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+	transition: left 0.5s;
+	z-index: 1;
+}
+
+.siwbooks-item-card:hover::before {
+	left: 100%;
+}
+
+/* ===== SIWBOOKS ITEM HEADER ===== */
+/* Header della card con avatar e informazioni */
+
+.siwbooks-item-header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 1.5rem;
+	position: relative;
+	z-index: 2;
+}
+
+.siwbooks-item-avatar {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.5rem;
+	margin-right: 1rem;
+	flex-shrink: 0;
+	transition: all 0.3s ease;
+}
+
+/* Avatar specifico per autori */
+.siwbooks-author-avatar {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
+	box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Avatar specifico per libri (da usare con .siwbooks-book-avatar) */
+.siwbooks-book-avatar {
+	background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+	color: white;
+	box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+}
+
+/* Effetto hover per gli avatar */
+.siwbooks-item-avatar:hover {
+	transform: scale(1.1);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.siwbooks-item-info {
+	flex: 1;
+	min-width: 0;
+	/* Permette al testo di essere troncato */
+}
+
+.siwbooks-item-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #1f2937;
+	margin: 0 0 0.25rem 0;
+	line-height: 1.3;
+	font-family: 'Playfair Display', serif;
+
+	/* Troncamento del testo se troppo lungo */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.siwbooks-item-subtitle {
+	font-size: 0.9rem;
+	color: #6b7280;
+	margin: 0;
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+/* ===== SIWBOOKS ITEM ACTIONS ===== */
+/* Pulsanti di azione per ogni card */
+
+.siwbooks-item-actions {
+	display: flex;
+	gap: 0.5rem;
+	justify-content: flex-end;
+	position: relative;
+	z-index: 2;
+}
+
+/* Stili base per i pulsanti di azione */
+.siwbooks-btn-view,
+.siwbooks-btn-edit,
+.siwbooks-btn-delete {
+	width: 36px;
+	height: 36px;
+	border-radius: 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+	font-size: 0.9rem;
+	transition: all 0.3s ease;
+	border: none;
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+}
+
+/* Pulsante visualizza - blu */
+.siwbooks-btn-view {
+	background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+	color: white;
+	box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+}
+
+.siwbooks-btn-view:hover {
+	background: linear-gradient(135deg, #2563eb, #1e40af);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* Pulsante modifica - arancione */
+.siwbooks-btn-edit {
+	background: linear-gradient(135deg, #f59e0b, #d97706);
+	color: white;
+	box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+.siwbooks-btn-edit:hover {
+	background: linear-gradient(135deg, #d97706, #b45309);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+/* Pulsante elimina - rosso */
+.siwbooks-btn-delete {
+	background: linear-gradient(135deg, #ef4444, #dc2626);
+	color: white;
+	box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+.siwbooks-btn-delete:hover {
+	background: linear-gradient(135deg, #dc2626, #b91c1c);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* Effetto ripple per i pulsanti */
+.siwbooks-btn-view::after,
+.siwbooks-btn-edit::after,
+.siwbooks-btn-delete::after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.3);
+	transform: translate(-50%, -50%);
+	transition: width 0.3s, height 0.3s;
+}
+
+.siwbooks-btn-view:active::after,
+.siwbooks-btn-edit:active::after,
+.siwbooks-btn-delete:active::after {
+	width: 100px;
+	height: 100px;
+}
+
+/* ===== SECTION HEADER ADDITIONS ===== */
+/* Miglioramenti per gli header delle sezioni */
+
+.section-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 2rem;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.section-actions {
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+}
+
+.btn-secondary {
+	background: linear-gradient(135deg, #6b7280, #4b5563);
+	color: white;
+	padding: 0.75rem 1.5rem;
+	border-radius: 8px;
+	text-decoration: none;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	border: none;
+	cursor: pointer;
+}
+
+.btn-secondary:hover {
+	background: linear-gradient(135deg, #4b5563, #374151);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+/* Adattamenti per dispositivi mobili */
+
+@media (max-width: 640px) {
+	.siwbooks-item-card {
+		padding: 1rem;
+	}
+
+	.siwbooks-item-header {
+		margin-bottom: 1rem;
+	}
+
+	.siwbooks-item-avatar {
+		width: 50px;
+		height: 50px;
+		font-size: 1.2rem;
+	}
+
+	.siwbooks-item-title {
+		font-size: 1.1rem;
+	}
+
+	.siwbooks-item-actions {
+		gap: 0.25rem;
+	}
+
+	.siwbooks-btn-view,
+	.siwbooks-btn-edit,
+	.siwbooks-btn-delete {
+		width: 32px;
+		height: 32px;
+		font-size: 0.8rem;
+	}
+
+	.section-header {
+		flex-direction: column;
+		align-items: stretch;
+		text-align: center;
+	}
+}
+
+/* ===== ANIMAZIONI AGGIUNTIVE ===== */
+/* Animazioni per migliorare l'esperienza utente */
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(30px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes slideInLeft {
+	from {
+		opacity: 0;
+		transform: translateX(-30px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* Applicazione delle animazioni */
+.siwbooks-item-card {
+	animation: fadeInUp 0.5s ease-out;
+}
+
+.siwbooks-item-card:nth-child(even) {
+	animation: slideInLeft 0.5s ease-out;
+}
+
+/* Ritardi sfalsati per le animazioni */
+.siwbooks-item-card:nth-child(1) {
+	animation-delay: 0.1s;
+}
+
+.siwbooks-item-card:nth-child(2) {
+	animation-delay: 0.2s;
+}
+
+.siwbooks-item-card:nth-child(3) {
+	animation-delay: 0.3s;
+}
+
+.siwbooks-item-card:nth-child(4) {
+	animation-delay: 0.4s;
+}
+
+.siwbooks-item-card:nth-child(5) {
+	animation-delay: 0.5s;
+}
+
+.siwbooks-item-card:nth-child(6) {
+	animation-delay: 0.6s;
 }
