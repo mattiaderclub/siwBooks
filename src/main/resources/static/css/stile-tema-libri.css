@@ -1121,3 +1121,37 @@ html {
 .rating-input {
 	margin-bottom: 0;
 }
+
+/* Stili aggiuntivi solo per il badge del ruolo */
+.role-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	border-radius: 20px;
+	font-weight: 600;
+	font-size: 0.9rem;
+}
+
+.role-badge.user-role {
+	background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+	color: #1565c0;
+}
+
+.role-badge.admin-role {
+	background: linear-gradient(135deg, #fff3e0, #ffcc02);
+	color: #e65100;
+}
+
+/* Aggiustamenti per le icone nelle label */
+.detail-label i {
+	margin-right: 0.5rem;
+	color: var(--primary-color, #8B4513);
+	width: 16px;
+}
+
+/* Scroll effect per l'header */
+.main-header.scrolled {
+	background: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(10px);
+}

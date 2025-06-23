@@ -1,56 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Profilo Utente</title>
 	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=2" />
-
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
-<header class="main-header">
-	<div class="header-content container">
-
-		<!-- A sinistra -->
-		<div class="user-info">
-			<span class="user-role" th:if="${credentials != null}">
-				<span th:if="${credentials.role == 'DEFAULT'}">Cliente:</span>
-				<span th:if="${credentials.role == 'ADMIN'}">Bibliotecario:</span>
-			</span>
-			<span class="user-name" th:if="${userDetails}" th:text="${userDetails.username}"></span>
-		</div>
-
-		<!-- A destra -->
-		<div class="header-links">
-			<a class="header-link" th:if="${credentials != null}"
-				th:href="@{/utente/{id}/profilo/modifica(id=${utente.id})}">Modifica Profilo</a>
-			<a class="header-link" href="/logout" th:if="${userDetails}">Logout</a>
-			<a class="header-link" href="/login" th:unless="${userDetails}">Login</a>
-		</div>
-
-	</div>
-</header>
-
 <body>
+	<!-- Header -->
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- Logo e Brand -->
+			<div class="brand-section">
+				<a href="/">
+					<img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
+				</a>
+				<h1 class="brand-title">SIW Books</h1>
+			</div>
 
-	<h1 style="text-align: center; margin-top: 2em;">Il tuo Profilo</h1>
+			<!-- A destra -->
+			<div class="user-section">
+				<div class="user-info">
+					<span class="user-role" th:if="${credentials != null}">
+						<span th:if="${credentials.role == 'DEFAULT'}">Cliente:</span>
+						<span th:if="${credentials.role == 'ADMIN'}">Bibliotecario:</span>
+					</span>
+					<span class="user-name" th:if="${userDetails}" th:text="${userDetails.username}"></span>
+				</div>
+				<div class="header-actions">
+					<a class="btn-logout" href="/logout" th:if="${userDetails}">
+						<i class="fas fa-sign-out-alt"></i>
+						Logout
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
 
-	<div class="main-content">
-		<!-- Attributi di User -->
-		<p><strong>Nome:</strong> <span th:text="${utente.name}"></span></p>
-		<p><strong>Cognome:</strong> <span th:text="${utente.surname}"></span></p>
-		<p><strong>Cellulare:</strong> <span th:text="${utente.cell}"></span></p>
-		<p><strong>Email:</strong> <span th:text="${utente.email}"></span></p>
+	<!-- Profile Section -->
+	<section class="hero-section">
+		<div class="hero-content">
+			<div class="success-content">
+				<!-- Profile Icon -->
+				<div class="success-icon">
+					<i class="fas fa-user-circle"></i>
+				</div>
 
-		<!-- Attributi di Credentials -->
-		<p><strong>Username:</strong> <span th:text="${credentials.username}"></span></p>
-		<p><strong>Password:</strong> ********</p>
-		<p><strong>Ruolo:</strong> <span th:text="${credentials.role}"></span></p>
-	</div>
+				<!-- Profile Title -->
+				<h1 class="hero-title">
+					Il tuo <span class="highlight">Profilo</span>
+				</h1>
+				<p class="hero-subtitle">
+					Gestisci le tue informazioni personali
+				</p>
+			</div>
+		</div>
+	</section>
 
-	<div class="actions">
-		<a href="/" class="back-link">Torna alla Home</a>
-	</div>
+	<!-- Profile Details Section -->
+	<section class="quick-access-section">
+		<div class="container">
+			<!-- Informazioni Personali -->
+			<h2 class="section-title">
+				<i class="fas fa-user"></i> Informazioni Personali
+			</h2>
+			<div class="user-info-card">
+				<div class="user-details">
+					<div class="detail-row">
+						<span class="detail-label">
+							<i class="fas fa-id-card"></i> Nome:
+						</span>
+						<span class="detail-value" th:text="${utente.name}">Nome Utente</span>
+					</div>
+					<div class="detail-row">
+						<span class="detail-label">
+							<i class="fas fa-id-card"></i> Cognome:
+						</span>
+						<span class="detail-value" th:text="${utente.surname}">Cognome Utente</span>
+					</div>
+					<div class="detail-row">
+						<span class="detail-label">
+							<i class="fas fa-envelope"></i> Email:
+						</span>
+						<span class="detail-value" th:text="${utente.email}">email@esempio.com</span>
+					</div>
+					<div class="detail-row">
+						<span class="detail-label">
+							<i class="fas fa-phone"></i> Cellulare:
+						</span>
+						<span class="detail-value" th:text="${utente.cell}">+39 123 456 7890</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Informazioni Account -->
+			<h2 class="section-title" style="margin-top: 3rem;">
+				<i class="fas fa-cog"></i> Informazioni Account
+			</h2>
+			<div class="user-info-card">
+				<div class="user-details">
+					<div class="detail-row">
+						<span class="detail-label">
+							<i class="fas fa-user-tag"></i> Username:
+						</span>
+						<span class="detail-value" th:text="${credentials.username}">username</span>
+					</div>
+					<div class="detail-row">
+						<span class="detail-label">
+							<i class="fas fa-lock"></i> Password:
+						</span>
+						<span class="detail-value">••••••••</span>
+					</div>
+					<div class="detail-row">
+						<span class="detail-label">
+							<i class="fas fa-shield-alt"></i> Ruolo:
+						</span>
+						<span class="detail-value">
+							<span class="role-badge"
+								th:classappend="${credentials.role == 'ADMIN'} ? 'admin-role' : 'user-role'">
+								<i class="fas fa-user" th:if="${credentials.role == 'DEFAULT'}"></i>
+								<i class="fas fa-user-shield" th:if="${credentials.role == 'ADMIN'}"></i>
+								<span th:if="${credentials.role == 'DEFAULT'}">Cliente</span>
+								<span th:if="${credentials.role == 'ADMIN'}">Bibliotecario</span>
+							</span>
+						</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Actions -->
+			<div class="hero-actions" style="margin-top: 3rem;">
+				<a href="/" class="btn-secondary">
+					<i class="fas fa-home"></i> Torna alla Home
+				</a>
+				<a th:href="@{/utente/{id}/profilo/modifica(id=${utente.id})}" class="btn-primary">
+					<i class="fas fa-edit"></i> Modifica Profilo
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+
+			<div class="footer-bottom">
+				<p>&copy; 2025 SIW Books. Tutti i diritti riservati.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Add scroll effect to header
+		window.addEventListener('scroll', function () {
+			const header = document.querySelector('.main-header');
+			if (window.scrollY > 100) {
+				header.classList.add('scrolled');
+			} else {
+				header.classList.remove('scrolled');
+			}
+		});
+	</script>
 </body>
-
 
 </html>
