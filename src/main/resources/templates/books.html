@@ -3,28 +3,179 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Libri</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SIW Books - Libri</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+		rel="stylesheet">
 </head>
 
 <body>
+	<!-- Header Semplificato -->
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- Logo e Brand -->
+			<div class="brand-section">
+				<a href="/">
+					<img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
+				</a>
+				<h1 class="brand-title">SIW Books</h1>
+			</div>
 
-	<!-- Logo per tornare alla home -->
-	<div>
-		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
-	</div>
+			<!-- Navigation -->
+			<div class="user-section">
+				<div class="header-actions">
+					<a class="btn-profile" href="/">
+						<i class="fas fa-home"></i> Home
+					</a>
+					<a class="btn-profile" href="/authors">
+						<i class="fas fa-users"></i> Autori
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
 
-	<h1>Elenco Libri</h1>
+	<!-- Hero Section -->
+	<section class="hero-section">
+		<div class="hero-content">
+			<div class="hero-text">
+				<h1 class="hero-title">
+					<span class="highlight">Scopri i Libri</span>
+				</h1>
+				<p class="hero-subtitle">
+					Esplora la collezione completa dei libri presenti nella nostra biblioteca digitale.
+					Scopri nuove opere e i titoli più apprezzati dalla community.
+				</p>
+			</div>
+			<div class="hero-visual">
+				<div class="floating-books">
+					<div class="book-card floating-book book-1">
+						<div class="book-spine"></div>
+						<div class="book-cover admin-book-1"></div>
+					</div>
+					<div class="book-card floating-book book-2">
+						<div class="book-spine"></div>
+						<div class="book-cover admin-book-2"></div>
+					</div>
+					<div class="book-card floating-book book-3">
+						<div class="book-spine"></div>
+						<div class="book-cover admin-book-3"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-	<div th:if="${books.isEmpty()}">
-		<p>Nessun libro disponibile.</p>
-	</div>
+	<!-- Books Section -->
+	<section class="quick-access-section">
+		<div class="container">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="fas fa-book"></i> Elenco Libri
+				</h2>
+			</div>
 
-	<ul th:unless="${books.isEmpty()}">
-		<li th:each="book : ${books}">
-			<a th:href="@{/book/{id}(id=${book.id})}" th:text="${book.title}">Titolo</a>
-		</li>
-	</ul>
+			<!-- Empty State -->
+			<div th:if="${books.isEmpty()}" class="siwbooks-empty-state">
+				<div class="siwbooks-empty-content">
+					<div class="siwbooks-empty-icon">
+						<i class="fas fa-book-open"></i>
+					</div>
+					<h3 class="siwbooks-empty-title">Nessun Libro Disponibile</h3>
+					<p class="siwbooks-empty-description">
+						Al momento non ci sono libri disponibili nella biblioteca digitale.
+						Torna presto per scoprire nuove opere e titoli interessanti.
+					</p>
+				</div>
+			</div>
 
+			<!-- Books Grid -->
+			<div th:unless="${books.isEmpty()}" class="siwbooks-items-grid">
+				<div th:each="book : ${books}" class="siwbooks-item-card">
+					<div class="siwbooks-item-header">
+						<div class="siwbooks-item-avatar">
+							<i class="fas fa-book"></i>
+						</div>
+						<div class="siwbooks-item-info">
+							<h3 class="siwbooks-item-title" th:text="${book.title}">Titolo</h3>
+							<p class="siwbooks-item-subtitle">Libro</p>
+						</div>
+					</div>
+
+					<!-- Rating Section -->
+					<div class="siwbooks-item-rating">
+						<div class="rating-stars">
+							<i class="fas fa-star"></i>
+							<span class="rating-value">N/A</span>
+						</div>
+						<span class="rating-label">Valutazione</span>
+					</div>
+
+					<div class="siwbooks-item-actions">
+						<a th:href="@{/book/{id}(id=${book.id})}" class="siwbooks-btn-view"
+							title="Visualizza Dettagli Libro">
+							<i class="fas fa-eye"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-bottom">
+				<p>&copy; 2025 SIW Books - Biblioteca Digitale. Tutti i diritti riservati.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Floating animation for books
+		function animateFloatingBooks() {
+			const books = document.querySelectorAll('.floating-book');
+			books.forEach((book, index) => {
+				book.style.animationDelay = `${index * 0.5}s`;
+			});
+		}
+
+		// Initialize animations when page loads
+		document.addEventListener('DOMContentLoaded', function () {
+			animateFloatingBooks();
+
+			// Add scroll effect to header
+			window.addEventListener('scroll', function () {
+				const header = document.querySelector('.main-header');
+				if (window.scrollY > 100) {
+					header.classList.add('scrolled');
+				} else {
+					header.classList.remove('scrolled');
+				}
+			});
+
+			// Page welcome animation
+			setTimeout(() => {
+				const title = document.querySelector('.hero-title');
+				title.style.animation = 'fadeInUp 1s ease-out';
+			}, 300);
+
+			// Item cards hover animation
+			const itemCards = document.querySelectorAll('.siwbooks-item-card');
+			itemCards.forEach(card => {
+				card.addEventListener('mouseenter', function () {
+					this.style.transform = 'translateY(-5px)';
+				});
+
+				card.addEventListener('mouseleave', function () {
+					this.style.transform = 'translateY(0)';
+				});
+			});
+		});
+	</script>
 </body>
 
 </html>

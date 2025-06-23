@@ -2038,3 +2038,22 @@ html {
 .no-filters span {
 	color: #8D6E63;
 }
+
+/* Additional styles for book cover images */
+.book-cover-image {
+	width: 60px;
+	height: 80px;
+	object-fit: cover;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.siwbooks-item-image {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.siwbooks-book-avatar {
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}

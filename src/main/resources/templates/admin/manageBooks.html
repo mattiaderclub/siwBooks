@@ -1,58 +1,204 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 
 <head>
-	<title>Gestione Libri</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SIW Books - Gestione Libri</title>
 	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
-
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+		rel="stylesheet">
 </head>
 
-<header class="main-header">
-	<div class="header-content container">
-		<!-- A sinistra -->
-		<div class="user-info">
-			<span class="user-role">Bibliotecario:</span>
-			<span class="user-name" th:text="${userDetails.username}"></span>
-		</div>
-
-		<!-- A destra -->
-		<div class="header-links">
-			<a class="header-link" th:if="${credentials != null}"
-				th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
-				Profilo
-			</a>
-
-			<a class="header-link" href="/logout">Logout</a>
-		</div>
-	</div>
-</header>
-
 <body>
-
-	<div>
-		<a href="/"><img src="/images/logo-siwBooks.png" width="20%" /></a>
-	</div>
-
-	<h1>Libri</h1>
-
-	<div th:if="${books.isEmpty()}">
-		Non ci sono libri nel sistema.
-	</div>
-
-	<ul>
-		<li th:each="book : ${books}">
-			<div>
-				<a th:href="@{'/book/' + ${book.id}}" th:text="${book.title} + ' (' + ${book.annoPubblicazione} + ')'">
+	<!-- Header -->
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- Logo e Brand -->
+			<div class="brand-section">
+				<a href="/">
+					<img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
 				</a>
-
-				<img th:if="${book.imagePaths != null and #lists.size(book.imagePaths) > 0}"
-					th:src="@{${book.imagePaths[0]}}" alt="Copertina libro" style="max-width:100px; margin-left:8px;" />
-
-				<a th:href="@{'/admin/deleteBook/' + ${book.id}}">Cancella</a>
+				<h1 class="brand-title">SIW Books Admin</h1>
 			</div>
-		</li>
-	</ul>
 
+			<!-- User Section -->
+			<div class="user-section">
+				<div class="user-info">
+					<span class="user-welcome">Bibliotecario:</span>
+					<span class="user-name" th:text="${userDetails.username}"></span>
+				</div>
+
+				<div class="header-actions">
+					<a class="btn-profile" th:if="${credentials != null}"
+						th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
+						<i class="fas fa-user-circle"></i> Profilo
+					</a>
+					<a class="btn-logout" href="/logout">
+						<i class="fas fa-sign-out-alt"></i> Logout
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Hero Section -->
+	<section class="hero-section">
+		<div class="hero-content">
+			<div class="hero-text">
+				<h1 class="hero-title">
+					<span class="highlight">Gestione Libri</span>
+				</h1>
+				<p class="hero-subtitle">
+					Modifica, elimina o visualizza i libri della tua biblioteca digitale.
+					Gestisci facilmente il database dei libri con un'interfaccia intuitiva.
+				</p>
+				<div class="hero-actions">
+					<a href="/admin/formNewBook" class="btn-primary">
+						<i class="fas fa-book-medical"></i> Nuovo Libro
+					</a>
+				</div>
+			</div>
+			<div class="hero-visual">
+				<div class="floating-books">
+					<div class="book-card floating-book book-1">
+						<div class="book-spine"></div>
+						<div class="book-cover admin-book-1"></div>
+					</div>
+					<div class="book-card floating-book book-2">
+						<div class="book-spine"></div>
+						<div class="book-cover admin-book-2"></div>
+					</div>
+					<div class="book-card floating-book book-3">
+						<div class="book-spine"></div>
+						<div class="book-cover admin-book-3"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Books List Section -->
+	<section class="quick-access-section">
+		<div class="container">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="fas fa-books"></i> Lista Libri
+				</h2>
+				<div class="section-actions">
+					<a href="/admin/indexBooks" class="btn-secondary">
+						<i class="fas fa-arrow-left"></i> Torna al Menu
+					</a>
+				</div>
+			</div>
+
+			<!-- Empty State -->
+			<div th:if="${books.isEmpty()}" class="siwbooks-empty-state">
+				<div class="siwbooks-empty-content">
+					<div class="siwbooks-empty-icon">
+						<i class="fas fa-book-open"></i>
+					</div>
+					<h3 class="siwbooks-empty-title">Nessun Libro Trovato</h3>
+					<p class="siwbooks-empty-description">
+						Non ci sono libri nel sistema. Aggiungi il primo libro per iniziare a costruire il tuo
+						catalogo.
+					</p>
+					<a href="/admin/formNewBook" class="btn-primary">
+						<i class="fas fa-book-medical"></i> Aggiungi Primo Libro
+					</a>
+				</div>
+			</div>
+
+			<!-- Books Grid -->
+			<div th:unless="${books.isEmpty()}" class="siwbooks-items-grid">
+				<div th:each="book : ${books}" class="siwbooks-item-card">
+					<div class="siwbooks-item-header">
+						<div class="siwbooks-item-image">
+							<img th:if="${book.imagePaths != null and #lists.size(book.imagePaths) > 0}"
+								th:src="@{${book.imagePaths[0]}}" alt="Copertina libro" class="book-cover-image" />
+							<div th:unless="${book.imagePaths != null and #lists.size(book.imagePaths) > 0}"
+								class="siwbooks-item-avatar siwbooks-book-avatar">
+								<i class="fas fa-book"></i>
+							</div>
+						</div>
+						<div class="siwbooks-item-info">
+							<h3 class="siwbooks-item-title" th:text="${book.title}"></h3>
+							<p class="siwbooks-item-subtitle" th:text="'Anno: ' + ${book.annoPubblicazione}"></p>
+						</div>
+					</div>
+
+					<div class="siwbooks-item-actions">
+						<a th:href="@{'/book/' + ${book.id}}" class="siwbooks-btn-view" title="Visualizza Dettagli">
+							<i class="fas fa-eye"></i>
+						</a>
+						<a th:href="@{'/admin/editBook/' + ${book.id}}" class="siwbooks-btn-edit"
+							title="Modifica Libro">
+							<i class="fas fa-edit"></i>
+						</a>
+						<a th:href="@{'/admin/deleteBook/' + ${book.id}}" class="siwbooks-btn-delete"
+							title="Elimina Libro"
+							onclick="return confirm('Sei sicuro di voler eliminare questo libro?')">
+							<i class="fas fa-trash"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-bottom">
+				<p>&copy; 2025 SIW Books - Gestione Libri. Tutti i diritti riservati.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Floating animation for books
+		function animateFloatingBooks() {
+			const books = document.querySelectorAll('.floating-book');
+			books.forEach((book, index) => {
+				book.style.animationDelay = `${index * 0.5}s`;
+			});
+		}
+
+		// Initialize animations when page loads
+		document.addEventListener('DOMContentLoaded', function () {
+			animateFloatingBooks();
+
+			// Add scroll effect to header
+			window.addEventListener('scroll', function () {
+				const header = document.querySelector('.main-header');
+				if (window.scrollY > 100) {
+					header.classList.add('scrolled');
+				} else {
+					header.classList.remove('scrolled');
+				}
+			});
+
+			// Page welcome animation
+			setTimeout(() => {
+				const title = document.querySelector('.hero-title');
+				title.style.animation = 'fadeInUp 1s ease-out';
+			}, 300);
+
+			// Book cards hover animation
+			const bookCards = document.querySelectorAll('.siwbooks-item-card');
+			bookCards.forEach(card => {
+				card.addEventListener('mouseenter', function () {
+					this.style.transform = 'translateY(-5px)';
+				});
+
+				card.addEventListener('mouseleave', function () {
+					this.style.transform = 'translateY(0)';
+				});
+			});
+		});
+	</script>
 </body>
 
 </html>

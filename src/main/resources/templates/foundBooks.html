@@ -3,31 +3,183 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Risultati Ricerca Libri</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SIW Books - Risultati Ricerca Libri</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+		rel="stylesheet">
 </head>
 
 <body>
+	<!-- Header Semplificato -->
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- Logo e Brand -->
+			<div class="brand-section">
+				<a href="/">
+					<img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
+				</a>
+				<h1 class="brand-title">SIW Books</h1>
+			</div>
 
-	<!-- Logo per tornare alla home -->
-	<div>
-		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
-	</div>
+			<!-- Navigation -->
+			<div class="user-section">
+				<div class="header-actions">
+					<a class="btn-profile" href="/">
+						<i class="fas fa-home"></i> Home
+					</a>
+					<a class="btn-profile" href="/books">
+						<i class="fas fa-book"></i> Libri
+					</a>
+					<a class="btn-profile" href="/authors">
+						<i class="fas fa-users"></i> Autori
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
 
-	<h1>Risultati della Ricerca</h1>
+	<!-- Hero Section -->
+	<section class="hero-section">
+		<div class="hero-content">
+			<div class="hero-text">
+				<h1 class="hero-title">
+					<span class="highlight">Risultati Ricerca Libri</span>
+				</h1>
+				<p class="hero-subtitle">
+					Ecco i libri che corrispondono ai tuoi criteri di ricerca.
+					Esplora i titoli disponibili nella nostra biblioteca digitale.
+				</p>
+			</div>
+			<div class="hero-visual">
+				<!-- Search Filters Summary -->
+				<div class="search-filters-info">
+					<div class="filters-card">
+						<h3><i class="fas fa-filter"></i> Filtri Ricerca</h3>
+						<div class="filters-list">
+							<div class="filter-item no-filters">
+								<i class="fas fa-book-open"></i>
+								<span>Tutti i libri disponibili</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-	<div th:if="${books.isEmpty()}">
-		<p>Nessun libro trovato con i criteri selezionati.</p>
-	</div>
+	<!-- Search Results Section -->
+	<section class="quick-access-section">
+		<div class="container">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="fas fa-search"></i> Risultati della Ricerca
+				</h2>
+			</div>
 
-	<ul th:unless="${books.isEmpty()}">
-		<li th:each="book : ${books}">
-			<a th:href="@{/book/{id}(id=${book.id})}" th:text="${book.title}">Titolo</a>
-		</li>
-	</ul>
+			<!-- Empty State -->
+			<div th:if="${books.isEmpty()}" class="siwbooks-empty-state">
+				<div class="siwbooks-empty-content">
+					<div class="siwbooks-empty-icon">
+						<i class="fas fa-search-minus"></i>
+					</div>
+					<h3 class="siwbooks-empty-title">Nessun Libro Trovato</h3>
+					<p class="siwbooks-empty-description">
+						Non sono stati trovati libri che corrispondono ai criteri di ricerca selezionati.
+						Prova a modificare i filtri o effettua una nuova ricerca.
+					</p>
+					<!-- New Search Section -->
+					<div style="margin-top: 2rem; text-align: center;">
+						<a href="/formSearchBooks" class="btn-secondary">
+							<i class="fas fa-search"></i> Nuova Ricerca
+						</a>
+					</div>
+				</div>
+			</div>
 
-	<!-- Link per tornare al form di ricerca -->
-	<p><a href="/formSearchBooks">Torna alla ricerca</a></p>
+			<!-- Books Grid Results -->
+			<div th:unless="${books.isEmpty()}" class="siwbooks-items-grid">
+				<div th:each="book : ${books}" class="siwbooks-item-card">
+					<div class="siwbooks-item-header">
+						<div class="siwbooks-item-avatar">
+							<i class="fas fa-book"></i>
+						</div>
+						<div class="siwbooks-item-info">
+							<h3 class="siwbooks-item-title" th:text="${book.title}">Titolo</h3>
+							<p class="siwbooks-item-subtitle">Libro</p>
+						</div>
+					</div>
 
+					<!-- Rating Section -->
+					<div class="siwbooks-item-rating">
+						<div class="rating-stars">
+							<i class="fas fa-star"></i>
+							<span class="rating-value">N/A</span>
+						</div>
+						<span class="rating-label">Valutazione</span>
+					</div>
+
+					<div class="siwbooks-item-actions">
+						<a th:href="@{/book/{id}(id=${book.id})}" class="siwbooks-btn-view"
+							title="Visualizza Dettagli Libro">
+							<i class="fas fa-eye"></i>
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- New Search Section -->
+			<div th:unless="${books.isEmpty()}" class="section-actions" style="margin-top: 2rem; text-align: center;">
+				<a href="/formSearchBooks" class="btn-secondary">
+					<i class="fas fa-search"></i> Nuova Ricerca
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-bottom">
+				<p>&copy; 2025 SIW Books - Biblioteca Digitale. Tutti i diritti riservati.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Initialize page functionality
+		document.addEventListener('DOMContentLoaded', function () {
+			// Add scroll effect to header
+			window.addEventListener('scroll', function () {
+				const header = document.querySelector('.main-header');
+				if (window.scrollY > 100) {
+					header.classList.add('scrolled');
+				} else {
+					header.classList.remove('scrolled');
+				}
+			});
+
+			// Page welcome animation
+			setTimeout(() => {
+				const title = document.querySelector('.hero-title');
+				title.style.animation = 'fadeInUp 1s ease-out';
+			}, 300);
+
+			// Item cards hover animation
+			const itemCards = document.querySelectorAll('.siwbooks-item-card');
+			itemCards.forEach(card => {
+				card.addEventListener('mouseenter', function () {
+					this.style.transform = 'translateY(-5px)';
+				});
+
+				card.addEventListener('mouseleave', function () {
+					this.style.transform = 'translateY(0)';
+				});
+			});
+		});
+	</script>
 </body>
 
 </html>
