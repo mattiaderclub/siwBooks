@@ -3,59 +3,149 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Nuovo Autore</title>
+	<title>SiwBooks - Nuovo Autore</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- A sinistra -->
+			<div class="brand-section">
+				<a href="/"><img src="/images/logo-siwBooks.png" class="brand-logo" alt="SiwBooks Logo" /></a>
+				<h1 class="brand-title">SiwBooks</h1>
+			</div>
 
-	<div>
-		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
-	</div>
-
-	<h1>Aggiungi un nuovo autore</h1>
-
-	<form th:action="@{/admin/author}" method="post" th:object="${author}" enctype="multipart/form-data">
-
-		<div>
-			<label for="name">Nome:</label>
-			<input type="text" id="name" th:field="*{name}" />
-			<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+			<!-- A destra -->
+			<div class="user-section">
+				<div class="header-actions">
+					<a class="btn-profile" href="/admin">
+						<i class="fas fa-tachometer-alt"></i>
+						Dashboard Admin
+					</a>
+				</div>
+			</div>
 		</div>
+	</header>
 
-		<div>
-			<label for="surname">Cognome:</label>
-			<input type="text" id="surname" th:field="*{surname}" />
-			<span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></span>
+	<main class="form-container">
+		<div class="container">
+			<div class="form-header">
+				<div class="form-icon">
+					<i class="fas fa-user-edit"></i>
+				</div>
+				<h1 class="form-title">Aggiungi nuovo autore</h1>
+				<p class="form-subtitle">Inserisci i dati dell'autore da aggiungere al catalogo</p>
+			</div>
+
+			<div class="form-wrapper">
+				<form th:action="@{/admin/author}" method="post" th:object="${author}" enctype="multipart/form-data"
+					class="book-form">
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-user"></i>
+							Dati Anagrafici
+						</h3>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label for="name" class="form-label">
+									<i class="fas fa-user"></i>
+									Nome *
+								</label>
+								<input type="text" id="name" th:field="*{name}" class="form-input"
+									placeholder="Inserisci il nome dell'autore" />
+								<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+									class="error-message"></span>
+							</div>
+
+							<div class="form-group">
+								<label for="surname" class="form-label">
+									<i class="fas fa-user"></i>
+									Cognome *
+								</label>
+								<input type="text" id="surname" th:field="*{surname}" class="form-input"
+									placeholder="Inserisci il cognome dell'autore" />
+								<span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"
+									class="error-message"></span>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="nationality" class="form-label">
+								<i class="fas fa-globe"></i>
+								Nazionalità *
+							</label>
+							<input type="text" id="nationality" th:field="*{nationality}" class="form-input"
+								placeholder="Inserisci la nazionalità dell'autore" />
+							<span th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"
+								class="error-message"></span>
+						</div>
+					</div>
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-calendar-alt"></i>
+							Date Biografiche
+						</h3>
+
+						<div class="form-row">
+							<div class="form-group">
+								<label for="birthDate" class="form-label">
+									<i class="fas fa-birthday-cake"></i>
+									Data di nascita *
+								</label>
+								<input type="date" id="birthDate" th:field="*{birthDate}" class="form-input" />
+								<span th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"
+									class="error-message"></span>
+							</div>
+
+							<div class="form-group">
+								<label for="deathDate" class="form-label">
+									<i class="fas fa-calendar-alt"></i>
+									Data di morte
+								</label>
+								<input type="date" id="deathDate" th:field="*{deathDate}" class="form-input" />
+								<span th:if="${#fields.hasErrors('deathDate')}" th:errors="*{deathDate}"
+									class="error-message"></span>
+							</div>
+						</div>
+					</div>
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-image"></i>
+							Foto Profilo
+						</h3>
+
+						<div class="form-group">
+							<label for="photo" class="form-label">
+								<i class="fas fa-camera"></i>
+								Foto dell'autore
+							</label>
+							<input type="file" id="photo" name="photoFile" accept="image/*" class="form-input" />
+							<small class="form-help">Seleziona una foto dell'autore (formati supportati: JPG, PNG,
+								GIF)</small>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="button" class="btn-secondary" onclick="window.history.back()">
+							<i class="fas fa-arrow-left"></i>
+							Indietro
+						</button>
+						<button type="submit" class="btn-primary">
+							<i class="fas fa-plus"></i>
+							Aggiungi Autore
+						</button>
+					</div>
+
+				</form>
+			</div>
 		</div>
-
-		<div>
-			<label for="birthDate">Data di nascita:</label>
-			<input type="date" id="birthDate" th:field="*{birthDate}" />
-			<span th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></span>
-		</div>
-
-		<div>
-			<label for="deathDate">Data di morte:</label>
-			<input type="date" id="deathDate" th:field="*{deathDate}" />
-			<span th:if="${#fields.hasErrors('deathDate')}" th:errors="*{deathDate}"></span>
-		</div>
-
-		<div>
-			<label for="nationality">Nazionalità:</label>
-			<input type="text" id="nationality" th:field="*{nationality}" />
-			<span th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></span>
-		</div>
-
-		<div>
-			<label for="photo">Foto:</label>
-			<input type="file" id="photo" name="photoFile" accept="image/*" />
-		</div>
-
-		<div>
-			<button type="submit">Aggiungi Autore</button>
-		</div>
-
-	</form>
+	</main>
 
 </body>
 
