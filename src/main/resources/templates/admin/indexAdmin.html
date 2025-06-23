@@ -126,9 +126,9 @@
 					<h3 class="card-title" style="color: white;">Totale Libri</h3>
 					<p class="card-description" style="color: rgba(255,255,255,0.8);">Numero di libri nella biblioteca
 					</p>
-					<div class="stats-number"
+					<div class="stats-number" th:text="${totalBooks}"
 						style="font-size: 2rem; font-weight: bold; color: #fff; margin-top: 10px;">
-						${totalBooks}
+						0
 					</div>
 				</div>
 
@@ -139,9 +139,9 @@
 					</div>
 					<h3 class="card-title" style="color: white;">Totale Autori</h3>
 					<p class="card-description" style="color: rgba(255,255,255,0.8);">Numero di autori registrati</p>
-					<div class="stats-number"
+					<div class="stats-number"  th:text="${totalAuthors}"
 						style="font-size: 2rem; font-weight: bold; color: #fff; margin-top: 10px;">
-						${totalAuthors}
+						0
 					</div>
 				</div>
 
@@ -152,9 +152,9 @@
 					</div>
 					<h3 class="card-title" style="color: white;">Recensioni</h3>
 					<p class="card-description" style="color: rgba(255,255,255,0.8);">Totale recensioni pubblicate</p>
-					<div class="stats-number"
+					<div class="stats-number" th:text="${totalReviews}"
 						style="font-size: 2rem; font-weight: bold; color: #fff; margin-top: 10px;">
-						${totalReviews}
+						0
 					</div>
 				</div>
 			</div>
