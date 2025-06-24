@@ -175,9 +175,15 @@ public class BookController {
 	}
 
 	@GetMapping("/foundBooks")
-	public String searchBooks(@ModelAttribute("filtro") BookSearchDTO filtro, Model model) {
+	public String searchBooks(@ModelAttribute("filtro") BookSearchDTO filtro, Model model,
+			@AuthenticationPrincipal UserDetails currentUser) {
 		List<Book> books = bookService.searchBooks(filtro.getTitle(), filtro.getAnnoMin(), filtro.getAnnoMax(),
 				filtro.getMinRating());
+
+		if (currentUser != null) {
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
 
 		model.addAttribute("books", books);
 		model.addAttribute("filtro", filtro);
@@ -187,7 +193,7 @@ public class BookController {
 	@GetMapping("/admin/book/{id}/manageBookAuthors")
 	public String manageBookAuthors(@PathVariable("id") Long id, @RequestParam(required = false) Boolean authorized,
 			Model model, @AuthenticationPrincipal UserDetails currentUser) {
-		
+
 		Book book = bookService.getBookById(id);
 		if (book == null) {
 			return "redirect:/admin/manageBooks";

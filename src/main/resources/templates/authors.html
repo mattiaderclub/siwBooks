@@ -27,11 +27,29 @@
 			<!-- Navigation -->
 			<div class="user-section">
 				<div class="header-actions">
-					<a class="btn-profile" href="/">
-						<i class="fas fa-home"></i> Home
-					</a>
 					<a class="btn-profile" href="/books">
 						<i class="fas fa-book"></i> Libri
+					</a>
+				</div>
+			</div>
+
+			<!-- User Section -->
+			<div class="user-section">
+				<div class="user-info" th:if="${userDetails}">
+					<span class="user-welcome">Benvenuto,</span>
+					<span class="user-name" th:text="${userDetails.username}"></span>
+				</div>
+
+				<div class="header-actions">
+					<a class="btn-profile" th:if="${credentials != null}"
+						th:href="@{/utente/{id}/profilo(id=${credentials.user.id})}">
+						<i class="fas fa-user-circle"></i> Profilo
+					</a>
+					<a class="btn-logout" href="/logout" th:if="${userDetails}">
+						<i class="fas fa-sign-out-alt"></i> Logout
+					</a>
+					<a class="btn-login" href="/login" th:unless="${userDetails}">
+						<i class="fas fa-sign-in-alt"></i> Login
 					</a>
 				</div>
 			</div>

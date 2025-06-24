@@ -156,9 +156,16 @@ public class AuthorController {
 	}
 
 	@GetMapping("/foundAuthors")
-	public String searchAuthors(@ModelAttribute("filtro") AuthorSearchDTO filtro, Model model) {
+	public String searchAuthors(@ModelAttribute("filtro") AuthorSearchDTO filtro, Model model,
+			@AuthenticationPrincipal UserDetails currentUser) {
 		List<Author> authors = authorService.searchAuthors(filtro.getName(), filtro.getSurname(),
 				filtro.getNationality());
+
+		if (currentUser != null) {
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
+
 		model.addAttribute("authors", authors);
 		model.addAttribute("filtro", filtro);
 		return "foundAuthors.html";
