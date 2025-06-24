@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.controller.validator.BookValidator;
 import it.uniroma3.siw.dto.BookSearchDTO;
+import it.uniroma3.siw.dto.UpdateBookDTO;
 import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.ReviewService;
 import it.uniroma3.siw.model.Author;
@@ -243,4 +244,105 @@ public class BookController {
 
 		return "redirect:/admin/book/" + bookId + "/manageBookAuthors";
 	}
+
+	@GetMapping("/admin/formUpdateBook/{id}")
+	public String formUpdateBook(@PathVariable("id") Long id, Model model,
+			@AuthenticationPrincipal UserDetails currentUser) {
+		Book book = bookService.getBookById(id);
+		if (book == null)
+			return "redirect:/admin/manageBooks";
+
+		UpdateBookDTO dto = new UpdateBookDTO();
+		dto.setId(book.getId());
+		dto.setTitle(book.getTitle());
+		dto.setAnnoPubblicazione(book.getAnnoPubblicazione());
+		dto.setImagePaths(book.getImagePaths());
+
+		model.addAttribute("bookUpdateDto", dto);
+		model.addAttribute("book", book);
+
+		if (currentUser != null) {
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
+
+		return "admin/formUpdateBook";
+	}
+
+	@PostMapping(value = "/admin/book/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String updateBook(@Valid @ModelAttribute("bookUpdateDto") UpdateBookDTO dto, BindingResult bindingResult,
+			@RequestParam(value = "images", required = false) List<MultipartFile> images, Model model)
+			throws IOException {
+
+		Book existing = bookService.getBookById(dto.getId());
+		if (existing == null)
+			return "redirect:/admin/manageBooks";
+
+		// Custom validator per aggiornamento: evita falso duplicato
+		if (!existing.getTitle().equals(dto.getTitle())
+				|| !existing.getAnnoPubblicazione().equals(dto.getAnnoPubblicazione())) {
+			if (bookService.existsByTitleAndAnnoPubblicazione(dto.getTitle(), dto.getAnnoPubblicazione())) {
+				bindingResult.reject("book.duplicate");
+			}
+		}
+
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("book", existing);
+			return "admin/formUpdateBook";
+		}
+
+		// === aggiorna titolo e anno ===
+		existing.setTitle(dto.getTitle());
+		existing.setAnnoPubblicazione(dto.getAnnoPubblicazione());
+
+		// === gestione immagini ===
+		Path folder = Paths.get("uploads/images/books");
+		Files.createDirectories(folder);
+
+		List<String> savedPaths = new ArrayList<>(
+				existing.getImagePaths() != null ? existing.getImagePaths() : List.of());
+
+		// Ordina immagini
+		if (dto.getImageOrder() != null && dto.getImageOrder().length > 0) {
+			List<String> reordered = new ArrayList<>();
+			for (String path : dto.getImageOrder()) {
+				if (savedPaths.contains(path))
+					reordered.add(path);
+			}
+			savedPaths = reordered;
+		}
+
+		// Rimuove immagini selezionate
+		if (dto.getImagesToDelete() != null && !dto.getImagesToDelete().isEmpty()) {
+			for (String pathToDelete : dto.getImagesToDelete()) {
+				savedPaths.remove(pathToDelete);
+
+				String filename = pathToDelete.substring(pathToDelete.lastIndexOf('/') + 1);
+				Path fileOnDisk = folder.resolve(filename);
+				try {
+					Files.deleteIfExists(fileOnDisk);
+				} catch (IOException e) {
+					System.err.println("Non ho potuto cancellare il file: " + fileOnDisk);
+				}
+			}
+		}
+
+		// Aggiunge nuove immagini
+		if (images != null) {
+			for (MultipartFile file : images) {
+				if (!file.isEmpty()) {
+					String filename = UUID.randomUUID() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
+					Path target = folder.resolve(filename);
+					file.transferTo(target);
+					savedPaths.add("/images/books/" + filename);
+				}
+			}
+		}
+
+		existing.setImagePaths(savedPaths);
+		bookService.saveBook(existing);
+
+		return "redirect:/book/" + existing.getId();
+	}
+
 }

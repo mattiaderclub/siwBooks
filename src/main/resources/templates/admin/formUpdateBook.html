@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Modifica Libro</title>
+</head>
+
+<body>
+
+	<!-- Logo con link alla homepage -->
+	<a th:href="@{/}">
+		<img src="/images/logo-siwBooks.png" alt="Logo SIW Books" style="height: 80px;">
+	</a>
+
+	<h1>Modifica Libro</h1>
+
+	<form th:action="@{/admin/book/update}" th:object="${bookUpdateDto}" method="post" enctype="multipart/form-data">
+
+		<!-- ✅ Ora siamo dentro il contesto di th:object -->
+		<div th:if="${#fields.hasGlobalErrors()}" class="form-error">
+			<p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+		</div>
+
+		<input type="hidden" th:field="*{id}" />
+
+		<div>
+			<label for="title">Titolo:</label>
+			<input type="text" th:field="*{title}" />
+			<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+		</div>
+
+		<div>
+			<label for="annoPubblicazione">Anno pubblicazione:</label>
+			<input type="number" th:field="*{annoPubblicazione}" />
+			<div th:if="${#fields.hasErrors('annoPubblicazione')}" th:errors="*{annoPubblicazione}"></div>
+		</div>
+
+		<h3>Immagini esistenti</h3>
+		<div th:if="${book.imagePaths != null}">
+			<div th:each="img : ${book.imagePaths}">
+				<img th:src="@{${img}}" alt="book image" style="height: 100px; margin: 5px;" />
+				<label>
+					<input type="checkbox" name="imagesToDelete" th:value="${img}" />
+					Rimuovi
+				</label>
+				<!-- Campo nascosto per ordine -->
+				<input type="hidden" name="imageOrder" th:value="${img}" />
+			</div>
+		</div>
+
+		<h3>Aggiungi nuove immagini</h3>
+		<input type="file" name="images" multiple />
+
+		<br><br>
+		<button type="submit">💾 Salva modifiche</button>
+	</form>
+
+</body>
+
+</html>
