@@ -133,9 +133,9 @@
 						<a th:href="@{'/book/' + ${book.id}}" class="siwbooks-btn-view" title="Visualizza Dettagli">
 							<i class="fas fa-eye"></i>
 						</a>
-						<a th:href="@{'/admin/editBook/' + ${book.id}}" class="siwbooks-btn-edit"
-							title="Modifica Libro">
-							<i class="fas fa-edit"></i>
+						<a th:href="@{'/admin/book/' + ${book.id} + '/manageBookAuthors'}" class="siwbooks-btn-edit"
+							title="Associa Autori">
+							<i class="fas fa-users"></i>
 						</a>
 						<a th:href="@{'/admin/deleteBook/' + ${book.id}}" class="siwbooks-btn-delete"
 							title="Elimina Libro"

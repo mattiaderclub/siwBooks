@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestione Autori Libro</title>
+</head>
+
+<body>
+
+    <!-- Logo cliccabile -->
+    <div>
+        <a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+    </div>
+
+    <h1 th:text="'Gestione autori per: ' + ${book.title}">Titolo Libro</h1>
+
+    <!-- Autori associati -->
+    <h2>Autori associati</h2>
+    <ul>
+        <li th:each="author : ${bookAuthors}">
+            <span th:text="${author.name + ' ' + author.surname}"></span>
+            <form th:action="@{'/admin/book/' + ${book.id} + '/removeAuthor/' + ${author.id}}" method="post" style="display:inline;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit">Rimuovi</button>
+            </form>
+        </li>
+    </ul>
+
+    <!-- Autori disponibili -->
+    <h2>Altri autori disponibili</h2>
+    <ul>
+        <li th:each="author : ${availableAuthors}">
+            <span th:text="${author.name + ' ' + author.surname}"></span>
+            <form th:action="@{'/admin/book/' + ${book.id} + '/addAuthor/' + ${author.id}}" method="post" style="display:inline;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit">Aggiungi</button>
+            </form>
+        </li>
+    </ul>
+
+    <p>
+        <a th:href="@{'/book/' + ${book.id}}">🔙 Torna al libro</a>
+    </p>
+
+</body>
+</html>

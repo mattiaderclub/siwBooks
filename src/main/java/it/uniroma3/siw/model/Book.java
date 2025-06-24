@@ -85,20 +85,15 @@ public class Book {
 	}
 	
 	@Override
-	public int hashCode() {
-		return Objects.hash(annoPubblicazione, autori, id, imagePaths, recensioni, title);
-	}
-	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
 		Book other = (Book) obj;
-		return Objects.equals(annoPubblicazione, other.annoPubblicazione) && Objects.equals(autori, other.autori)
-				&& Objects.equals(id, other.id) && Objects.equals(imagePaths, other.imagePaths)
-				&& Objects.equals(recensioni, other.recensioni) && Objects.equals(title, other.title);
+		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
 	}
 }

@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -25,8 +28,10 @@ import it.uniroma3.siw.controller.validator.BookValidator;
 import it.uniroma3.siw.dto.BookSearchDTO;
 import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.ReviewService;
+import it.uniroma3.siw.model.Author;
 import it.uniroma3.siw.model.Book;
 import it.uniroma3.siw.model.Credentials;
+import it.uniroma3.siw.service.AuthorService;
 import it.uniroma3.siw.service.BookService;
 import jakarta.validation.Valid;
 
@@ -38,6 +43,9 @@ public class BookController {
 
 	@Autowired
 	private BookService bookService;
+
+	@Autowired
+	private AuthorService authorService;
 
 	@Autowired
 	private BookValidator bookValidator;
@@ -55,13 +63,13 @@ public class BookController {
 		for (Book book : books) {
 			bookAverageRatings.put(book.getId(), reviewService.getAverageRatingForBook(book));
 		}
-		
-		if (currentUser != null) {
-        	model.addAttribute("currentUser", currentUser);
 
-            Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
-            model.addAttribute("credentials", credentials);
-        }
+		if (currentUser != null) {
+			model.addAttribute("currentUser", currentUser);
+
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
 
 		model.addAttribute("books", books);
 		model.addAttribute("bookAverageRatings", bookAverageRatings);
@@ -70,32 +78,32 @@ public class BookController {
 
 	// Visualizza il dettaglio di un libro
 	@GetMapping("/book/{id}")
-    public String getBookDetails(@PathVariable("id") Long id, Model model,
-                                 @AuthenticationPrincipal UserDetails currentUser) {
-        Book book = bookService.getBookById(id);
-        model.addAttribute("book", book);
-        model.addAttribute("averageRating", bookService.getAverageRating(book));
+	public String getBookDetails(@PathVariable("id") Long id, Model model,
+			@AuthenticationPrincipal UserDetails currentUser) {
+		Book book = bookService.getBookById(id);
+		model.addAttribute("book", book);
+		model.addAttribute("averageRating", bookService.getAverageRating(book));
 
-        if (currentUser != null) {
-        	model.addAttribute("currentUser", currentUser);
+		if (currentUser != null) {
+			model.addAttribute("currentUser", currentUser);
 
-            Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
-            model.addAttribute("credentials", credentials);
-        }
-        return "book.html";
-    }
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
+		return "book.html";
+	}
 
 	@GetMapping("/admin/formNewBook")
-    public String formNewBook(Model model, @AuthenticationPrincipal UserDetails currentUser) {
-        model.addAttribute("book", new Book());
+	public String formNewBook(Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		model.addAttribute("book", new Book());
 
-        if (currentUser != null) {
-        	model.addAttribute("currentUser", currentUser);
-            Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
-            model.addAttribute("credentials", credentials);
-        }
-        return "admin/formNewBook.html";
-    }
+		if (currentUser != null) {
+			model.addAttribute("currentUser", currentUser);
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
+		return "admin/formNewBook.html";
+	}
 
 	// Salva un nuovo libro con immagini
 	@PostMapping(value = "/admin/book", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -172,32 +180,57 @@ public class BookController {
 		return "foundBooks.html";
 	}
 
-	// Form per aggiungere autori a un libro
-	/*
-	 * @GetMapping("/admin/formAddAuthorsToBook/{id}") public String
-	 * formAddAuthors(@PathVariable("id") Long id, Model model) { Book book =
-	 * bookService.getBookById(id); model.addAttribute("book", book);
-	 * model.addAttribute("allAuthors", authorService.getAllAuthors()); return
-	 * "admin/formAddAuthorsToBook.html"; }
-	 * 
-	 * // Salva l'associazione degli autori a un libro
-	 * 
-	 * @PostMapping("/admin/addAuthorsToBook/{id}") public String
-	 * addAuthorsToBook(@PathVariable("id") Long id, @RequestParam Set<Long>
-	 * authorIds) { Book book = bookService.getBookById(id); Iterable<Author>
-	 * authorsToAdd = authorService.getAuthorsByIds(authorIds);
-	 * 
-	 * Set<Author> autori = book.getAutori(); for (Author a : authorsToAdd) {
-	 * autori.add(a); } bookService.saveBook(book); return "redirect:/book/" + id; }
-	 * 
-	 * @PostMapping("/admin/removeAuthorFromBook/{bookId}") public String
-	 * removeAuthorFromBook(@PathVariable Long bookId, @RequestParam Long authorId)
-	 * { Book book = bookService.getBookById(bookId); Author author =
-	 * authorService.getAuthorById(authorId);
-	 * 
-	 * book.getAutori().remove(author);
-	 * 
-	 * bookService.saveBook(book); return "redirect:/book/" + bookId; }
-	 */
+	@GetMapping("/admin/book/{id}/manageBookAuthors")
+	public String manageBookAuthors(@PathVariable("id") Long id, @RequestParam(required = false) Boolean authorized,
+			Model model, @AuthenticationPrincipal UserDetails currentUser) {
+		
+		Book book = bookService.getBookById(id);
+		if (book == null) {
+			return "redirect:/admin/manageBooks";
+		}
 
+		List<Author> allAuthors = StreamSupport.stream(authorService.getAllAuthors().spliterator(), false).toList();
+
+		Set<Author> bookAuthors = book.getAutori();
+
+		List<Author> availableAuthors = allAuthors.stream().filter(a -> !bookAuthors.contains(a)).toList();
+
+		model.addAttribute("book", book);
+		model.addAttribute("bookAuthors", bookAuthors);
+		model.addAttribute("availableAuthors", availableAuthors);
+
+		if (currentUser != null) {
+			model.addAttribute("currentUser", currentUser);
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
+
+		return "admin/manageBookAuthors.html";
+	}
+
+	@PostMapping("/admin/book/{bookId}/addAuthor/{authorId}")
+	public String addAuthorToBook(@PathVariable Long bookId, @PathVariable Long authorId) {
+		Book book = bookService.getBookById(bookId);
+		Author author = authorService.getAuthorById(authorId);
+
+		book.getAutori().add(author);
+		author.getLibri().add(book); // aggiorna anche l’autore
+
+		bookService.saveBook(book); // salva solo uno dei due: Hibernate aggiornerà l’altro
+
+		return "redirect:/admin/book/" + bookId + "/manageBookAuthors";
+	}
+
+	@PostMapping("/admin/book/{bookId}/removeAuthor/{authorId}")
+	public String removeAuthorFromBook(@PathVariable Long bookId, @PathVariable Long authorId) {
+		Book book = bookService.getBookById(bookId);
+		Author author = authorService.getAuthorById(authorId);
+
+		book.getAutori().remove(author);
+		author.getLibri().remove(book); // aggiorna anche l’autore
+
+		bookService.saveBook(book);
+
+		return "redirect:/admin/book/" + bookId + "/manageBookAuthors";
+	}
 }
