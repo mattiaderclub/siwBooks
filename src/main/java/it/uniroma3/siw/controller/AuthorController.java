@@ -125,8 +125,12 @@ public class AuthorController {
 	}
 
 	@GetMapping("/admin/manageAuthors")
-	public String manageAuthors(Model model) {
+	public String manageAuthors(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		model.addAttribute("authors", authorService.getAllAuthors());
+		if (currentUser != null) {
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
 		return "admin/manageAuthors.html";
 	}
 

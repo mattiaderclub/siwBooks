@@ -146,8 +146,12 @@ public class BookController {
 
 	// Mostra la pagina di gestione admin
 	@GetMapping("/admin/manageBooks")
-	public String manageBooks(Model model) {
+	public String manageBooks(Model model, @AuthenticationPrincipal UserDetails currentUser) {
 		model.addAttribute("books", bookService.getAllBooks());
+		if (currentUser != null) {
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
 		return "admin/manageBooks.html";
 	}
 
