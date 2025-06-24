@@ -7,10 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import it.uniroma3.siw.model.Book;
 import it.uniroma3.siw.model.Credentials;
@@ -32,66 +29,93 @@ public class ReviewController {
 
     @Autowired
     private CredentialsService credentialsService;
-    
-    @GetMapping("/reviews/new/{bookId}")
-    public String newReviewForm(@PathVariable Long bookId,
-                                @AuthenticationPrincipal UserDetails currentUser,
-                                Model model) {
 
-        // Recupera l’utente loggato
+    /** ----------------------------------------
+     * Aggiungi nuova recensione
+     * ---------------------------------------- */
+    @PostMapping("/book/{bookId}/review")
+    @PreAuthorize("isAuthenticated()")
+    public String addReview(@PathVariable Long bookId,
+                            @Valid @ModelAttribute("reviewForm") Review review,
+                            BindingResult bindingResult,
+                            @AuthenticationPrincipal UserDetails currentUser,
+                            Model model) {
+
         Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
         User user = credentials.getUser();
-
-        // Verifica se ha già recensito questo libro
         Book book = bookService.getBookById(bookId);
+
         if (reviewService.existsByUserAndBook(user, book)) {
-            // Se già recensito, reindirizza alla pagina del libro
-            return "redirect:/book/" + bookId;
-        }
-
-        model.addAttribute("review", new Review());
-        model.addAttribute("book", book);
-        return "review/formNewReview.html";
-    }
-
-    // Salva nuova recensione
-    @PostMapping("/reviews/{bookId}")
-    public String saveReview(@PathVariable Long bookId,
-                              @Valid @ModelAttribute("review") Review review,
-                              BindingResult bindingResult,
-                              @AuthenticationPrincipal UserDetails currentUser,
-                              Model model) {
-
-        Book book = bookService.getBookById(bookId);
-        Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
-        User user = credentials.getUser();
-
-        // Controllo duplicato (anche qui per sicurezza) se si vuole fare POST a mano
-        if (reviewService.existsByUserAndBook(user, book)) {
-            bindingResult.rejectValue("title", "duplicate", "Hai già recensito questo libro.");
+            bindingResult.reject("duplicate", "Hai già recensito questo libro.");
         }
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("book", book);
-            return "review/formNewReview.html";
+            model.addAttribute("myReview", null); // per evitare conflitti in HTML
+            return "book.html";
         }
 
-        review.setLibro(book);
         review.setUser(user);
+        review.setLibro(book);
         reviewService.saveReview(review);
 
         return "redirect:/book/" + bookId;
     }
 
-    // Elimina recensione (solo admin)
-    @PostMapping("/admin/reviews/delete/{id}")
-    public String deleteReview(@PathVariable Long id) {
+    /** ----------------------------------------
+     * Modifica recensione
+     * ---------------------------------------- */
+    @PostMapping("/book/{bookId}/review/edit/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String editReview(@PathVariable Long bookId,
+                             @PathVariable Long id,
+                             @Valid @ModelAttribute("reviewForm") Review review,
+                             BindingResult bindingResult,
+                             @AuthenticationPrincipal UserDetails currentUser,
+                             Model model) {
+
+        Review existingReview = reviewService.getReviewById(id);
+        Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+
+        if (existingReview == null || !existingReview.getUser().getId().equals(credentials.getUser().getId())) {
+            return "redirect:/book/" + bookId;
+        }
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("book", existingReview.getLibro());
+            model.addAttribute("myReview", existingReview);
+            return "book.html";
+        }
+
+        existingReview.setTitle(review.getTitle());
+        existingReview.setText(review.getText());
+        existingReview.setRating(review.getRating());
+        reviewService.saveReview(existingReview);
+
+        return "redirect:/book/" + bookId;
+    }
+
+    /** ----------------------------------------
+     * Elimina recensione - Utente o Admin
+     * ---------------------------------------- */
+    @PostMapping("/review/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String deleteReview(@PathVariable Long id,
+                               @AuthenticationPrincipal UserDetails currentUser) {
+
         Review review = reviewService.getReviewById(id);
+        if (review == null) return "redirect:/";
+
         Long bookId = review.getLibro().getId();
 
-        reviewService.deleteById(id);
+        Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+
+        // Se admin, elimina sempre. Se user, solo se è il proprietario
+        if (credentials.getRole().equals(Credentials.ADMIN_ROLE) ||
+            review.getUser().getId().equals(credentials.getUser().getId())) {
+            reviewService.deleteById(id);
+        }
 
         return "redirect:/book/" + bookId;
     }
 }
-

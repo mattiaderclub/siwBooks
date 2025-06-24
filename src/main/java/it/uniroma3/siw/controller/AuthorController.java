@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.controller.validator.AuthorValidator;
 import it.uniroma3.siw.dto.AuthorSearchDTO;
+import it.uniroma3.siw.dto.UpdateAuthorDTO;
 import it.uniroma3.siw.model.Author;
 import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.service.AuthorService;
@@ -169,5 +170,88 @@ public class AuthorController {
 		model.addAttribute("authors", authors);
 		model.addAttribute("filtro", filtro);
 		return "foundAuthors.html";
+	}
+
+	@GetMapping("/admin/formUpdateAuthor/{id}")
+	public String formUpdateAuthor(@PathVariable("id") Long id, Model model,
+			@AuthenticationPrincipal UserDetails currentUser) {
+		Author author = authorService.getAuthorById(id);
+		if (author == null)
+			return "redirect:/admin/manageAuthors";
+
+		UpdateAuthorDTO dto = new UpdateAuthorDTO();
+		dto.setId(author.getId());
+		dto.setName(author.getName());
+		dto.setSurname(author.getSurname());
+		dto.setBirthDate(author.getBirthDate());
+		dto.setDeathDate(author.getDeathDate());
+		dto.setNationality(author.getNationality());
+		dto.setPhotoPath(author.getPhoto());
+
+		model.addAttribute("authorUpdateDto", dto);
+		model.addAttribute("author", author);
+
+		if (currentUser != null) {
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			model.addAttribute("credentials", credentials);
+		}
+
+		return "admin/formUpdateAuthor";
+	}
+
+	@PostMapping(value = "/admin/author/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String updateAuthor(@Valid @ModelAttribute("authorUpdateDto") UpdateAuthorDTO dto,
+			BindingResult bindingResult, @RequestParam(value = "photo", required = false) MultipartFile photoFile,
+			Model model) throws IOException {
+
+		Author existing = authorService.getAuthorById(dto.getId());
+		if (existing == null)
+			return "redirect:/admin/manageAuthors";
+
+		// Validazione duplicato (solo se nome, cognome o data sono cambiati)
+		if (!existing.getName().equals(dto.getName()) || !existing.getSurname().equals(dto.getSurname())
+				|| !existing.getBirthDate().equals(dto.getBirthDate())) {
+
+			if (authorService.existsByNameAndSurnameAndBirthDate(dto.getName(), dto.getSurname(), dto.getBirthDate())) {
+				bindingResult.reject("author.duplicate");
+			}
+		}
+
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("author", existing);
+			return "admin/formUpdateAuthor";
+		}
+
+		// Aggiorna i campi base
+		existing.setName(dto.getName());
+		existing.setSurname(dto.getSurname());
+		existing.setBirthDate(dto.getBirthDate());
+		existing.setDeathDate(dto.getDeathDate());
+		existing.setNationality(dto.getNationality());
+
+		// Gestione immagine
+		Path folder = Paths.get("uploads/images/authors");
+		Files.createDirectories(folder);
+
+		if (dto.isDeletePhoto() && existing.getPhoto() != null) {
+			String filename = existing.getPhoto().substring(existing.getPhoto().lastIndexOf('/') + 1);
+			Path fileOnDisk = folder.resolve(filename);
+			try {
+				Files.deleteIfExists(fileOnDisk);
+			} catch (IOException e) {
+				System.err.println("Non ho potuto cancellare il file: " + fileOnDisk);
+			}
+			existing.setPhoto(null);
+		}
+
+		if (photoFile != null && !photoFile.isEmpty()) {
+			String filename = UUID.randomUUID() + "_" + StringUtils.cleanPath(photoFile.getOriginalFilename());
+			Path target = folder.resolve(filename);
+			photoFile.transferTo(target);
+			existing.setPhoto("/images/authors/" + filename);
+		}
+
+		authorService.saveAuthor(existing);
+		return "redirect:/author/" + existing.getId();
 	}
 }
