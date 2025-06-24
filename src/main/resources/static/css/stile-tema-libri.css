@@ -428,6 +428,11 @@ body {
 	color: var(--text-dark);
 }
 
+.section-title i {
+	color: var(--primary-color);
+	font-size: 18px;
+}
+
 .quick-access-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -948,11 +953,6 @@ html {
 
 .form-section:last-child {
 	margin-bottom: 0;
-}
-
-.section-title i {
-	color: var(--primary-color);
-	font-size: 18px;
 }
 
 .form-row {
