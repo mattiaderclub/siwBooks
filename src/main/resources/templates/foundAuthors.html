@@ -39,7 +39,8 @@
 			<!-- User Section -->
 			<div class="user-section">
 				<div class="user-info" th:if="${userDetails}">
-					<span class="user-welcome">Benvenuto,</span>
+					<span class="user-welcome" th:if="${credentials.role == 'DEFAULT'}">Cliente:</span>
+					<span class="user-welcome" th:if="${credentials.role == 'ADMIN'}">Bibliotecario:</span>
 					<span class="user-name" th:text="${userDetails.username}"></span>
 				</div>
 

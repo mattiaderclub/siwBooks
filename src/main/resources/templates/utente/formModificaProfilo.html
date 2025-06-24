@@ -19,7 +19,8 @@
 			<!-- A destra -->
 			<div class="user-section">
 				<div class="user-info">
-					<span class="user-welcome">Bentornato</span>
+					<span class="user-welcome" th:if="${credentials.role == 'DEFAULT'}">Cliente:</span>
+					<span class="user-welcome" th:if="${credentials.role == 'ADMIN'}">Bibliotecario:</span>
 					<span class="user-name" th:text="${credentials.username}">Utente</span>
 				</div>
 				<div class="header-actions">
