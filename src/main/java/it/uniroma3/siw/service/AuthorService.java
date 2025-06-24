@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import it.uniroma3.siw.model.Author;
 import it.uniroma3.siw.model.Book;
 import it.uniroma3.siw.repository.AuthorRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class AuthorService {
@@ -32,8 +33,16 @@ public class AuthorService {
 		authorRepository.save(author);
 	}
 
+	@Transactional
 	public void deleteById(Long id) {
-		this.authorRepository.deleteById(id);
+		Author author = this.getAuthorById(id);
+		if (author != null) {
+			for (Book book : author.getLibri()) {
+				book.getAutori().remove(author); // scollega da ogni libro
+			}
+			author.getLibri().clear(); // facoltativo, aiuta Hibernate a sincronizzare
+			this.authorRepository.delete(author);
+		}
 	}
 
 	/**
