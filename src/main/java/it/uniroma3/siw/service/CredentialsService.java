@@ -66,6 +66,10 @@ public class CredentialsService {
         return credentialsRepository.findByUsername(username).isPresent();
     }
     
+    /*
+     * Serve quando modifico il profilo senza modificare la password e quindi salvo 
+     * senza fare l'encoding della password
+     */
     @Transactional
     public Credentials saveWithoutEncoding(Credentials credentials) {
         return this.credentialsRepository.save(credentials);

@@ -68,15 +68,19 @@ public class AuthorService {
 		return this.authorRepository.existsByNameAndSurnameAndBirthDate(name, surname, birthDate);
 	}
 
+	/*
+	 * Recupera la valutazione media per un autore
+	 */
 	public Double getAverageRatingOfAuthor(Author author) {
-		Set<Book> books = author.getLibri();
-		if (books == null || books.isEmpty())
+		Set<Book> books = author.getLibri();					// Recupera tutti i libri dell'autore
+		if (books == null || books.isEmpty())		// Se non ha libri l'autore, torna null
 			return null;
 
+		// Inizializza
 		double sum = 0;
 		int count = 0;
 		for (Book b : books) {
-			Double bookAvg = reviewService.getAverageRatingForBook(b);
+			Double bookAvg = reviewService.getAverageRatingForBook(b);	// Per ogni libro dell'autore prende l'avgRating
 			if (bookAvg != null) {
 				sum += bookAvg;
 				count++;

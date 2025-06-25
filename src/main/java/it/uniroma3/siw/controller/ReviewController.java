@@ -36,8 +36,13 @@ public class ReviewController {
 	private CredentialsService credentialsService;
 
 	/**
-	 * ---------------------------------------- Aggiungi nuova recensione
-	 * ----------------------------------------
+	 * Mostra il form per scrivere una nuova recensione su un libro. L'utente deve
+	 * essere autenticato e non deve aver già recensito il libro.
+	 *
+	 * @param bookId      ID del libro da recensire
+	 * @param currentUser utente loggato
+	 * @param model       modello per passare attributi alla view
+	 * @return pagina HTML del form oppure redirect se recensione già presente
 	 */
 	@GetMapping("/reviews/new/{bookId}")
 	@PreAuthorize("isAuthenticated()")
@@ -48,14 +53,17 @@ public class ReviewController {
 		User user = credentials.getUser();
 		Book book = bookService.getBookById(bookId);
 
+		// Impedisce che l'utente scriva più di una recensione per lo stesso libro
 		if (reviewService.existsByUserAndBook(user, book)) {
 			return "redirect:/book/" + bookId;
 		}
 
+		// Inizializza DTO con valori minimi
 		UpdateReviewDTO dto = new UpdateReviewDTO();
 		dto.setBookId(bookId);
 		dto.setRating(1); // valore minimo iniziale
 
+		// Attributi dinamici per la view
 		model.addAttribute("reviewDto", dto);
 		model.addAttribute("formAction", "/reviews/new/" + bookId);
 		model.addAttribute("formTitle", "Scrivi una recensione");
@@ -63,6 +71,16 @@ public class ReviewController {
 		return "cliente/formNewReview.html";
 	}
 
+	/**
+	 * Salva una nuova recensione, se valida.
+	 *
+	 * @param bookId        ID del libro
+	 * @param dto           DTO con i dati inseriti dall’utente
+	 * @param bindingResult risultati della validazione
+	 * @param currentUser   utente loggato
+	 * @param model         modello per tornare al form in caso di errori
+	 * @return redirect alla pagina del libro o al form se ci sono errori
+	 */
 	@PostMapping("/reviews/new/{bookId}")
 	@PreAuthorize("isAuthenticated()")
 	public String saveNewReview(@PathVariable Long bookId, @Valid @ModelAttribute("reviewDto") UpdateReviewDTO dto,
@@ -76,6 +94,7 @@ public class ReviewController {
 			return "redirect:/book/" + bookId;
 		}
 
+		// Se il form ha errori, ricarica la view
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("reviewDto", dto);
 			model.addAttribute("formAction", "/reviews/new/" + bookId);
@@ -83,6 +102,7 @@ public class ReviewController {
 			return "cliente/formNewReview.html";
 		}
 
+		// Crea e salva la recensione
 		Review review = new Review();
 		review.setTitle(dto.getTitle());
 		review.setText(dto.getText());
@@ -95,8 +115,13 @@ public class ReviewController {
 	}
 
 	/**
-	 * ---------------------------------------- Modifica recensione
-	 * ----------------------------------------
+	 * Mostra il form di modifica di una recensione esistente. Solo il proprietario
+	 * della recensione può modificarla.
+	 *
+	 * @param id          ID della recensione
+	 * @param currentUser utente loggato
+	 * @param model       modello per la view
+	 * @return form precompilato o redirect se non autorizzato
 	 */
 	@GetMapping("/reviews/edit/{id}")
 	@PreAuthorize("isAuthenticated()")
@@ -106,10 +131,12 @@ public class ReviewController {
 		Review review = reviewService.getReviewById(id);
 		Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
 
+		// Se la recensione non esiste o non appartiene all’utente loggato
 		if (review == null || !review.getUser().getId().equals(credentials.getUser().getId())) {
 			return "redirect:/";
 		}
 
+		// Prepara il DTO con i dati attuali
 		UpdateReviewDTO dto = new UpdateReviewDTO();
 		dto.setId(review.getId());
 		dto.setTitle(review.getTitle());
@@ -124,6 +151,17 @@ public class ReviewController {
 		return "cliente/formEditReview.html";
 	}
 
+	/**
+	 * Aggiorna la recensione dopo la modifica. Solo l’utente proprietario può
+	 * modificarla.
+	 *
+	 * @param id            ID della recensione
+	 * @param dto           DTO con i nuovi valori
+	 * @param bindingResult errori di validazione
+	 * @param currentUser   utente loggato
+	 * @param model         modello per la view
+	 * @return redirect al libro o ricarica del form con errori
+	 */
 	@PostMapping("/reviews/edit/{id}")
 	@PreAuthorize("isAuthenticated()")
 	public String updateReview(@PathVariable Long id, @Valid @ModelAttribute("reviewDto") UpdateReviewDTO dto,
@@ -152,8 +190,12 @@ public class ReviewController {
 	}
 
 	/**
-	 * ---------------------------------------- Elimina recensione - Utente o Admin
-	 * ----------------------------------------
+	 * Elimina una recensione. Può essere effettuata dal proprietario o da un
+	 * amministratore.
+	 *
+	 * @param id          ID della recensione
+	 * @param currentUser utente loggato
+	 * @return redirect al libro corrispondente
 	 */
 	@PostMapping("/review/delete/{id}")
 	@PreAuthorize("isAuthenticated()")
@@ -167,7 +209,7 @@ public class ReviewController {
 
 		Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
 
-		// Se admin, elimina sempre. Se user, solo se è il proprietario
+		// Elimina se ADMIN o autore della recensione
 		if (credentials.getRole().equals(Credentials.ADMIN_ROLE)
 				|| review.getUser().getId().equals(credentials.getUser().getId())) {
 			reviewService.deleteById(id);
@@ -176,6 +218,14 @@ public class ReviewController {
 		return "redirect:/book/" + bookId;
 	}
 
+	/**
+	 * Mostra la pagina personale dell’utente con: - recensioni scritte - libri
+	 * ancora non recensiti
+	 *
+	 * @param currentUser utente loggato
+	 * @param model       modello per la view
+	 * @return pagina con lista recensioni personali
+	 */
 	@GetMapping("/cliente/recensioni")
 	@PreAuthorize("hasAuthority('DEFAULT')")
 	public String getUserReviewPage(@AuthenticationPrincipal UserDetails currentUser, Model model) {
@@ -191,7 +241,7 @@ public class ReviewController {
 			for (Review r : libro.getRecensioni()) {
 				if (r.getUser().equals(user)) {
 					recensioniMie.put(libro, r);
-					break; // uno per libro
+					break; 							// solo una per libro
 				}
 			}
 		}
@@ -204,6 +254,12 @@ public class ReviewController {
 		return "cliente/recensioni.html";
 	}
 
+	/**
+	 * Pagina amministrativa per vedere tutte le recensioni raggruppate per libro.
+	 *
+	 * @param model modello per la view
+	 * @return pagina con elenco libri e relative recensioni
+	 */
 	@GetMapping("/admin/recensioni")
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public String getAllReviewsGroupedByBook(Model model) {

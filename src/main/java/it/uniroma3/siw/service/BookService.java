@@ -55,21 +55,32 @@ public class BookService {
     	return bookRepository.existsByTitleAndAnnoPubblicazione(title, annoPubblicazione);
 	}
     
+    /*
+     * Recupera valutazione media per un libro
+     */
     public Double getAverageRating(Book book) {
-        List<Review> recensioni = book.getRecensioni();
+        List<Review> recensioni = book.getRecensioni();		// Recupera recensioni del libro
         if (recensioni == null || recensioni.isEmpty()) {
             return null;
         }
 
         double somma = 0;
         for (Review r : recensioni) {
-            somma += r.getRating(); // assicurati che getRating() restituisca un valore numerico
+            somma += r.getRating();
         }
 
         return somma / recensioni.size();
     }
 
-    
+    /**
+     * Calcola la media delle valutazioni (rating) per ogni libro nella lista.
+     * 
+     * Se un libro non ha recensioni, la media viene impostata a {@code null} (oppure {@code 0.0} se preferito).
+     * La mappa risultante associa l'ID del libro alla sua media voto.
+     *
+     * @param books lista di libri di cui calcolare le medie delle recensioni
+     * @return mappa ID libro → media delle valutazioni (Double, può essere null)
+     */
     public Map<Long, Double> mediaRecensioniPerLibro(List<Book> books) {
         Map<Long, Double> mediaMap = new HashMap<>();
 

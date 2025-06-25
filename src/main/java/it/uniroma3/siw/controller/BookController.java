@@ -134,20 +134,20 @@ public class BookController {
 
 		// Salva immagini in "uploads/images/books"
 		List<String> savedPaths = new ArrayList<>();
-		Path folder = Paths.get("uploads/images/books");
-		Files.createDirectories(folder);
+		Path folder = Paths.get("uploads/images/books");		// Cerca directory
+		Files.createDirectories(folder);						// Crea cartella se non esiste
 
 		for (MultipartFile file : images) {
 			if (!file.isEmpty()) {
 				String filename = UUID.randomUUID() + "_" + StringUtils.cleanPath(file.getOriginalFilename());
 				Path target = folder.resolve(filename);
 				file.transferTo(target);
-				savedPaths.add("/images/books/" + filename);
+				savedPaths.add("/images/books/" + filename);		// Aggiunge path alla lista
 			}
 		}
 
-		book.setImagePaths(savedPaths);
-		bookService.saveBook(book);
+		book.setImagePaths(savedPaths);		// Imposta lista di percorsi file per immagini
+		bookService.saveBook(book);			// Salva libro in DB
 		return "redirect:/book/" + book.getId();
 	}
 
@@ -216,10 +216,9 @@ public class BookController {
 			return "redirect:/admin/manageBooks";
 		}
 
+		// Catturo tutti gli autori, gli autori di quel libro e così mi trovo gli autori disponibili all'aggiunta
 		List<Author> allAuthors = StreamSupport.stream(authorService.getAllAuthors().spliterator(), false).toList();
-
 		Set<Author> bookAuthors = book.getAutori();
-
 		List<Author> availableAuthors = allAuthors.stream().filter(a -> !bookAuthors.contains(a)).toList();
 
 		model.addAttribute("book", book);
