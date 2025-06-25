@@ -43,4 +43,8 @@ public class ReviewService {
 	public Double getAverageRatingForBook(Book book) {
 		return reviewRepository.averageRatingByLibro(book);
 	}
+
+	public Review findByUserAndBook(User user, Book book) {
+		return reviewRepository.findByUserAndLibro(user, book).orElse(null);
+	}
 }

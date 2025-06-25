@@ -1,6 +1,7 @@
 package it.uniroma3.siw.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -20,4 +21,6 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
 	// media delle valutazioni (rating) per un dato libro
 	@Query("SELECT AVG(r.rating) FROM Review r WHERE r.libro = :libro")
 	Double averageRatingByLibro(@Param("libro") Book libro);
+	
+	Optional<Review> findByUserAndLibro(User user, Book libro);
 }

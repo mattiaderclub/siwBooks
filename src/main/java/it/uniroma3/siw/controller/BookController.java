@@ -32,6 +32,8 @@ import it.uniroma3.siw.service.ReviewService;
 import it.uniroma3.siw.model.Author;
 import it.uniroma3.siw.model.Book;
 import it.uniroma3.siw.model.Credentials;
+import it.uniroma3.siw.model.Review;
+import it.uniroma3.siw.model.User;
 import it.uniroma3.siw.service.AuthorService;
 import it.uniroma3.siw.service.BookService;
 import jakarta.validation.Valid;
@@ -81,16 +83,31 @@ public class BookController {
 	@GetMapping("/book/{id}")
 	public String getBookDetails(@PathVariable("id") Long id, Model model,
 			@AuthenticationPrincipal UserDetails currentUser) {
+
 		Book book = bookService.getBookById(id);
 		model.addAttribute("book", book);
 		model.addAttribute("averageRating", bookService.getAverageRating(book));
 
 		if (currentUser != null) {
+			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
+			User user = credentials.getUser();
+
+			model.addAttribute("credentials", credentials);
 			model.addAttribute("currentUser", currentUser);
 
-			Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
-			model.addAttribute("credentials", credentials);
+			Review myReview = reviewService.findByUserAndBook(user, book); // da aggiungere al service
+
+			model.addAttribute("myReview", myReview);
+
+			if (myReview != null) {
+				model.addAttribute("reviewForm", myReview); // per modifica
+			} else {
+				Review reviewForm = new Review();
+				reviewForm.setRating(1);
+				model.addAttribute("reviewForm", reviewForm);
+			}
 		}
+
 		return "book.html";
 	}
 
