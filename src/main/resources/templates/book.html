@@ -3,82 +3,333 @@
 
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title th:text="${book.title}">Dettaglio Libro</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+		rel="stylesheet">
 </head>
 
 <body>
-
-	<!-- Logo cliccabile per tornare alla home -->
-	<div>
-		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
-	</div>
-
-	<h1 th:text="${book.title}">Titolo Libro</h1>
-
-	<p><strong>Anno di pubblicazione:</strong> <span th:text="${book.annoPubblicazione}">2020</span></p>
-
-	<div th:if="${book.imagePaths != null}">
-		<p><strong>Immagini del libro:</strong></p>
-		<div th:each="img : ${book.imagePaths}">
-			<img th:src="@{${img}}" alt="Immagine Libro" width="200" />
-		</div>
-	</div>
-
-	<p><strong>Autori:</strong></p>
-	<ul>
-		<li th:each="autore : ${book.autori}">
-			<a th:href="@{/author/{id}(id=${autore.id})}" th:text="${autore.name + ' ' + autore.surname}">Autore</a>
-		</li>
-	</ul>
-
-	<p><strong>Valutazione media:</strong>
-		<span th:if="${averageRating != null}" th:text="${averageRating}">4.5</span>
-		<span th:unless="${averageRating != null}">Nessuna valutazione</span>
-	</p>
-
-	<!-- ----------------------------------------- -->
-	<!-- 1. Lista delle recensioni -->
-	<!-- ----------------------------------------- -->
-	<h2>Recensioni</h2>
-
-	<div th:if="${book.recensioni != null and #lists.isEmpty(book.recensioni) == false}">
-		<div th:each="review : ${book.recensioni}" style="border: 1px solid #ccc; padding: 1em; margin-bottom: 1em;">
-			<h3 th:text="${review.title}">Titolo</h3>
-			<p><strong>Voto:</strong> <span th:text="${review.rating}"></span>/5</p>
-			<p th:text="${review.text}">Contenuto della recensione</p>
-			<p><em>di <span th:text="${review.user.name + ' ' + review.user.surname}">Autore</span></em></p>
-
-			<!-- Se utente loggato è l'autore -->
-			<div th:if="${userDetails != null and credentials != null and review.user.id == credentials.user.id}">
-				<a th:href="@{'/reviews/edit/' + ${review.id}}">✏️ Modifica</a>
-				<form th:action="@{'/review/delete/' + ${review.id}}" method="post" style="display: inline;">
-					<button type="submit">🗑️ Elimina</button>
-				</form>
+	<!-- Header -->
+	<header class="main-header">
+		<div class="header-content container">
+			<div class="brand-section">
+				<a href="/"><img src="/images/logo-siwBooks.png" class="brand-logo" alt="SiwBooks Logo" /></a>
+				<h1 class="brand-title">SiwBooks</h1>
 			</div>
-
-			<!-- Se utente è admin -->
-			<div th:if="${credentials != null and credentials.role == 'ADMIN'}">
-				<form th:action="@{'/review/delete/' + ${review.id}}" method="post">
-					<button type="submit">🗑️ Elimina (Admin)</button>
-				</form>
+			<div class="user-section">
+				<div class="header-actions">
+					<a class="btn-profile" href="/authors">
+						<i class="fas fa-users"></i> Autori
+					</a>
+				</div>
 			</div>
 		</div>
+	</header>
+
+	<!-- Breadcrumb e Hero Section -->
+	<div class="entity-detail-header">
+		<div class="entity-detail-container">
+			<div class="entity-detail-breadcrumb">
+				<a href="/"><i class="fas fa-home"></i> Home</a>
+				<i class="fas fa-chevron-right"></i>
+				<span th:text="${book.title}">Titolo Libro</span>
+			</div>
+
+			<div class="entity-detail-hero">
+				<!-- Carosello Immagini -->
+				<div class="entity-detail-image-wrapper">
+					<div th:if="${book.imagePaths != null and !#lists.isEmpty(book.imagePaths)}" class="book-carousel">
+						<div class="carousel-container">
+							<div class="carousel-track">
+								<img th:each="img, iterStat : ${book.imagePaths}" th:src="@{${img}}"
+									th:class="'carousel-slide' + (${iterStat.index == 0} ? ' active' : '')"
+									alt="Immagine Libro" />
+							</div>
+							<div th:if="${#lists.size(book.imagePaths) > 1}" class="carousel-controls">
+								<button class="carousel-btn carousel-prev">
+									<i class="fas fa-chevron-left"></i>
+								</button>
+								<button class="carousel-btn carousel-next">
+									<i class="fas fa-chevron-right"></i>
+								</button>
+							</div>
+							<div th:if="${#lists.size(book.imagePaths) > 1}" class="carousel-indicators">
+								<span th:each="img, iterStat : ${book.imagePaths}"
+									th:class="'indicator' + (${iterStat.index == 0} ? ' active' : '')"
+									th:onclick="'goToSlide(' + ${iterStat.index} + ')'"></span>
+							</div>
+						</div>
+					</div>
+					<div th:unless="${book.imagePaths != null and !#lists.isEmpty(book.imagePaths)}"
+						class="entity-detail-image-placeholder">
+						<i class="fas fa-book"></i>
+					</div>
+				</div>
+
+				<div class="entity-detail-info">
+					<h1 class="entity-detail-title" th:text="${book.title}">Titolo Libro</h1>
+					<p class="entity-detail-subtitle" th:text="${book.annoPubblicazione}">Anno di pubblicazione</p>
+
+					<div class="entity-detail-stats">
+						<div class="entity-detail-stat">
+							<span class="entity-detail-stat-value" th:text="${#lists.size(book.autori)}">0</span>
+							<span class="entity-detail-stat-label">Autori</span>
+						</div>
+						<div class="entity-detail-stat">
+							<span class="entity-detail-stat-value">
+								<span th:if="${averageRating != null}"
+									th:text="${#numbers.formatDecimal(averageRating, 1, 1)}">0.0</span>
+								<span th:unless="${averageRating != null}">-</span>
+							</span>
+							<span class="entity-detail-stat-label">Valutazione</span>
+						</div>
+						<div class="entity-detail-stat">
+							<span class="entity-detail-stat-value" th:text="${#lists.size(book.recensioni)}">0</span>
+							<span class="entity-detail-stat-label">Recensioni</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 
-	<p th:if="${#lists.isEmpty(book.recensioni)}">Nessuna recensione per questo libro.</p>
+	<!-- Content Section -->
+	<div class="entity-detail-container">
+		<div class="entity-detail-content">
+			<div class="entity-detail-main">
+				<!-- Sezione Autori -->
+				<h2 class="entity-detail-section-title">
+					<i class="fas fa-users"></i>
+					Autori
+				</h2>
 
-	<!-- ----------------------------------------- -->
-	<!-- 2. Azione utente: aggiungi o già recensito -->
-	<!-- ----------------------------------------- -->
+				<div class="entity-detail-books-grid" th:if="${!#lists.isEmpty(book.autori)}">
+					<a th:each="autore : ${book.autori}" th:href="@{/author/{id}(id=${autore.id})}"
+						class="entity-detail-book-item">
+						<div class="entity-detail-book-icon">
+							<i class="fas fa-user"></i>
+						</div>
+						<span class="entity-detail-book-title" th:text="${autore.name + ' ' + autore.surname}">Nome
+							Autore</span>
+						<i class="fas fa-chevron-right entity-detail-book-arrow"></i>
+					</a>
+				</div>
 
-	<div th:if="${credentials != null and credentials.role == 'DEFAULT'}">
-		<div th:if="${myReview == null}">
-			<a th:href="@{'/reviews/new/' + ${book.id}}">📝 Scrivi una recensione</a>
-		</div>
-		<div th:if="${myReview != null}">
-			<p>✅ Hai già recensito questo libro.</p>
+				<!-- Sezione Recensioni -->
+				<h2 class="entity-detail-section-title" style="margin-top: 2em;">
+					<i class="fas fa-star"></i>
+					Recensioni
+				</h2>
+
+				<!-- Empty State per recensioni -->
+				<div th:if="${book.recensioni == null or #lists.isEmpty(book.recensioni)}" class="siwbooks-empty-state">
+					<div class="siwbooks-empty-content">
+						<div class="siwbooks-empty-icon">
+							<i class="fas fa-star-half-alt"></i>
+						</div>
+						<h3 class="siwbooks-empty-title">Nessuna Recensione</h3>
+						<p class="siwbooks-empty-description">
+							Non ci sono ancora recensioni per questo libro. Sii il primo a condividere la tua opinione!
+						</p>
+					</div>
+				</div>
+
+				<!-- Reviews Grid -->
+				<div th:unless="${book.recensioni == null or #lists.isEmpty(book.recensioni)}"
+					class="recensioni-mie-container-grid-layout">
+					<div th:each="review : ${book.recensioni}" class="recensioni-mie-card-rettangolare">
+						<div class="recensioni-mie-contenuto-principale">
+							<div class="recensioni-mie-icona-libro-container">
+								<div class="recensioni-mie-icona-libro-avatar">
+									<i class="fas fa-user"></i>
+								</div>
+							</div>
+							<div class="recensioni-mie-dettagli-contenuto">
+								<h3 class="recensioni-mie-titolo-libro" th:text="${review.title}">Titolo Recensione</h3>
+								<div class="recensioni-mie-info-recensione">
+									<p class="recensioni-mie-valutazione">
+										<strong>Valutazione:</strong>
+										<span class="recensioni-mie-stelle" th:text="${review.rating}">5</span>/5
+									</p>
+									<p class="recensioni-mie-valutazione">
+										<strong>Di:</strong>
+										<span th:text="${review.user.name + ' ' + review.user.surname}">Autore</span>
+									</p>
+									<div class="recensioni-mie-testo-container">
+										<p class="recensioni-mie-testo-recensione" th:text="${review.text}">Testo
+											recensione</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="recensioni-mie-azioni-laterali">
+							<!-- Se utente loggato è l'autore -->
+							<div
+								th:if="${userDetails != null and credentials != null and review.user.id == credentials.user.id}">
+								<a th:href="@{'/reviews/edit/' + ${review.id}}" class="recensioni-mie-btn-modifica"
+									title="Modifica recensione">
+									<i class="fas fa-edit"></i>
+								</a>
+								<form th:action="@{'/review/delete/' + ${review.id}}" method="post"
+									style="display:inline;"
+									onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+									<button type="submit" class="recensioni-mie-btn-elimina" title="Elimina recensione">
+										<i class="fas fa-trash"></i>
+									</button>
+								</form>
+							</div>
+
+							<!-- Se utente è admin -->
+							<div th:if="${credentials != null and credentials.role == 'ADMIN'}">
+								<form th:action="@{'/review/delete/' + ${review.id}}" method="post"
+									style="display:inline;"
+									onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+									<button type="submit" class="recensioni-mie-btn-elimina" title="Elimina (Admin)">
+										<i class="fas fa-trash"></i>
+									</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Azione utente: aggiungi recensione -->
+				<div th:if="${credentials != null and credentials.role == 'DEFAULT'}" style="margin-top: 2em;">
+					<div th:if="${myReview == null}" class="siwbooks-item-actions" style="justify-content: center;">
+						<a th:href="@{'/reviews/new/' + ${book.id}}" class="btn-primary"
+							style="padding: 1rem 2rem; text-decoration: none;">
+							<i class="fas fa-pen"></i> Scrivi una recensione
+						</a>
+					</div>
+				</div>
+			</div>
+
+			<!-- Sidebar -->
+			<div class="entity-detail-sidebar">
+				<h3 class="entity-detail-section-title">
+					<i class="fas fa-info-circle"></i>
+					Informazioni
+				</h3>
+
+				<div class="entity-detail-info-grid">
+					<div class="entity-detail-info-item">
+						<i class="fas fa-calendar entity-detail-info-icon"></i>
+						<span class="entity-detail-info-label">Anno pubblicazione:</span>
+						<span class="entity-detail-info-value" th:text="${book.annoPubblicazione}">2020</span>
+					</div>
+
+					<div class="entity-detail-info-item">
+						<i class="fas fa-star entity-detail-info-icon"></i>
+						<span class="entity-detail-info-label">Valutazione:</span>
+						<div class="entity-detail-info-value">
+							<div th:if="${averageRating != null}" class="entity-detail-rating-wrapper">
+								<div class="entity-detail-stars">
+									<i th:each="i : ${#numbers.sequence(1, 5)}"
+										th:class="'fas fa-star entity-detail-star' + (${i <= averageRating} ? '' : ' empty')"></i>
+								</div>
+								<span th:text="${#numbers.formatDecimal(averageRating, 1, 1)}">0.0</span>
+							</div>
+							<span th:unless="${averageRating != null}">Nessuna valutazione</span>
+						</div>
+					</div>
+
+					<div class="entity-detail-info-item">
+						<i class="fas fa-comments entity-detail-info-icon"></i>
+						<span class="entity-detail-info-label">Recensioni:</span>
+						<span class="entity-detail-info-value"
+							th:text="${#lists.size(book.recensioni)} + ' recensioni'">0 recensioni</span>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
+
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-bottom">
+				<p>&copy; 2025 SIW Books. Tutti i diritti riservati.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Carousel functionality
+		let currentSlide = 0;
+		const slides = document.querySelectorAll('.carousel-slide');
+		const indicators = document.querySelectorAll('.indicator');
+		const totalSlides = slides.length;
+
+		function showSlide(index) {
+			// Hide all slides
+			slides.forEach(slide => slide.classList.remove('active'));
+			indicators.forEach(indicator => indicator.classList.remove('active'));
+
+			// Show current slide
+			if (slides[index]) {
+				slides[index].classList.add('active');
+				indicators[index].classList.add('active');
+			}
+		}
+
+		function nextSlide() {
+			currentSlide = (currentSlide + 1) % totalSlides;
+			showSlide(currentSlide);
+		}
+
+		function prevSlide() {
+			currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+			showSlide(currentSlide);
+		}
+
+		function goToSlide(index) {
+			currentSlide = index;
+			showSlide(currentSlide);
+		}
+
+		// Event listeners
+		document.addEventListener('DOMContentLoaded', function () {
+			const nextBtn = document.querySelector('.carousel-next');
+			const prevBtn = document.querySelector('.carousel-prev');
+
+			if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+			if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+
+			// Auto-slide every 5 seconds (optional)
+			if (totalSlides > 1) {
+				setInterval(nextSlide, 5000);
+			}
+
+			// Add scroll effect to header
+			window.addEventListener('scroll', function () {
+				const header = document.querySelector('.main-header');
+				if (window.scrollY > 100) {
+					header.classList.add('scrolled');
+				} else {
+					header.classList.remove('scrolled');
+				}
+			});
+
+			// Review cards hover animation
+			const reviewCards = document.querySelectorAll('.recensioni-mie-card-rettangolare');
+			reviewCards.forEach(card => {
+				card.addEventListener('mouseenter', function () {
+					this.style.transform = 'translateY(-3px)';
+					this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+				});
+
+				card.addEventListener('mouseleave', function () {
+					this.style.transform = 'translateY(0)';
+					this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+				});
+			});
+		});
+	</script>
 
 </body>
 
