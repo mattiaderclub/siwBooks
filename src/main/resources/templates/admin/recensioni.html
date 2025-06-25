@@ -3,41 +3,158 @@
 
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Gestione Recensioni</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+		rel="stylesheet">
 </head>
 
 <body>
-
-	<!-- Logo per tornare alla home -->
-	<div>
-		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
-	</div>
-
-	<h1>Gestione Recensioni</h1>
-
-	<div th:each="book : ${books}" style="margin-bottom: 2em; padding-bottom: 1em; border-bottom: 1px solid #ccc;">
-		<h2 th:text="${book.title}">Titolo Libro</h2>
-
-		<div th:if="${#lists.isEmpty(book.recensioni)}">
-			<p>Nessuna recensione per questo libro.</p>
+	<!-- Header -->
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- Logo e Brand -->
+			<div class="brand-section">
+				<a href="/">
+					<img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
+				</a>
+				<h1 class="brand-title">SIW Books Admin</h1>
+			</div>
 		</div>
+	</header>
 
-		<div th:if="${not #lists.isEmpty(book.recensioni)}">
-			<ul>
-				<li th:each="review : ${book.recensioni}" style="margin-bottom: 1em;">
-					<p><strong>Titolo:</strong> <span th:text="${review.title}">Titolo</span></p>
-					<p><strong>Voto:</strong> <span th:text="${review.rating}">5</span>/5</p>
-					<p th:text="${review.text}">Contenuto</p>
-					<p><em>di <span th:text="${review.user.name + ' ' + review.user.surname}">Autore</span></em></p>
-
-					<form th:action="@{'/review/delete/' + ${review.id}}" method="post">
-						<button type="submit">Elimina</button>
-					</form>
-				</li>
-			</ul>
+	<!-- Hero Section -->
+	<section class="hero-section">
+		<div class="hero-content">
+			<div class="hero-text">
+				<h1 class="hero-title">
+					<span class="highlight">Gestione Recensioni</span>
+				</h1>
+				<p class="hero-subtitle">
+					Gestisci tutte le recensioni dei libri nel sistema.
+					Visualizza, monitora ed elimina le recensioni degli utenti.
+				</p>
+			</div>
 		</div>
-	</div>
+	</section>
 
+	<!-- Books and Reviews Section -->
+	<section class="quick-access-section">
+		<div class="container">
+			<div th:each="book : ${books}" class="gestione-recensioni-libro-sezione">
+				<div class="section-header">
+					<h2 class="section-title">
+						<i class="fas fa-book"></i> <span th:text="${book.title}">Titolo Libro</span>
+					</h2>
+				</div>
+
+				<!-- Empty State per libro senza recensioni -->
+				<div th:if="${#lists.isEmpty(book.recensioni)}" class="siwbooks-empty-state">
+					<div class="siwbooks-empty-content">
+						<div class="siwbooks-empty-icon">
+							<i class="fas fa-comment-slash"></i>
+						</div>
+						<h3 class="siwbooks-empty-title">Nessuna Recensione</h3>
+						<p class="siwbooks-empty-description">
+							Nessuna recensione per questo libro.
+						</p>
+					</div>
+				</div>
+
+				<!-- Reviews Grid per ogni libro -->
+				<div th:unless="${#lists.isEmpty(book.recensioni)}" class="recensioni-mie-container-grid-layout">
+					<div th:each="review : ${book.recensioni}" class="recensioni-mie-card-rettangolare">
+						<div class="recensioni-mie-contenuto-principale">
+							<div class="recensioni-mie-icona-libro-container">
+								<div class="gestione-recensioni-icona-utente-avatar">
+									<i class="fas fa-user"></i>
+								</div>
+							</div>
+							<div class="recensioni-mie-dettagli-contenuto">
+								<h3 class="recensioni-mie-titolo-libro" th:text="${review.title}">Titolo Recensione</h3>
+								<div class="recensioni-mie-info-recensione">
+									<p class="recensioni-mie-valutazione">
+										<strong>Voto:</strong>
+										<span class="recensioni-mie-stelle" th:text="${review.rating}">5</span>/5
+									</p>
+									<p class="gestione-recensioni-autore-info">
+										<strong>Autore:</strong>
+										<span th:text="${review.user.name + ' ' + review.user.surname}">Nome
+											Cognome</span>
+									</p>
+									<div class="recensioni-mie-testo-container">
+										<strong>Testo:</strong>
+										<p class="recensioni-mie-testo-recensione" th:text="${review.text}">Contenuto
+											recensione</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="recensioni-mie-azioni-laterali">
+							<a th:href="@{'/book/' + ${book.id}}" class="recensioni-mie-btn-visualizza"
+								title="Vai al libro">
+								<i class="fas fa-eye"></i>
+							</a>
+							<form th:action="@{'/review/delete/' + ${review.id}}" method="post" style="display:inline;"
+								onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+								<button type="submit" class="recensioni-mie-btn-elimina" title="Elimina recensione">
+									<i class="fas fa-trash"></i>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-bottom">
+				<p>&copy; 2025 SIW Books - Gestione Recensioni. Tutti i diritti riservati.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Initialize animations when page loads
+		document.addEventListener('DOMContentLoaded', function () {
+			// Add scroll effect to header
+			window.addEventListener('scroll', function () {
+				const header = document.querySelector('.main-header');
+				if (window.scrollY > 100) {
+					header.classList.add('scrolled');
+				} else {
+					header.classList.remove('scrolled');
+				}
+			});
+
+			// Page welcome animation
+			setTimeout(() => {
+				const title = document.querySelector('.hero-title');
+				title.style.animation = 'fadeInUp 1s ease-out';
+			}, 300);
+
+			// Review cards hover animation
+			const reviewCards = document.querySelectorAll('.recensioni-mie-card-rettangolare');
+			reviewCards.forEach(card => {
+				card.addEventListener('mouseenter', function () {
+					this.style.transform = 'translateY(-3px)';
+					this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+				});
+
+				card.addEventListener('mouseleave', function () {
+					this.style.transform = 'translateY(0)';
+					this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+				});
+			});
+		});
+	</script>
 </body>
 
 </html>

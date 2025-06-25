@@ -3,63 +3,216 @@
 
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Le mie recensioni</title>
-	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=2" />
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+		rel="stylesheet">
 </head>
 
 <body>
+	<!-- Header -->
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- Logo e Brand -->
+			<div class="brand-section">
+				<a href="/">
+					<img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
+				</a>
+				<h1 class="brand-title">SIW Books</h1>
+			</div>
+		</div>
+	</header>
 
-	<!-- Logo e link home -->
-	<div class="logo-container">
-		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
-	</div>
+	<!-- Hero Section -->
+	<section class="hero-section">
+		<div class="hero-content">
+			<div class="hero-text">
+				<h1 class="hero-title">
+					<span class="highlight">Le mie recensioni</span>
+				</h1>
+				<p class="hero-subtitle">
+					Gestisci le tue recensioni e scopri nuovi libri da recensire.
+					Condividi le tue opinioni sui libri che hai letto.
+				</p>
+			</div>
+			<div class="hero-visual">
 
-	<h1>Le mie recensioni</h1>
+			</div>
+		</div>
+	</section>
 
 	<!-- Sezione: Libri recensiti -->
-	<section>
-		<h2>Libri che hai recensito</h2>
+	<section class="quick-access-section">
+		<div class="container">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="fas fa-star"></i> Libri che hai recensito
+				</h2>
+			</div>
 
-		<div th:if="${#maps.isEmpty(recensioniMie)}">
-			<p>Non hai ancora recensito nessun libro.</p>
+			<!-- Empty State -->
+			<div th:if="${#maps.isEmpty(recensioniMie)}" class="siwbooks-empty-state">
+				<div class="siwbooks-empty-content">
+					<div class="siwbooks-empty-icon">
+						<i class="fas fa-star-half-alt"></i>
+					</div>
+					<h3 class="siwbooks-empty-title">Nessuna Recensione</h3>
+					<p class="siwbooks-empty-description">
+						Non hai ancora recensito nessun libro. Inizia a condividere le tue opinioni sui libri che hai
+						letto.
+					</p>
+				</div>
+			</div>
+
+			<!-- Reviews Grid -->
+			<div th:unless="${#maps.isEmpty(recensioniMie)}" class="recensioni-mie-container-grid-layout">
+				<div th:each="stat : ${recensioniMie}" class="recensioni-mie-card-rettangolare">
+					<div class="recensioni-mie-contenuto-principale">
+						<div class="recensioni-mie-icona-libro-container">
+							<div class="recensioni-mie-icona-libro-avatar">
+								<i class="fas fa-book"></i>
+							</div>
+						</div>
+						<div class="recensioni-mie-dettagli-contenuto">
+							<h3 class="recensioni-mie-titolo-libro" th:text="${stat.key.title}">Titolo Libro</h3>
+							<div class="recensioni-mie-info-recensione">
+								<p class="recensioni-mie-titolo-recensione">
+									<strong>Titolo recensione:</strong>
+									<span th:text="${stat.value.title}">Titolo Recensione</span>
+								</p>
+								<p class="recensioni-mie-valutazione">
+									<strong>Valutazione:</strong>
+									<span class="recensioni-mie-stelle" th:text="${stat.value.rating}">5</span>/5
+								</p>
+								<div class="recensioni-mie-testo-container">
+									<strong>Testo:</strong>
+									<p class="recensioni-mie-testo-recensione" th:text="${stat.value.text}">Testo
+										recensione</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="recensioni-mie-azioni-laterali">
+						<a th:href="@{'/book/' + ${stat.key.id}}" class="recensioni-mie-btn-visualizza"
+							title="Vai al libro">
+							<i class="fas fa-eye"></i>
+						</a>
+						<a th:href="@{'/reviews/edit/' + ${stat.value.id}}" class="recensioni-mie-btn-modifica"
+							title="Modifica recensione">
+							<i class="fas fa-edit"></i>
+						</a>
+						<form th:action="@{'/review/delete/' + ${stat.value.id}}" method="post" style="display:inline;"
+							onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+							<button type="submit" class="recensioni-mie-btn-elimina" title="Elimina recensione">
+								<i class="fas fa-trash"></i>
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
 		</div>
-
-		<ul th:if="${not #maps.isEmpty(recensioniMie)}" class="review-list">
-			<li th:each="stat : ${recensioniMie}" class="review-item">
-			    <h3 th:text="${stat.key.title}">Titolo Libro</h3>
-
-			    <p><strong>Titolo recensione:</strong> <span th:text="${stat.value.title}">Titolo Recensione</span></p>
-			    <p><strong>Valutazione:</strong> <span th:text="${stat.value.rating}">5</span>/5</p>
-			    <p><strong>Testo:</strong> <span th:text="${stat.value.text}">Testo recensione</span></p>
-
-			    <div class="review-actions">
-			        <a th:href="@{'/book/' + ${stat.key.id}}" class="button-link">Vai al libro</a>
-			        <a th:href="@{'/reviews/edit/' + ${stat.value.id}}" class="button-link">Modifica</a>
-			        <form th:action="@{'/review/delete/' + ${stat.value.id}}" method="post" style="display:inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
-			            <button type="submit" class="button-danger">Elimina</button>
-			        </form>
-			    </div>
-			</li>
-
-		</ul>
 	</section>
 
 	<!-- Sezione: Libri da recensire -->
-	<section style="margin-top: 2em;">
-		<h2>Libri che puoi recensire</h2>
+	<section class="quick-access-section" style="margin-top: 2em;">
+		<div class="container">
+			<div class="section-header">
+				<h2 class="section-title">
+					<i class="fas fa-book-open"></i> Libri che puoi recensire
+				</h2>
+			</div>
 
-		<div th:if="${#lists.isEmpty(libriNonRecensiti)}">
-			<p>Hai recensito tutti i libri disponibili.</p>
+			<!-- Empty State -->
+			<div th:if="${#lists.isEmpty(libriNonRecensiti)}" class="siwbooks-empty-state">
+				<div class="siwbooks-empty-content">
+					<div class="siwbooks-empty-icon">
+						<i class="fas fa-check-circle"></i>
+					</div>
+					<h3 class="siwbooks-empty-title">Tutti i Libri Recensiti</h3>
+					<p class="siwbooks-empty-description">
+						Hai recensito tutti i libri disponibili. Ottimo lavoro!
+					</p>
+				</div>
+			</div>
+
+			<!-- Books to Review Grid -->
+			<div th:unless="${#lists.isEmpty(libriNonRecensiti)}" class="siwbooks-items-grid">
+				<div th:each="book : ${libriNonRecensiti}" class="siwbooks-item-card">
+					<div class="siwbooks-item-header">
+						<div class="siwbooks-item-image">
+							<div class="siwbooks-item-avatar siwbooks-book-avatar">
+								<i class="fas fa-book"></i>
+							</div>
+						</div>
+						<div class="siwbooks-item-info">
+							<h3 class="siwbooks-item-title" th:text="${book.title}">Titolo Libro</h3>
+						</div>
+					</div>
+
+					<div class="siwbooks-item-actions">
+						<a th:href="@{'/book/' + ${book.id}}" class="btn-secondary"
+							style="padding: 0.5rem 1rem; text-decoration: none;">
+							<i class="fas fa-eye"></i> Vai al libro
+						</a>
+						<a th:href="@{'/reviews/new/' + ${book.id}}" class="btn-primary"
+							style="padding: 0.5rem 1rem; text-decoration: none;">
+							<i class="fas fa-pen"></i> Scrivi recensione
+						</a>
+					</div>
+				</div>
+			</div>
 		</div>
-
-		<ul th:if="${not #lists.isEmpty(libriNonRecensiti)}" class="review-list">
-			<li th:each="book : ${libriNonRecensiti}" class="review-item">
-				<h3 th:text="${book.title}">Titolo Libro</h3>
-				<a th:href="@{'/reviews/new/' + ${book.id}}" class="button-link">Scrivi una recensione</a>
-			</li>
-		</ul>
 	</section>
 
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-bottom">
+				<p>&copy; 2025 SIW Books - Le mie recensioni. Tutti i diritti riservati.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Initialize animations when page loads
+		document.addEventListener('DOMContentLoaded', function () {
+			animateFloatingBooks();
+
+			// Add scroll effect to header
+			window.addEventListener('scroll', function () {
+				const header = document.querySelector('.main-header');
+				if (window.scrollY > 100) {
+					header.classList.add('scrolled');
+				} else {
+					header.classList.remove('scrolled');
+				}
+			});
+
+			// Page welcome animation
+			setTimeout(() => {
+				const title = document.querySelector('.hero-title');
+				title.style.animation = 'fadeInUp 1s ease-out';
+			}, 300);
+
+			// Review cards hover animation
+			const reviewCards = document.querySelectorAll('.recensioni-mie-card-rettangolare');
+			reviewCards.forEach(card => {
+				card.addEventListener('mouseenter', function () {
+					this.style.transform = 'translateY(-3px)';
+					this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.15)';
+				});
+
+				card.addEventListener('mouseleave', function () {
+					this.style.transform = 'translateY(0)';
+					this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+				});
+			});
+		});
+	</script>
 </body>
 
 </html>
