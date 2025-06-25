@@ -3,39 +3,95 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Modifica recensione</title>
+	<title>SiwBooks - Modifica recensione</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- A sinistra -->
+			<div class="brand-section">
+				<a href="/"><img src="/images/logo-siwBooks.png" class="brand-logo" alt="SiwBooks Logo" /></a>
+				<h1 class="brand-title">SiwBooks</h1>
+			</div>
 
-	<h1>Modifica la tua recensione</h1>
+		</div>
+	</header>
 
-	<form th:action="@{${formAction}}" method="post" th:object="${reviewDto}">
-		<label for="title">Titolo</label><br />
-		<input type="text" th:field="*{title}" /><br />
-		<p th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Errore titolo</p>
+	<main class="form-container">
+		<div class="container">
+			<div class="form-header">
+				<div class="form-icon">
+					<i class="fas fa-edit"></i>
+				</div>
+				<h1 class="form-title">Modifica la tua recensione</h1>
+				<p class="form-subtitle">Aggiorna la tua opinione su questo libro</p>
+			</div>
 
-		<br />
+			<div class="form-wrapper">
+				<form th:action="@{${formAction}}" method="post" th:object="${reviewDto}" class="book-form">
 
-		<label for="rating">Voto (1-5)</label><br />
-		<input type="number" th:field="*{rating}" min="1" max="5" /><br />
-		<p th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}">Errore voto</p>
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-pen"></i>
+							Modifica Recensione
+						</h3>
 
-		<br />
+						<div class="form-group">
+							<label for="title" class="form-label">
+								<i class="fas fa-heading"></i>
+								Titolo *
+							</label>
+							<input type="text" id="title" th:field="*{title}" class="form-input"
+								placeholder="Inserisci il titolo della recensione" />
+							<span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+								class="error-message"></span>
+						</div>
 
-		<label for="text">Testo</label><br />
-		<textarea th:field="*{text}" rows="4" cols="40"></textarea><br />
-		<p th:if="${#fields.hasErrors('text')}" th:errors="*{text}">Errore testo</p>
+						<div class="form-group">
+							<label for="rating" class="form-label">
+								<i class="fas fa-star"></i>
+								Voto (1-5) *
+							</label>
+							<input type="number" id="rating" th:field="*{rating}" min="1" max="5"
+								class="form-input rating-input" placeholder="Inserisci un voto da 1 a 5" />
+							<span th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"
+								class="error-message"></span>
+						</div>
 
-		<input type="hidden" th:field="*{bookId}" />
-		<input type="hidden" th:field="*{id}" />
+						<div class="form-group">
+							<label for="text" class="form-label">
+								<i class="fas fa-comment-alt"></i>
+								Testo della recensione *
+							</label>
+							<textarea id="text" th:field="*{text}" rows="6" class="form-input form-textarea"
+								placeholder="Scrivi qui la tua recensione..."></textarea>
+							<span th:if="${#fields.hasErrors('text')}" th:errors="*{text}" class="error-message"></span>
+							<small class="form-help">Descrivi cosa hai pensato del libro, cosa ti è piaciuto e cosa
+								no</small>
+						</div>
 
-		<br />
-		<button type="submit">Salva modifiche</button>
-	</form>
+						<input type="hidden" th:field="*{bookId}" />
+						<input type="hidden" th:field="*{id}" />
+					</div>
 
-	<br />
-	<a th:href="@{'/book/' + ${reviewDto.bookId}}">← Torna al libro</a>
+					<div class="form-actions">
+						<a th:href="@{'/book/' + ${reviewDto.bookId}}" class="btn-secondary">
+							<i class="fas fa-arrow-left"></i>
+							Torna al libro
+						</a>
+						<button type="submit" class="btn-primary">
+							<i class="fas fa-save"></i>
+							Salva modifiche
+						</button>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</main>
 
 </body>
 

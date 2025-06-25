@@ -1,74 +1,207 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
 
 <head>
 	<meta charset="UTF-8">
-	<title>Modifica Autore</title>
+	<title>SiwBooks - Modifica Autore</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
-
-	<!-- Logo con link alla homepage -->
-	<a th:href="@{/}">
-		<img src="/images/logo-siwBooks.png" alt="Logo SIW Books" style="height: 80px;">
-	</a>
-
-	<h1>Modifica Autore</h1>
-
-	<form th:action="@{/admin/author/update}" th:object="${authorUpdateDto}" method="post"
-		enctype="multipart/form-data">
-
-		<!-- Messaggi di errore globali (es: autore duplicato) -->
-		<div th:if="${#fields.hasGlobalErrors()}" class="form-error">
-			<p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- A sinistra -->
+			<div class="brand-section">
+				<a href="/"><img src="/images/logo-siwBooks.png" class="brand-logo" alt="SiwBooks Logo" /></a>
+				<h1 class="brand-title">SiwBooks</h1>
+			</div>
 		</div>
+	</header>
 
-		<input type="hidden" th:field="*{id}" />
+	<main class="form-container">
+		<div class="container">
+			<div class="form-header">
+				<div class="form-icon">
+					<i class="fas fa-user-edit"></i>
+				</div>
+				<h1 class="form-title">Modifica autore</h1>
+				<p class="form-subtitle">Aggiorna i dati dell'autore nel catalogo</p>
+			</div>
 
-		<div>
-			<label for="name">Nome:</label>
-			<input type="text" th:field="*{name}" />
-			<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+			<div class="form-wrapper">
+				<form th:action="@{/admin/author/update}" th:object="${authorUpdateDto}" method="post"
+					enctype="multipart/form-data" class="book-form">
+
+					<!-- Errori globali -->
+					<div th:if="${#fields.hasGlobalErrors()}" class="form-error">
+						<p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+					</div>
+
+					<input type="hidden" th:field="*{id}" />
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-user"></i>
+							Informazioni Personali
+						</h3>
+
+						<div class="form-group">
+							<label for="name" class="form-label">
+								<i class="fas fa-user-circle"></i>
+								Nome *
+							</label>
+							<input type="text" id="name" th:field="*{name}" class="form-input"
+								placeholder="Inserisci il nome dell'autore" />
+							<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></span>
+						</div>
+
+						<div class="form-group">
+							<label for="surname" class="form-label">
+								<i class="fas fa-user-tag"></i>
+								Cognome *
+							</label>
+							<input type="text" id="surname" th:field="*{surname}" class="form-input"
+								placeholder="Inserisci il cognome dell'autore" />
+							<span th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"
+								class="error-message"></span>
+						</div>
+
+						<div class="form-group">
+							<label for="nationality" class="form-label">
+								<i class="fas fa-globe"></i>
+								Nazionalità *
+							</label>
+							<input type="text" id="nationality" th:field="*{nationality}" class="form-input"
+								placeholder="Inserisci la nazionalità dell'autore" />
+							<span th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"
+								class="error-message"></span>
+						</div>
+					</div>
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-calendar-alt"></i>
+							Date Biografiche
+						</h3>
+
+						<div class="form-group">
+							<label for="birthDate" class="form-label">
+								<i class="fas fa-birthday-cake"></i>
+								Data di nascita *
+							</label>
+							<input type="date" id="birthDate" th:field="*{birthDate}" class="form-input" />
+							<span th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"
+								class="error-message"></span>
+						</div>
+
+						<div class="form-group">
+							<label for="deathDate" class="form-label">
+								<i class="fas fa-cross"></i>
+								Data di morte (opzionale)
+							</label>
+							<input type="date" id="deathDate" th:field="*{deathDate}" class="form-input" />
+							<small class="form-help">Lascia vuoto se l'autore è ancora vivente</small>
+						</div>
+					</div>
+
+					<hr class="section-divider">
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-camera"></i>
+							Foto Profilo
+						</h3>
+
+						<div class="images-section" th:if="${author.photo != null}">
+							<h4 style="margin-top: 0; color: var(--text-medium);">
+								<i class="fas fa-portrait"></i>
+								Foto attuale
+							</h4>
+
+							<div class="author-photo-container">
+								<img th:src="@{${author.photo}}" alt="Foto autore" class="author-photo" />
+								<label class="delete-photo-label">
+									<input type="checkbox" th:field="*{deletePhoto}" />
+									<i class="fas fa-trash-alt"></i> Elimina foto
+								</label>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="photo" class="form-label">
+								<i class="fas fa-camera-retro"></i>
+								Carica nuova foto
+							</label>
+							<input type="file" id="photo" name="photo" accept="image/*" class="form-input" />
+							<small class="form-help">Seleziona una foto dell'autore (formati supportati: JPG, PNG,
+								GIF)</small>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="button" class="btn-secondary" onclick="window.history.back()">
+							<i class="fas fa-arrow-left"></i>
+							Indietro
+						</button>
+						<button type="submit" class="btn-primary">
+							<i class="fas fa-save"></i>
+							Salva modifiche
+						</button>
+					</div>
+
+				</form>
+			</div>
 		</div>
+	</main>
 
-		<div>
-			<label for="surname">Cognome:</label>
-			<input type="text" th:field="*{surname}" />
-			<div th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"></div>
-		</div>
+	<style>
+		/* Stili specifici per la foto dell'autore */
+		.author-photo-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 15px;
+			padding: 20px;
+			background: var(--background-white);
+			border: 2px solid var(--border-color);
+			border-radius: 12px;
+			margin: 20px 0;
+		}
 
-		<div>
-			<label for="birthDate">Data di nascita:</label>
-			<input type="date" th:field="*{birthDate}" />
-			<div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></div>
-		</div>
+		.author-photo {
+			width: 150px;
+			height: 150px;
+			object-fit: cover;
+			border-radius: 50%;
+			border: 4px solid var(--primary-color);
+			box-shadow: var(--shadow-medium);
+		}
 
-		<div>
-			<label for="deathDate">Data di morte (opzionale):</label>
-			<input type="date" th:field="*{deathDate}" />
-		</div>
+		.delete-photo-label {
+			color: var(--primary-color);
+			font-weight: 500;
+			font-size: 14px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			transition: var(--transition-fast);
+		}
 
-		<div>
-			<label for="nationality">Nazionalità:</label>
-			<input type="text" th:field="*{nationality}" />
-			<div th:if="${#fields.hasErrors('nationality')}" th:errors="*{nationality}"></div>
-		</div>
+		.delete-photo-label:hover {
+			color: var(--primary-dark);
+		}
 
-		<div th:if="${author.photo != null}">
-			<h3>Foto attuale</h3>
-			<img th:src="@{${author.photo}}" alt="Author photo" style="height: 100px;" />
-			<label>
-				<input type="checkbox" th:field="*{deletePhoto}" />
-				Elimina immagine
-			</label>
-		</div>
+		.delete-photo-label input[type="checkbox"] {
+			margin: 0;
+		}
 
-		<h3>Carica nuova immagine</h3>
-		<input type="file" name="photo" />
-
-		<br><br>
-		<button type="submit">💾 Salva modifiche</button>
-	</form>
+		/* Miglioramenti per i campi data */
+		.form-input[type="date"] {
+			font-family: var(--font-body);
+		}
+	</style>
 
 </body>
 

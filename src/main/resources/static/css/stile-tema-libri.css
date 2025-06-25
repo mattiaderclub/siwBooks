@@ -2057,3 +2057,189 @@ html {
 .siwbooks-book-avatar {
 	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
+
+/* CSS personalizzato per il form recensione */
+.form-textarea {
+	resize: vertical;
+	max-width: 100%;
+	min-height: 120px;
+	max-height: 300px;
+	box-sizing: border-box;
+}
+
+/* Migliore gestione del rating input */
+.rating-input {
+	width: 100px;
+}
+
+/* Assicura che tutti gli input rispettino i contenitori */
+.form-input {
+	box-sizing: border-box;
+	width: 100%;
+}
+
+#imageList {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 15px;
+	padding: 0;
+	list-style: none;
+	margin: 20px 0;
+}
+
+#imageList li {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	cursor: move;
+	padding: 10px;
+	border: 3px solid transparent;
+	border-radius: 8px;
+	background-color: #fff;
+	transition: all 0.3s ease;
+	min-width: 120px;
+	position: relative;
+	box-shadow: var(--shadow-light);
+}
+
+#imageList li:hover {
+	background-color: #f8f9fa;
+	border-color: #dee2e6;
+	box-shadow: var(--shadow-medium);
+}
+
+#imageList li.dragging {
+	opacity: 0.7;
+	transform: scale(0.9) rotate(5deg);
+	background-color: white;
+	border-color: var(--primary-color);
+	box-shadow: var(--shadow-heavy);
+	z-index: 1000;
+}
+
+#imageList li.drag-over {
+	border-color: var(--secondary-color) !important;
+	background-color: white !important;
+	border-style: dashed !important;
+	border-width: 4px !important;
+	transform: scale(1.05);
+}
+
+#imageList li img {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	border-radius: 6px;
+	margin-bottom: 8px;
+	border: 1px solid #e9ecef;
+}
+
+#imageList li label {
+	margin: 0;
+	font-size: 12px;
+	text-align: center;
+	color: var(--primary-color);
+	font-weight: 500;
+}
+
+#imageList li input[type="checkbox"] {
+	margin-right: 4px;
+}
+
+/* Indicatore di inserimento */
+.drop-indicator {
+	position: absolute;
+	top: -3px;
+	left: -3px;
+	width: 6px;
+	height: calc(100% + 6px);
+	background-color: var(--primary-color);
+	border-radius: 3px;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.drop-indicator.show {
+	opacity: 1;
+}
+
+.drop-indicator.after {
+	left: auto;
+	right: -3px;
+}
+
+/* Stile per la sezione immagini */
+.images-section {
+	background: var(--background-light);
+	border-radius: 8px;
+	padding: 20px;
+	margin: 20px 0;
+}
+
+.drag-help {
+	background: var(--background-light);
+	border: 1px solid var(--border-color);
+	border-radius: 6px;
+	padding: 10px;
+	margin-bottom: 15px;
+	font-size: 14px;
+	color: var(--primary-color);
+}
+
+.drag-help i {
+	margin-right: 6px;
+}
+
+.section-divider {
+	border: none;
+	height: 2px;
+	background: linear-gradient(to right, transparent, var(--border-color), transparent);
+	;
+	margin: 30px 0;
+}
+
+/* Stili specifici per la foto dell'autore */
+.author-photo-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	padding: 20px;
+	background: var(--background-white);
+	border: 2px solid var(--border-color);
+	border-radius: 12px;
+	margin: 20px 0;
+}
+
+.author-photo {
+	width: 150px;
+	height: 150px;
+	object-fit: cover;
+	border-radius: 50%;
+	border: 4px solid var(--primary-color);
+	box-shadow: var(--shadow-medium);
+}
+
+.delete-photo-label {
+	color: var(--primary-color);
+	font-weight: 500;
+	font-size: 14px;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	transition: var(--transition-fast);
+}
+
+.delete-photo-label:hover {
+	color: var(--primary-dark);
+}
+
+.delete-photo-label input[type="checkbox"] {
+	margin: 0;
+}
+
+/* Miglioramenti per i campi data */
+.form-input[type="date"] {
+	font-family: var(--font-body);
+}

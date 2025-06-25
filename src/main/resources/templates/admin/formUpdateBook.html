@@ -1,60 +1,250 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
 
 <head>
 	<meta charset="UTF-8">
-	<title>Modifica Libro</title>
+	<title>SiwBooks - Modifica Libro</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 
 <body>
-
-	<!-- Logo con link alla homepage -->
-	<a th:href="@{/}">
-		<img src="/images/logo-siwBooks.png" alt="Logo SIW Books" style="height: 80px;">
-	</a>
-
-	<h1>Modifica Libro</h1>
-
-	<form th:action="@{/admin/book/update}" th:object="${bookUpdateDto}" method="post" enctype="multipart/form-data">
-
-		<!-- ✅ Ora siamo dentro il contesto di th:object -->
-		<div th:if="${#fields.hasGlobalErrors()}" class="form-error">
-			<p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
-		</div>
-
-		<input type="hidden" th:field="*{id}" />
-
-		<div>
-			<label for="title">Titolo:</label>
-			<input type="text" th:field="*{title}" />
-			<div th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
-		</div>
-
-		<div>
-			<label for="annoPubblicazione">Anno pubblicazione:</label>
-			<input type="number" th:field="*{annoPubblicazione}" />
-			<div th:if="${#fields.hasErrors('annoPubblicazione')}" th:errors="*{annoPubblicazione}"></div>
-		</div>
-
-		<h3>Immagini esistenti</h3>
-		<div th:if="${book.imagePaths != null}">
-			<div th:each="img : ${book.imagePaths}">
-				<img th:src="@{${img}}" alt="book image" style="height: 100px; margin: 5px;" />
-				<label>
-					<input type="checkbox" name="imagesToDelete" th:value="${img}" />
-					Rimuovi
-				</label>
-				<!-- Campo nascosto per ordine -->
-				<input type="hidden" name="imageOrder" th:value="${img}" />
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- A sinistra -->
+			<div class="brand-section">
+				<a href="/"><img src="/images/logo-siwBooks.png" class="brand-logo" alt="SiwBooks Logo" /></a>
+				<h1 class="brand-title">SiwBooks</h1>
 			</div>
 		</div>
+	</header>
 
-		<h3>Aggiungi nuove immagini</h3>
-		<input type="file" name="images" multiple />
+	<main class="form-container">
+		<div class="container">
+			<div class="form-header">
+				<div class="form-icon">
+					<i class="fas fa-book-open"></i>
+				</div>
+				<h1 class="form-title">Modifica libro</h1>
+				<p class="form-subtitle">Aggiorna i dati del libro nel catalogo</p>
+			</div>
 
-		<br><br>
-		<button type="submit">💾 Salva modifiche</button>
-	</form>
+			<div class="form-wrapper">
+				<form th:action="@{/admin/book/update}" th:object="${bookUpdateDto}" method="post" 
+					  enctype="multipart/form-data" class="book-form">
+
+					<!-- Errori globali -->
+					<div th:if="${#fields.hasGlobalErrors()}" class="form-error">
+						<p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+					</div>
+
+					<input type="hidden" th:field="*{id}" />
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-book"></i>
+							Informazioni Libro
+						</h3>
+
+						<div class="form-group">
+							<label for="title" class="form-label">
+								<i class="fas fa-heading"></i>
+								Titolo *
+							</label>
+							<input type="text" id="title" th:field="*{title}" class="form-input"
+								placeholder="Inserisci il titolo del libro" />
+							<span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+								class="error-message"></span>
+						</div>
+
+						<div class="form-group">
+							<label for="annoPubblicazione" class="form-label">
+								<i class="fas fa-calendar-alt"></i>
+								Anno di pubblicazione *
+							</label>
+							<input type="number" id="annoPubblicazione" th:field="*{annoPubblicazione}"
+								class="form-input" placeholder="Inserisci l'anno di pubblicazione" />
+							<span th:if="${#fields.hasErrors('annoPubblicazione')}" th:errors="*{annoPubblicazione}"
+								class="error-message"></span>
+						</div>
+					</div>
+
+					<hr class="section-divider">
+
+					<div class="form-section">
+						<h3 class="section-title">
+							<i class="fas fa-images"></i>
+							Gestione Immagini
+						</h3>
+
+						<div class="images-section" th:if="${book.imagePaths != null}">
+							<h4 style="margin-top: 0; color: var(--text-medium);">
+								<i class="fas fa-photo-video"></i>
+								Immagini esistenti
+							</h4>
+							
+							<div class="drag-help">
+								<i class="fas fa-hand-paper"></i>
+								<strong>Suggerimento:</strong> Trascina le immagini per riordinarle - vedrai dove verranno posizionate
+							</div>
+
+							<ul id="imageList">
+								<li th:each="path : ${book.imagePaths}" draggable="true" th:data-path="${path}">
+									<div class="drop-indicator"></div>
+									<img th:src="@{${path}}" alt="Immagine libro" />
+									<label>
+										<input type="checkbox" name="imagesToDelete" th:value="${path}" />
+										<i class="fas fa-trash-alt"></i> Elimina
+									</label>
+									<!-- Input nascosto per salvare l'ordine -->
+									<input type="hidden" name="imageOrder" th:value="${path}" />
+								</li>
+							</ul>
+						</div>
+
+						<div class="form-group">
+							<label for="images" class="form-label">
+								<i class="fas fa-camera"></i>
+								Aggiungi nuove immagini
+							</label>
+							<input type="file" id="images" name="images" multiple accept="image/*" class="form-input" />
+							<small class="form-help">Seleziona una o più immagini per il libro (formati supportati: JPG, PNG, GIF)</small>
+						</div>
+					</div>
+
+					<div class="form-actions">
+						<button type="button" class="btn-secondary" onclick="window.history.back()">
+							<i class="fas fa-arrow-left"></i>
+							Indietro
+						</button>
+						<button type="submit" class="btn-primary">
+							<i class="fas fa-save"></i>
+							Salva modifiche
+						</button>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</main>
+
+	<script>
+		// JavaScript per il drag & drop delle immagini
+		document.addEventListener('DOMContentLoaded', function () {
+			const imageList = document.getElementById('imageList');
+			if (!imageList) return;
+
+			let draggedElement = null;
+
+			// Aggiungi eventi a tutti i <li>
+			imageList.querySelectorAll('li').forEach(item => {
+				item.addEventListener('dragstart', function (e) {
+					draggedElement = this;
+					this.classList.add('dragging');
+					// Nascondi tutti gli indicatori
+					hideAllIndicators();
+				});
+
+				item.addEventListener('dragover', function (e) {
+					e.preventDefault();
+
+					if (this === draggedElement) return;
+
+					// Calcola se inserire prima o dopo
+					const rect = this.getBoundingClientRect();
+					const midpoint = rect.top + rect.height / 2;
+					const insertBefore = e.clientY < midpoint;
+
+					// Nascondi tutti gli indicatori prima di mostrare quello giusto
+					hideAllIndicators();
+
+					// Mostra l'indicatore appropriato
+					const indicator = this.querySelector('.drop-indicator');
+					if (insertBefore) {
+						indicator.classList.add('show');
+					} else {
+						// Crea un indicatore temporaneo dopo questo elemento
+						const nextItem = this.nextElementSibling;
+						if (nextItem && nextItem !== draggedElement) {
+							const nextIndicator = nextItem.querySelector('.drop-indicator');
+							nextIndicator.classList.add('show');
+						} else if (!nextItem) {
+							// Se è l'ultimo elemento, mostra l'indicatore alla fine
+							indicator.style.position = 'relative';
+							indicator.style.top = '100%';
+							indicator.classList.add('show');
+						}
+					}
+				});
+
+				item.addEventListener('dragenter', function (e) {
+					if (this !== draggedElement) {
+						this.classList.add('drag-over');
+					}
+				});
+
+				item.addEventListener('dragleave', function (e) {
+					// Controlla se stiamo realmente uscendo dall'elemento
+					if (!this.contains(e.relatedTarget)) {
+						this.classList.remove('drag-over');
+						hideAllIndicators();
+					}
+				});
+
+				item.addEventListener('drop', function (e) {
+					e.preventDefault();
+					if (draggedElement !== this) {
+						// Calcola dove inserire basandosi sulla posizione del mouse
+						const rect = this.getBoundingClientRect();
+						const midpoint = rect.top + rect.height / 2;
+						const insertBefore = e.clientY < midpoint;
+
+						if (insertBefore) {
+							this.parentNode.insertBefore(draggedElement, this);
+						} else {
+							this.parentNode.insertBefore(draggedElement, this.nextSibling);
+						}
+
+						// Aggiorna l'ordine degli input nascosti
+						updateImageOrder();
+					}
+					cleanupDragState();
+				});
+
+				item.addEventListener('dragend', function (e) {
+					cleanupDragState();
+				});
+			});
+
+			function hideAllIndicators() {
+				imageList.querySelectorAll('.drop-indicator').forEach(indicator => {
+					indicator.classList.remove('show');
+					indicator.style.position = '';
+					indicator.style.top = '';
+				});
+			}
+
+			function cleanupDragState() {
+				imageList.querySelectorAll('li').forEach(li => {
+					li.classList.remove('dragging', 'drag-over');
+				});
+				hideAllIndicators();
+				draggedElement = null;
+			}
+
+			function updateImageOrder() {
+				// Aggiorna l'ordine degli input nascosti dopo il drag & drop
+				const items = imageList.querySelectorAll('li');
+				items.forEach((item, index) => {
+					const hiddenInput = item.querySelector('input[name="imageOrder"]');
+					if (hiddenInput) {
+						// Mantieni il valore originale ma aggiorna la posizione nell'HTML
+						// Il server può utilizzare l'ordine degli elementi per determinare la nuova sequenza
+					}
+				});
+			}
+		});
+	</script>
 
 </body>
 
