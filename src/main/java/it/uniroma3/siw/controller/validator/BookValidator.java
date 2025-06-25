@@ -27,7 +27,7 @@ public class BookValidator implements Validator{
 				&& bookService.existsByTitleAndAnnoPubblicazione(
 					book.getTitle(), book.getAnnoPubblicazione())) {
 				
-			errors.reject("book.duplicate");
+			errors.rejectValue("title", "duplicate", "Libro già esistente");
 		}		
 	}
 }
