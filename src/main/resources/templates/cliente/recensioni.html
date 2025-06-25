@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Le mie recensioni</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=2" />
+</head>
+
+<body>
+
+	<!-- Logo e link home -->
+	<div class="logo-container">
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1>Le mie recensioni</h1>
+
+	<!-- Sezione: Libri recensiti -->
+	<section>
+		<h2>Libri che hai recensito</h2>
+
+		<div th:if="${#maps.isEmpty(recensioniMie)}">
+			<p>Non hai ancora recensito nessun libro.</p>
+		</div>
+
+		<ul th:if="${not #maps.isEmpty(recensioniMie)}" class="review-list">
+			<li th:each="stat : ${recensioniMie}" class="review-item">
+			    <h3 th:text="${stat.key.title}">Titolo Libro</h3>
+
+			    <p><strong>Titolo recensione:</strong> <span th:text="${stat.value.title}">Titolo Recensione</span></p>
+			    <p><strong>Valutazione:</strong> <span th:text="${stat.value.rating}">5</span>/5</p>
+			    <p><strong>Testo:</strong> <span th:text="${stat.value.text}">Testo recensione</span></p>
+
+			    <div class="review-actions">
+			        <a th:href="@{'/book/' + ${stat.key.id}}" class="button-link">Vai al libro</a>
+			        <a th:href="@{'/reviews/edit/' + ${stat.value.id}}" class="button-link">Modifica</a>
+			        <form th:action="@{'/review/delete/' + ${stat.value.id}}" method="post" style="display:inline;" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+			            <button type="submit" class="button-danger">Elimina</button>
+			        </form>
+			    </div>
+			</li>
+
+		</ul>
+	</section>
+
+	<!-- Sezione: Libri da recensire -->
+	<section style="margin-top: 2em;">
+		<h2>Libri che puoi recensire</h2>
+
+		<div th:if="${#lists.isEmpty(libriNonRecensiti)}">
+			<p>Hai recensito tutti i libri disponibili.</p>
+		</div>
+
+		<ul th:if="${not #lists.isEmpty(libriNonRecensiti)}" class="review-list">
+			<li th:each="book : ${libriNonRecensiti}" class="review-item">
+				<h3 th:text="${book.title}">Titolo Libro</h3>
+				<a th:href="@{'/reviews/new/' + ${book.id}}" class="button-link">Scrivi una recensione</a>
+			</li>
+		</ul>
+	</section>
+
+</body>
+
+</html>

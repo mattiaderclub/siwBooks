@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Gestione Recensioni</title>
+</head>
+
+<body>
+
+	<!-- Logo per tornare alla home -->
+	<div>
+		<a href="/"><img src="/images/logo-siwBooks.png" alt="Home" width="150" /></a>
+	</div>
+
+	<h1>Gestione Recensioni</h1>
+
+	<div th:each="book : ${books}" style="margin-bottom: 2em; padding-bottom: 1em; border-bottom: 1px solid #ccc;">
+		<h2 th:text="${book.title}">Titolo Libro</h2>
+
+		<div th:if="${#lists.isEmpty(book.recensioni)}">
+			<p>Nessuna recensione per questo libro.</p>
+		</div>
+
+		<div th:if="${not #lists.isEmpty(book.recensioni)}">
+			<ul>
+				<li th:each="review : ${book.recensioni}" style="margin-bottom: 1em;">
+					<p><strong>Titolo:</strong> <span th:text="${review.title}">Titolo</span></p>
+					<p><strong>Voto:</strong> <span th:text="${review.rating}">5</span>/5</p>
+					<p th:text="${review.text}">Contenuto</p>
+					<p><em>di <span th:text="${review.user.name + ' ' + review.user.surname}">Autore</span></em></p>
+
+					<form th:action="@{'/review/delete/' + ${review.id}}" method="post">
+						<button type="submit">Elimina</button>
+					</form>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+</body>
+
+</html>

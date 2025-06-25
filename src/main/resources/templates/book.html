@@ -44,30 +44,22 @@
 	<div th:if="${book.recensioni != null and #lists.isEmpty(book.recensioni) == false}">
 		<div th:each="review : ${book.recensioni}" style="border: 1px solid #ccc; padding: 1em; margin-bottom: 1em;">
 			<h3 th:text="${review.title}">Titolo</h3>
-			<p>
-				<strong>Voto:</strong> <span th:text="${review.rating}"></span>/5
-			</p>
+			<p><strong>Voto:</strong> <span th:text="${review.rating}"></span>/5</p>
 			<p th:text="${review.text}">Contenuto della recensione</p>
 			<p><em>di <span th:text="${review.user.name + ' ' + review.user.surname}">Autore</span></em></p>
 
-			<!-- Se utente loggato è l'autore, mostra bottoni modifica/elimina -->
-			<div th:if="${userDetails != null and review.user.id == credentials.user.id}">
-				<form th:action="@{'/book/' + ${book.id} + '/review/edit/' + ${review.id}}" method="post">
-					<input type="text" name="title" th:value="${review.title}" placeholder="Titolo" required />
-					<input type="number" name="rating" min="1" max="5" th:value="${review.rating}" required />
-
-					<textarea name="text" required th:text="${review.text}"></textarea>
-					<button type="submit">Salva modifiche</button>
-				</form>
-				<form th:action="@{'/review/delete/' + ${review.id}}" method="post" style="margin-top: 0.5em;">
-					<button type="submit">Elimina</button>
+			<!-- Se utente loggato è l'autore -->
+			<div th:if="${userDetails != null and credentials != null and review.user.id == credentials.user.id}">
+				<a th:href="@{'/reviews/edit/' + ${review.id}}">✏️ Modifica</a>
+				<form th:action="@{'/review/delete/' + ${review.id}}" method="post" style="display: inline;">
+					<button type="submit">🗑️ Elimina</button>
 				</form>
 			</div>
 
 			<!-- Se utente è admin -->
 			<div th:if="${credentials != null and credentials.role == 'ADMIN'}">
 				<form th:action="@{'/review/delete/' + ${review.id}}" method="post">
-					<button type="submit">Elimina (Admin)</button>
+					<button type="submit">🗑️ Elimina (Admin)</button>
 				</form>
 			</div>
 		</div>
@@ -75,33 +67,17 @@
 
 	<p th:if="${#lists.isEmpty(book.recensioni)}">Nessuna recensione per questo libro.</p>
 
-
 	<!-- ----------------------------------------- -->
-	<!-- 2. Form per nuova recensione -->
+	<!-- 2. Azione utente: aggiungi o già recensito -->
 	<!-- ----------------------------------------- -->
-	<div th:if="${userDetails != null and myReview == null and credentials.role == 'DEFAULT'}">
-		<h3>Scrivi una recensione</h3>
 
-		<form th:action="@{'/book/' + ${book.id} + '/review'}" method="post" th:object="${reviewForm}">
-			<label for="title">Titolo</label>
-			<input type="text" th:field="*{title}" />
-			<p th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Il titolo della recensione è obbligatorio</p>
-
-			<label for="rating">Voto (1-5)</label>
-			<input type="number" min="1" max="5" th:field="*{rating}" />
-			<p th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}">Il voto è obbligatorio</p>
-
-			<label for="text">Testo</label>
-			<textarea th:field="*{text}"></textarea>
-			<p th:if="${#fields.hasErrors('text')}" th:errors="*{text}">Il contenuto non può essere vuoto</p>
-
-
-			<button type="submit">Invia recensione</button>
-		</form>
-	</div>
-
-	<div th:if="${userDetails != null and myReview != null}">
-		<p>Hai già recensito questo libro. Puoi modificarla o eliminarla qui sopra.</p>
+	<div th:if="${credentials != null and credentials.role == 'DEFAULT'}">
+		<div th:if="${myReview == null}">
+			<a th:href="@{'/reviews/new/' + ${book.id}}">📝 Scrivi una recensione</a>
+		</div>
+		<div th:if="${myReview != null}">
+			<p>✅ Hai già recensito questo libro.</p>
+		</div>
 	</div>
 
 </body>

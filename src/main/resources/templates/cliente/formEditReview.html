@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Modifica recensione</title>
+</head>
+
+<body>
+
+	<h1>Modifica la tua recensione</h1>
+
+	<form th:action="@{${formAction}}" method="post" th:object="${reviewDto}">
+		<label for="title">Titolo</label><br />
+		<input type="text" th:field="*{title}" /><br />
+		<p th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Errore titolo</p>
+
+		<br />
+
+		<label for="rating">Voto (1-5)</label><br />
+		<input type="number" th:field="*{rating}" min="1" max="5" /><br />
+		<p th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}">Errore voto</p>
+
+		<br />
+
+		<label for="text">Testo</label><br />
+		<textarea th:field="*{text}" rows="4" cols="40"></textarea><br />
+		<p th:if="${#fields.hasErrors('text')}" th:errors="*{text}">Errore testo</p>
+
+		<input type="hidden" th:field="*{bookId}" />
+		<input type="hidden" th:field="*{id}" />
+
+		<br />
+		<button type="submit">Salva modifiche</button>
+	</form>
+
+	<br />
+	<a th:href="@{'/book/' + ${reviewDto.bookId}}">← Torna al libro</a>
+
+</body>
+
+</html>

@@ -23,4 +23,6 @@ public interface ReviewRepository extends CrudRepository<Review, Long> {
 	Double averageRatingByLibro(@Param("libro") Book libro);
 	
 	Optional<Review> findByUserAndLibro(User user, Book libro);
+	
+	List<Review> findAllByUser(User user);
 }

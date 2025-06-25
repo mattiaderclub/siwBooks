@@ -108,6 +108,17 @@
 						<i class="fas fa-arrow-right"></i>
 					</div>
 				</div>
+
+				<div class="access-card admin-card" onclick="location.href='/admin/recensioni'">
+					<div class="card-icon admin-icon">
+						<i class="fas fa-star"></i>
+					</div>
+					<h3 class="card-title">Visualizza Recensioni</h3>
+					<p class="card-description">Esamina la lista di recensioni aggiunte dagli utenti</p>
+					<div class="card-arrow">
+						<i class="fas fa-arrow-right"></i>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -139,7 +150,7 @@
 					</div>
 					<h3 class="card-title" style="color: white;">Totale Autori</h3>
 					<p class="card-description" style="color: rgba(255,255,255,0.8);">Numero di autori registrati</p>
-					<div class="stats-number"  th:text="${totalAuthors}"
+					<div class="stats-number" th:text="${totalAuthors}"
 						style="font-size: 2rem; font-weight: bold; color: #fff; margin-top: 10px;">
 						0
 					</div>

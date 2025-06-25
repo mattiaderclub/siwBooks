@@ -9,13 +9,18 @@ import org.springframework.stereotype.Service;
 
 import it.uniroma3.siw.model.Book;
 import it.uniroma3.siw.model.Review;
+import it.uniroma3.siw.model.User;
 import it.uniroma3.siw.repository.BookRepository;
+import it.uniroma3.siw.repository.ReviewRepository;
 
 @Service
 public class BookService {
 
 	@Autowired
 	private BookRepository bookRepository;
+	
+	@Autowired
+	private ReviewRepository reviewRepository;
 	
 	public Book getBookById(Long id) {
 		return bookRepository.findById(id).orElse(null);
@@ -85,4 +90,16 @@ public class BookService {
         return mediaMap;
     }
 
+    public List<Book> getBooksReviewedByUser(User user) {
+	    List<Review> reviews = reviewRepository.findAllByUser(user);
+	    return reviews.stream().map(Review::getLibro).distinct().toList();
+	}
+
+	public List<Book> getBooksNotReviewedByUser(User user) {
+	    List<Book> allBooks = bookRepository.findAll();
+	    List<Book> reviewed = getBooksReviewedByUser(user);
+	    return allBooks.stream()
+	                   .filter(b -> !reviewed.contains(b))
+	                   .toList();
+	}
 }
