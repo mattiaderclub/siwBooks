@@ -42,10 +42,12 @@ public class AuthConfiguration {
 				// .requestMatchers("/**").permitAll()
 
 				// chiunque (autenticato o no) può accedere alle pagine index, login,
-				// register,annunci, formSearchAnnunci, foundAnnunci, annuncio
-				// ai css e alle immagini
-				.requestMatchers(HttpMethod.GET, "/", "/index", "/register", "/css/**", "/images/**", "/annunci",
-						"/formSearchAnnunci", "/foundAnnunci", "/annuncio/**", "/favicon.ico")
+				// register, book e correlate, author e correlate, ai css e alle immagini
+				.requestMatchers(HttpMethod.GET, "/", "/index", "/register", "/css/**", "/images/**", "/favicon.ico",
+						// Libri
+						"/books", "/book/**", "/formSearchBooks", "/foundBooks",
+						// Autori
+						"/authors", "/author/**", "/formSearchAuthors", "/foundAuthors")
 				.permitAll()
 
 				// chiunque (autenticato o no) può mandare richieste POST al punto di accesso
@@ -70,7 +72,6 @@ public class AuthConfiguration {
 				// in caso di successo, si viene reindirizzati alla home
 				.logoutSuccessUrl("/").invalidateHttpSession(true).deleteCookies("JSESSIONID")
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).clearAuthentication(true).permitAll();
-		
 
 		return httpSecurity.build();
 	}
