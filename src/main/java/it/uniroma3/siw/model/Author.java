@@ -12,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 
 @Entity
@@ -21,19 +22,21 @@ public class Author {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@NotBlank
+	@NotBlank(message = "{author.name.notblank}")
 	@Column(nullable = false)
 	private String name;
-	@NotBlank
+	@NotBlank(message = "{author.surname.notblank}")
 	@Column(nullable = false)
 	private String surname;
 
-	@PastOrPresent
+	@PastOrPresent(message = "{author.birthDate.pastorpresent}")
+	@NotNull(message = "{author.birthDate.notnull}")
 	@Column(nullable = false)
 	private LocalDate birthDate;
+	@PastOrPresent(message = "{author.deathDate.pastorpresent}")
 	private LocalDate deathDate;
 
-	@NotBlank
+	@NotBlank(message = "{author.nationality.notblank}")
 	@Column(nullable = false)
 	private String nationality;
 

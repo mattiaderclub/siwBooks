@@ -30,14 +30,22 @@
 					<a class="btn-profile" href="/books">
 						<i class="fas fa-book"></i> Libri
 					</a>
+					<a class="btn-profile" th:if="${credentials != null and credentials.role == 'DEFAULT'}" href="/cliente/recensioni">
+						<i class="fas fa-star"></i> Recensioni
+					</a>
+					<a class="btn-profile" th:if="${credentials != null and credentials.role == 'ADMIN'}" href="/admin/recensioni">
+						<i class="fas fa-star"></i> Recensioni
+					</a>
 				</div>
 			</div>
 
 			<!-- User Section -->
 			<div class="user-section">
 				<div class="user-info" th:if="${userDetails}">
-					<span class="user-welcome" th:if="${credentials.role == 'DEFAULT'}">Cliente:</span>
-					<span class="user-welcome" th:if="${credentials.role == 'ADMIN'}">Bibliotecario:</span>
+					<span class="user-welcome"
+						th:if="${credentials != null and credentials.role == 'DEFAULT'}">Cliente:</span>
+					<span class="user-welcome"
+						th:if="${credentials != null and credentials.role == 'ADMIN'}">Bibliotecario:</span>
 					<span class="user-name" th:text="${userDetails.username}"></span>
 				</div>
 
@@ -120,7 +128,7 @@
 						</div>
 						<div class="siwbooks-item-info">
 							<h3 class="siwbooks-item-title" th:text="${author.name} + ' ' + ${author.surname}"></h3>
-							<p class="siwbooks-item-subtitle">Autore</p>
+							<p class="siwbooks-item-subtitle" th:text="${author.birthDate}"></p>
 						</div>
 					</div>
 

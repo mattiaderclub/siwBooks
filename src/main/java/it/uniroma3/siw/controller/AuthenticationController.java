@@ -92,7 +92,7 @@ public class AuthenticationController {
 		Credentials credentials = credentialsService.getCredentials(currentUser.getUsername());
 		// Aggiungi le credenziali al Model
 		model.addAttribute("credentials", credentials);
-		
+
 		// Se l'utente è admin, vai alla dashboard admin
 		if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
 			int totalBooks = (int) StreamSupport.stream(bookService.getAllBooks().spliterator(), false).count();
@@ -135,18 +135,17 @@ public class AuthenticationController {
 
 		// Controllo che la password e la conferma password siano uguali
 		if (!registrationUserDTO.getCredentials().getPassword().equals(registrationUserDTO.getConfirmPassword())) {
-			bindingResult.rejectValue("confirmPassword", "error.confirmPassword", "Le password non coincidono");
+			bindingResult.rejectValue("confirmPassword", "confirmPassword.nomatch");
 		}
 
 		// Controllo se l'email esiste già
 		if (userService.existsByEmail(registrationUserDTO.getUser().getEmail())) {
-			bindingResult.rejectValue("user.email", "error.user.email", "Questa email è già registrata");
+			bindingResult.rejectValue("user.email", "user.email.duplicate");
 		}
 
 		// Controllo se lo username esiste già
 		if (credentialsService.existsByUsername(registrationUserDTO.getCredentials().getUsername())) {
-			bindingResult.rejectValue("credentials.username", "error.credentials.username",
-					"Questo username è già in uso");
+			bindingResult.rejectValue("credentials.username", "credentials.username.duplicate");
 		}
 
 		// Se ci sono errori, torna alla pagina di registrazione

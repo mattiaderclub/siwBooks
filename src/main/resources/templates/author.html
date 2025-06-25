@@ -110,7 +110,7 @@
 					</div>
 
 					<div th:if="${author.deathDate != null}" class="entity-detail-info-item">
-						<i class="fas fa-calendar-times entity-detail-info-icon"></i>
+						<i class="fas fa-calendar-alt entity-detail-info-icon"></i>
 						<span class="entity-detail-info-label">Data di morte:</span>
 						<span class="entity-detail-info-value"
 							th:text="${#temporals.format(author.deathDate, 'dd/MM/yyyy')}">01/01/2020</span>
@@ -140,6 +140,15 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-bottom">
+				<p>&copy; 2025 SIW Books. Tutti i diritti riservati.</p>
+			</div>
+		</div>
+	</footer>
 
 </body>
 

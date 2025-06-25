@@ -22,8 +22,8 @@
 			</div>
 			<div class="user-section">
 				<div class="header-actions">
-					<a class="btn-profile" href="/authors">
-						<i class="fas fa-users"></i> Autori
+					<a class="btn-profile" href="/books">
+						<i class="fas fa-book"></i> Libri
 					</a>
 				</div>
 			</div>
@@ -117,6 +117,11 @@
 							Autore</span>
 						<i class="fas fa-chevron-right entity-detail-book-arrow"></i>
 					</a>
+				</div>
+
+				<div th:if="${#lists.isEmpty(book.autori)}" class="entity-detail-no-content">
+					<i class="fas fa-users-slash" style="font-size: 48px; margin-bottom: 16px; display: block;"></i>
+					Nessun autore associato a questo libro
 				</div>
 
 				<!-- Sezione Recensioni -->

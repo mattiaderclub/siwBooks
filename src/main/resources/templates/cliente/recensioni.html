@@ -78,6 +78,7 @@
 						</div>
 						<div class="recensioni-mie-dettagli-contenuto">
 							<h3 class="recensioni-mie-titolo-libro" th:text="${stat.key.title}">Titolo Libro</h3>
+							<p class="siwbooks-item-subtitle" th:text="'Anno: ' + ${stat.key.annoPubblicazione}"></p>
 							<div class="recensioni-mie-info-recensione">
 								<p class="recensioni-mie-titolo-recensione">
 									<strong>Titolo recensione:</strong>
@@ -150,6 +151,7 @@
 						</div>
 						<div class="siwbooks-item-info">
 							<h3 class="siwbooks-item-title" th:text="${book.title}">Titolo Libro</h3>
+							<p class="siwbooks-item-subtitle" th:text="'Anno: ' + ${book.annoPubblicazione}"></p>
 						</div>
 					</div>
 

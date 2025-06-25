@@ -38,7 +38,7 @@ public class AuthConfiguration {
 
 	@Bean
 	protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().and().cors().disable().authorizeHttpRequests()
+		httpSecurity.csrf().disable().cors().disable().authorizeHttpRequests()
 				// .requestMatchers("/**").permitAll()
 
 				// chiunque (autenticato o no) può accedere alle pagine index, login,

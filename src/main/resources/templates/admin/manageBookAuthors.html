@@ -61,7 +61,7 @@
 				</div>
 			</div>
 			<div class="hero-visual">
-				
+
 			</div>
 		</div>
 	</section>
@@ -94,20 +94,19 @@
 				<div th:each="author : ${bookAuthors}" class="siwbooks-item-card">
 					<div class="siwbooks-item-header">
 						<div class="siwbooks-item-image">
-							<div class="siwbooks-item-avatar">
+							<div class="siwbooks-item-avatar siwbooks-author-avatar">
 								<i class="fas fa-user"></i>
 							</div>
 						</div>
 						<div class="siwbooks-item-info">
 							<h3 class="siwbooks-item-title" th:text="${author.name + ' ' + author.surname}"></h3>
-							<p class="siwbooks-item-subtitle">Autore associato</p>
+							<p class="siwbooks-item-subtitle" th:text="${author.birthDate}"></p>
 						</div>
 					</div>
 
 					<div class="siwbooks-item-actions">
 						<form th:action="@{'/admin/book/' + ${book.id} + '/removeAuthor/' + ${author.id}}"
 							method="post">
-							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 							<button type="submit" class="siwbooks-btn-delete" title="Rimuovi Autore"
 								onclick="return confirm('Sei sicuro di voler rimuovere questo autore dal libro?')">
 								<i class="fas fa-user-minus"></i>
@@ -146,19 +145,18 @@
 				<div th:each="author : ${availableAuthors}" class="siwbooks-item-card">
 					<div class="siwbooks-item-header">
 						<div class="siwbooks-item-image">
-							<div class="siwbooks-item-avatar">
+							<div class="siwbooks-item-avatar siwbooks-author-avatar">
 								<i class="fas fa-user"></i>
 							</div>
 						</div>
 						<div class="siwbooks-item-info">
 							<h3 class="siwbooks-item-title" th:text="${author.name + ' ' + author.surname}"></h3>
-							<p class="siwbooks-item-subtitle">Disponibile per associazione</p>
+							<p class="siwbooks-item-subtitle" th:text="${author.birthDate}"></p>
 						</div>
 					</div>
 
 					<div class="siwbooks-item-actions">
 						<form th:action="@{'/admin/book/' + ${book.id} + '/addAuthor/' + ${author.id}}" method="post">
-							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 							<button type="submit" class="siwbooks-btn-edit" title="Aggiungi Autore">
 								<i class="fas fa-user-plus"></i>
 							</button>

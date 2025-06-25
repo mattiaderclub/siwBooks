@@ -14,27 +14,31 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * Entità che rappresenta un utente del sistema.
- * Contiene informazioni personali come nome, cognome, email e cellulare.
+ * Entità che rappresenta un utente del sistema. Contiene informazioni personali
+ * come nome, cognome, email e cellulare.
  */
 @Entity
-@Table(name = "users")	// "user" è parola riservata in Postgres, quindi si usa "users"
+@Table(name = "users") // "user" è parola riservata in Postgres, quindi si usa "users"
 public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	// === Dati utente ===
-	@NotBlank
+	@NotBlank(message = "{user.name.notblank}")
 	private String name;
-	@NotBlank
+
+	@NotBlank(message = "{user.surname.notblank}")
 	private String surname;
-	@NotBlank
+
+	@NotBlank(message = "{user.email.notblank}")
+	@jakarta.validation.constraints.Email(message = "{user.email.invalid}")
 	private String email;
-	@NotBlank
+
+	@NotBlank(message = "{user.cell.notblank}")
 	private String cell;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
 	private List<Review> review;
 
@@ -42,44 +46,56 @@ public class User {
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public String getSurname() {
 		return surname;
 	}
+
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
+
 	public String getEmail() {
 		return email;
 	}
+
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
 	public String getCell() {
 		return cell;
 	}
+
 	public void setCell(String cell) {
 		this.cell = cell;
 	}
+
 	public List<Review> getReview() {
 		return review;
 	}
+
 	public void setReview(List<Review> review) {
 		this.review = review;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(cell, email, id, name, review, surname);
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

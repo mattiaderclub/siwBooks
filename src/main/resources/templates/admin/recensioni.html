@@ -38,16 +38,31 @@
 					Visualizza, monitora ed elimina le recensioni degli utenti.
 				</p>
 			</div>
+
+			
 		</div>
 	</section>
 
 	<!-- Books and Reviews Section -->
 	<section class="quick-access-section">
 		<div class="container">
+			<!-- Messaggio quando non ci sono libri -->
+			<div th:if="${#lists.isEmpty(books)}" class="siwbooks-empty-state">
+				<div class="siwbooks-empty-content">
+					<div class="siwbooks-empty-icon">
+						<i class="fas fa-book-open"></i>
+					</div>
+					<h3 class="siwbooks-empty-title">Nessun Libro Disponibile</h3>
+					<p class="siwbooks-empty-description">
+						Al momento non ci sono libri disponibili nella biblioteca digitale.
+					</p>
+				</div>
+			</div>
+			
 			<div th:each="book : ${books}" class="gestione-recensioni-libro-sezione">
 				<div class="section-header">
 					<h2 class="section-title">
-						<i class="fas fa-book"></i> <span th:text="${book.title}">Titolo Libro</span>
+						<i class="fas fa-book"></i> <span th:text="${book.title}">Titolo Libro</span><span th:text="'  (' + ${book.annoPubblicazione} + ')'">annoPubblicazione</span>
 					</h2>
 				</div>
 

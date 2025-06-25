@@ -39,8 +39,11 @@
 			<!-- User Section -->
 			<div class="user-section">
 				<div class="user-info" th:if="${userDetails}">
-					<span class="user-welcome" th:if="${credentials.role == 'DEFAULT'}">Cliente:</span>
-					<span class="user-welcome" th:if="${credentials.role == 'ADMIN'}">Bibliotecario:</span>
+					<span class="user-welcome"
+						th:if="${credentials != null and credentials.role == 'DEFAULT'}">Cliente:</span>
+					<span class="user-welcome"
+						th:if="${credentials != null and credentials.role == 'ADMIN'}">Bibliotecario:</span>
+
 					<span class="user-name" th:text="${userDetails.username}"></span>
 				</div>
 
@@ -78,7 +81,28 @@
 					<div class="filters-card">
 						<h3><i class="fas fa-filter"></i> Filtri Ricerca</h3>
 						<div class="filters-list">
-							<div class="filter-item no-filters">
+							<div th:if="${filtro.title != null and !filtro.title.isEmpty()}" class="filter-item">
+								<i class="fas fa-book"></i>
+								<span>Titolo: <strong th:text="${filtro.title}"></strong></span>
+							</div>
+
+							<div th:if="${filtro.annoMin != null}" class="filter-item">
+								<i class="fas fa-calendar-alt"></i>
+								<span>Anno Min: <strong th:text="${filtro.annoMin}"></strong></span>
+							</div>
+
+							<div th:if="${filtro.annoMax != null}" class="filter-item">
+								<i class="fas fa-calendar-check"></i>
+								<span>Anno Max: <strong th:text="${filtro.annoMax}"></strong></span>
+							</div>
+
+							<div th:if="${filtro.minRating != null}" class="filter-item">
+								<i class="fas fa-star"></i>
+								<span>Valutazione Min: <strong th:text="${filtro.minRating}"></strong></span>
+							</div>
+
+							<div th:if="${(filtro.title == null or filtro.title.isEmpty()) and filtro.annoMin == null and filtro.annoMax == null and filtro.minRating == null}"
+								class="filter-item no-filters">
 								<i class="fas fa-book-open"></i>
 								<span>Tutti i libri disponibili</span>
 							</div>
@@ -122,12 +146,12 @@
 			<div th:unless="${books.isEmpty()}" class="siwbooks-items-grid">
 				<div th:each="book : ${books}" class="siwbooks-item-card">
 					<div class="siwbooks-item-header">
-						<div class="siwbooks-item-avatar">
+						<div class="siwbooks-item-avatar siwbooks-book-avatar">
 							<i class="fas fa-book"></i>
 						</div>
 						<div class="siwbooks-item-info">
 							<h3 class="siwbooks-item-title" th:text="${book.title}">Titolo</h3>
-							<p class="siwbooks-item-subtitle">Libro</p>
+							<p class="siwbooks-item-subtitle" th:text="'Anno: ' + ${book.annoPubblicazione}"></p>
 						</div>
 					</div>
 

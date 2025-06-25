@@ -18,7 +18,7 @@
 		<div class="header-content container">
 			<!-- Logo e Brand -->
 			<div class="brand-section">
-				<a href="/">
+				<a href="/admin/indexBooks">
 					<img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
 				</a>
 				<h1 class="brand-title">SIW Books Admin</h1>
@@ -115,13 +115,8 @@
 			<div th:unless="${books.isEmpty()}" class="siwbooks-items-grid">
 				<div th:each="book : ${books}" class="siwbooks-item-card">
 					<div class="siwbooks-item-header">
-						<div class="siwbooks-item-image">
-							<img th:if="${book.imagePaths != null and #lists.size(book.imagePaths) > 0}"
-								th:src="@{${book.imagePaths[0]}}" alt="Copertina libro" class="book-cover-image" />
-							<div th:unless="${book.imagePaths != null and #lists.size(book.imagePaths) > 0}"
-								class="siwbooks-item-avatar siwbooks-book-avatar">
-								<i class="fas fa-book"></i>
-							</div>
+						<div class="siwbooks-item-avatar siwbooks-book-avatar">
+							<i class="fas fa-book"></i>
 						</div>
 						<div class="siwbooks-item-info">
 							<h3 class="siwbooks-item-title" th:text="${book.title}"></h3>

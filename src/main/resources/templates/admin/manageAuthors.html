@@ -18,7 +18,7 @@
 		<div class="header-content container">
 			<!-- Logo e Brand -->
 			<div class="brand-section">
-				<a href="/">
+				<a href="/admin/indexAuthors">
 					<img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
 				</a>
 				<h1 class="brand-title">SIW Books Admin</h1>
@@ -120,7 +120,7 @@
 						</div>
 						<div class="siwbooks-item-info">
 							<h3 class="siwbooks-item-title" th:text="${author.name} + ' ' + ${author.surname}"></h3>
-							<p class="siwbooks-item-subtitle">Autore</p>
+							<p class="siwbooks-item-subtitle" th:text="${author.birthDate}"></p>
 						</div>
 					</div>
 

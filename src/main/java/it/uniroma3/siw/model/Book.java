@@ -27,11 +27,11 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@NotBlank
+	@NotBlank(message = "{book.title.notblank}")
 	@Column(nullable = false)
 	private String title;
 	
-	@NotNull
+	@NotNull(message = "{book.annoPubblicazione.notnull}")
 	@Min(0)
 	@Column(nullable = false)
 	private Integer annoPubblicazione;
