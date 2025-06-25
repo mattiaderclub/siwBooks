@@ -1,165 +1,176 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIW Books - Registrazione Completata</title>
-    <link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SIW Books - Registrazione Completata</title>
+	<link rel="stylesheet" href="/css/stile-tema-libri.css?version=3" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap"
+		rel="stylesheet">
 </head>
+
 <body>
-    <!-- Header -->
-    <header class="main-header">
-        <div class="header-content container">
-            <!-- Logo e Brand -->
-            <div class="brand-section">
-                <a href="/">
-                    <img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
-                </a>
-                <h1 class="brand-title">SIW Books</h1>
-            </div>
+	<!-- Header -->
+	<header class="main-header">
+		<div class="header-content container">
+			<!-- Logo e Brand -->
+			<div class="brand-section">
+				<a href="/">
+					<img src="/images/logo-siwBooks.png" alt="SIW Books Logo" class="brand-logo" />
+				</a>
+				<h1 class="brand-title">SIW Books</h1>
+			</div>
 
-            <!-- User Section -->
-            <div class="user-section">
-                <div class="header-actions">
-                    <a class="btn-login" href="/login" th:unless="${userDetails}">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </a>
-                </div>
-            </div>
-        </div>
-    </header>
+			<!-- User Section -->
+			<div class="user-section">
+				<div class="header-actions">
+					<a class="btn-login" href="/login" th:unless="${userDetails}">
+						<i class="fas fa-sign-in-alt"></i> Login
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
 
-    <!-- Success Section -->
-    <section class="hero-section">
-        <div class="hero-content">
-            <div class="success-content">
-                <!-- Success Icon -->
-                <div class="success-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
+	<!-- Success Section -->
+	<section class="hero-section">
+		<div class="hero-content">
+			<div class="success-content">
+				<!-- Success Icon -->
+				<div class="success-icon">
+					<i class="fas fa-check-circle"></i>
+				</div>
 
-                <!-- Success Message -->
-                <h1 class="hero-title">
-                    <span class="highlight">Congratulazioni!</span>
-                </h1>
-                <p class="hero-subtitle">
-                    La tua registrazione è stata completata con successo.<br>
-                    Benvenuto in SIW Books!
-                </p>
+				<!-- Success Message -->
+				<h1 class="hero-title">
+					<span class="highlight">Congratulazioni!</span>
+				</h1>
+				<p class="hero-subtitle">
+					La tua registrazione è stata completata con successo.<br>
+					Benvenuto in SIW Books!
+				</p>
 
-                <!-- User Info -->
-                <div class="user-info-card">
-                    <h3>I tuoi dati di registrazione:</h3>
-                    <div class="user-details">
-                        <div class="detail-row">
-                            <span class="detail-label">Nome:</span>
-                            <span class="detail-value" th:text="${user.name}"></span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Cognome:</span>
-                            <span class="detail-value" th:text="${user.surname}"></span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Email:</span>
-                            <span class="detail-value" th:text="${user.email}"></span>
-                        </div>
-                        <div class="detail-row" th:if="${user.cell}">
-                            <span class="detail-label">Cellulare:</span>
-                            <span class="detail-value" th:text="${user.cell}"></span>
-                        </div>
-                    </div>
-                </div>
+				<!-- User Info -->
+				<div class="user-info-card">
+					<h3>I tuoi dati di registrazione:</h3>
+					<div class="user-details">
+						<div class="detail-row">
+							<span class="detail-label">Nome:</span>
+							<span class="detail-value" th:text="${user.name}"></span>
+						</div>
+						<div class="detail-row">
+							<span class="detail-label">Cognome:</span>
+							<span class="detail-value" th:text="${user.surname}"></span>
+						</div>
+						<div class="detail-row">
+							<span class="detail-label">Email:</span>
+							<span class="detail-value" th:text="${user.email}"></span>
+						</div>
+						<div class="detail-row" th:if="${user.cell}">
+							<span class="detail-label">Cellulare:</span>
+							<span class="detail-value" th:text="${user.cell}"></span>
+						</div>
+					</div>
+				</div>
 
-                <!-- Action Buttons -->
-                <div class="hero-actions">
-                    <a href="/login" class="btn-primary">
-                        <i class="fas fa-sign-in-alt"></i> Accedi ora
-                    </a>
-                    <a href="/" class="btn-secondary">
-                        <i class="fas fa-home"></i> Torna alla Home
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
+				<!-- Action Buttons -->
+				<div class="hero-actions">
+					<a href="/login" class="btn-primary">
+						<i class="fas fa-sign-in-alt"></i> Accedi ora
+					</a>
+					<a href="/" class="btn-secondary">
+						<i class="fas fa-home"></i> Torna alla Home
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
 
-    <!-- Quick Access Section -->
-    <section class="quick-access-section">
-        <div class="container">
-            <h2 class="section-title">Inizia la tua esperienza</h2>
-            <div class="quick-access-grid">
-                <div class="access-card" onclick="location.href='/books'">
-                    <div class="card-icon">
-                        <i class="fas fa-book"></i>
-                    </div>
-                    <h3 class="card-title">Esplora Libri</h3>
-                    <p class="card-description">Scopri la nostra collezione</p>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </div>
+	<!-- Quick Access Section -->
+	<section class="quick-access-section">
+		<div class="container">
+			<h2 class="section-title">Inizia la tua esperienza</h2>
+			<div class="quick-access-grid">
+				<div class="access-card" onclick="location.href='/books'">
+					<div class="card-icon">
+						<i class="fas fa-book"></i>
+					</div>
+					<h3 class="card-title">Esplora Libri</h3>
+					<p class="card-description">Scopri la nostra collezione</p>
+					<div class="card-arrow">
+						<i class="fas fa-arrow-right"></i>
+					</div>
+				</div>
 
-                <div class="access-card" onclick="location.href='/authors'">
-                    <div class="card-icon">
-                        <i class="fas fa-user-edit"></i>
-                    </div>
-                    <h3 class="card-title">Scopri Autori</h3>
-                    <p class="card-description">Conosci i grandi autori</p>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </div>
+				<div class="access-card" onclick="location.href='/authors'">
+					<div class="card-icon">
+						<i class="fas fa-user-edit"></i>
+					</div>
+					<h3 class="card-title">Scopri Autori</h3>
+					<p class="card-description">Conosci i grandi autori</p>
+					<div class="card-arrow">
+						<i class="fas fa-arrow-right"></i>
+					</div>
+				</div>
 
-                <div class="access-card" onclick="location.href='/formSearchBooks'">
-                    <div class="card-icon">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <h3 class="card-title">Cerca Libri</h3>
-                    <p class="card-description">Trova il libro perfetto</p>
-                    <div class="card-arrow">
-                        <i class="fas fa-arrow-right"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+				<div class="access-card" onclick="location.href='/formSearchBooks'">
+					<div class="card-icon">
+						<i class="fas fa-search"></i>
+					</div>
+					<h3 class="card-title">Cerca Libri</h3>
+					<p class="card-description">Trova il libro perfetto</p>
+					<div class="card-arrow">
+						<i class="fas fa-arrow-right"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4 class="footer-title">Benvenuto in SIW Books</h4>
-                </div>
-                
-                <div class="footer-section">
-                    <h4 class="footer-title">Navigazione</h4>
-                    <div class="footer-links">
-                        <a href="/login" class="footer-link">Login</a>
-                        <a href="/books" class="footer-link">Libri</a>
-                        <a href="/authors" class="footer-link">Autori</a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 SIW Books. Tutti i diritti riservati.</p>
-            </div>
-        </div>
-    </footer>
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="footer-section">
+					<h4 class="footer-title">Benvenuto in SIW Books</h4>
+				</div>
 
-    <script>
-        // Add scroll effect to header
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('.main-header');
-            if (window.scrollY > 100) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-    </script>
+				<div class="footer-section">
+					<h4 class="footer-title">Navigazione</h4>
+					<div class="footer-links">
+						<a href="/books" class="footer-link">Libri</a>
+						<a href="/authors" class="footer-link">Autori</a>
+					</div>
+				</div>
+
+				<div class="footer-section">
+					<h4 class="footer-title">Account</h4>
+					<div class="footer-links">
+						<a href="/login" class="footer-link">Login</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="footer-bottom">
+				<p>&copy; 2025 SIW Books. Tutti i diritti riservati.</p>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Add scroll effect to header
+		window.addEventListener('scroll', function () {
+			const header = document.querySelector('.main-header');
+			if (window.scrollY > 100) {
+				header.classList.add('scrolled');
+			} else {
+				header.classList.remove('scrolled');
+			}
+		});
+	</script>
 </body>
+
 </html>
